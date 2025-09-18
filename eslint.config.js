@@ -19,7 +19,7 @@ export default defineConfig([
       reactRefresh.configs.vite, // Fast Refresh rules
       reactX.configs["recommended-typescript"], // React-specific rules
       reactDom.configs.recommended, // React DOM-specific rules
-      prettier // disables conflicting ESLint rules
+      prettier, // disables conflicting ESLint rules
     ],
     plugins: {
       prettier: prettierPlugin, // run prettier as ESLint rule
