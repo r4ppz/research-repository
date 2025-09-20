@@ -5,6 +5,8 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 import reactX from "eslint-plugin-react-x";
 import reactDom from "eslint-plugin-react-dom";
+import prettier from "eslint-config-prettier";
+import prettierPlugin from "eslint-plugin-prettier";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
@@ -13,19 +15,19 @@ export default defineConfig([
     files: ["**/*.{ts,tsx}"],
     extends: [
       js.configs.recommended,
-      tseslint.configs.strictTypeChecked, // stricter TS rules
-      tseslint.configs.stylisticTypeChecked, // optional style rules
-      reactHooks.configs["recommended-latest"], // React Hooks rules
-      reactRefresh.configs.vite, // Fast Refresh rules
-      reactX.configs["recommended-typescript"], // React-specific rules
-      reactDom.configs.recommended, // React DOM-specific rules
-      prettier, // disables conflicting ESLint rules
+      tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
+      reactHooks.configs["recommended-latest"],
+      reactRefresh.configs.vite,
+      reactX.configs["recommended-typescript"],
+      reactDom.configs.recommended,
+      prettier,
     ],
     plugins: {
-      prettier: prettierPlugin, // run prettier as ESLint rule
+      prettier: prettierPlugin,
     },
     rules: {
-      "prettier/prettier": "error", // mark prettier issues as lint errors
+      "prettier/prettier": "error",
     },
     languageOptions: {
       ecmaVersion: 2020,
