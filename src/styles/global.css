@@ -1,0 +1,121 @@
+/* ------------------------------
+   1. Box sizing & word wrap
+------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
+
+/* ------------------------------
+   2. HTML
+------------------------------- */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+/* ------------------------------
+   3. Body
+------------------------------- */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  line-height: var(--line-height-normal);
+  font-family: var(--font-family-sans);
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+/* ------------------------------
+   4. Headings & paragraphs
+------------------------------- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  font-weight: inherit;
+}
+
+/* ------------------------------
+   5. Lists
+------------------------------- */
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------
+   6. Media
+------------------------------- */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ------------------------------
+   7. Form elements
+------------------------------- */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: none;
+  color: var(--color-text);
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ------------------------------
+   8. Links
+------------------------------- */
+a {
+  text-decoration: none;
+  color: var(--color-secondary);
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-secondary-dark);
+}
+
+/* ------------------------------
+   9. Tables
+------------------------------- */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* ------------------------------
+   10. Horizontal rule
+------------------------------- */
+hr {
+  border: none;
+  height: 1px;
+  background-color: var(--color-border);
+}
