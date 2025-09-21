@@ -1,18 +1,17 @@
 import React from "react";
 import style from "./Button.module.css";
-
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary";
 }
 
-const Button: React.FC<ButtonProps> = ({ variant = "primary", className, children, ...props }) => {
-  const buttonClass = `${style[variant]} ${className || ""}`.trim();
+function Button({ variant = "primary", children, ...props }: ButtonProps) {
+  const buttonClass = `${style.button} ${style[variant]}`.trim();
 
   return (
-    <button className={buttonClass} {...props}>
+    <button type="button" className={buttonClass} {...props}>
       {children}
     </button>
   );
-};
+}
 
 export default Button;
