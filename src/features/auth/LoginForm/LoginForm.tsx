@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from "react";
 import style from "./LoginForm.module.css";
 import { Search } from "lucide-react";
-import Button from "../../../components/common/button/Button";
-import Input from "../../../components/common/input/Input";
+import Button from "../../../components/common/Button/Button";
+import Input from "../../../components/common/Input/Input";
 
 function LoginForm() {
   const [username, setUsername] = useState<string>("");
