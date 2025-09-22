@@ -1,26 +1,29 @@
-import type { InputHTMLAttributes, ComponentType, ChangeEvent } from "react";
+import type { InputHTMLAttributes, ComponentType } from "react";
 import style from "./Input.module.css";
 
+type InputType =
+  | "text"
+  | "password"
+  | "email"
+  | "number"
+  | "search"
+  | "url"
+  | "tel"
+  | "date"
+  | "datetime-local";
+
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  type?: string;
+  type?: InputType;
   icon?: ComponentType<{ className?: string }>;
-  placeholder: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
+  placeholder?: string;
 }
 
-function Input({ type = "text", icon: Icon, placeholder, value, onChange, ...props }: InputProps) {
+function Input({ type = "text", icon: Icon, placeholder, ...props }: InputProps) {
   return (
     <div className={style.inputWrapper}>
       {Icon && <Icon className={style.icon} />}
-      <input
-        {...props}
-        type={type}
-        className={style.input}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-      />
+      <input {...props} type={type} className={style.input.trim()} placeholder={placeholder} />
     </div>
   );
 }

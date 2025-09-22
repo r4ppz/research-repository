@@ -1,5 +1,24 @@
-.primary {
+.button {
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-button-primary-text);
+  width: 100%;
 }
 
-.secondory {
+.primary {
+  background-color: var(--color-button-primary-bg);
+  border: var(--color-border-default);
+}
+
+.primary:hover {
+  background-color: var(--color-button-primary-bg-hover);
+  border: var(--color-border-hover);
+}
+
+.primary:active {
+  background-color: var(--color-button-primary-bg-active);
+  border: var(--color-border-active);
 }
