@@ -1,0 +1,128 @@
+.page {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-background);
+  height: 100vh;
+  width: 100vw;
+}
+
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.introCard {
+  display: flex;
+  flex-direction: column;
+  flex: 1.5;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm) var(--space-lg);
+  gap: var(--space-3xl);
+  background-color: var(--color-primary);
+}
+
+.logo {
+  width: var(--size-logo-md);
+  height: auto;
+}
+
+.introTextContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  text-align: center;
+}
+
+.introTitle {
+  font-size: var(--font-size-2xl);
+  color: var(--color-text-inverted);
+  font-weight: var(--font-weight-black);
+}
+
+.introDescription {
+  display: none;
+}
+
+.loginCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex: 2;
+  gap: var(--space-lg);
+  padding: var(--space-lg) var(--space-xl);
+  background-color: var(--color-surface);
+}
+
+.loginTextContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin: var(--space-lg) var(--space-0);
+}
+
+.loginTextHeader {
+  font-size: var(--font-size-2xl);
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+}
+
+.loginText {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  font-weight: var(--font-weight-normal);
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .loginContainer {
+    max-width: 900px;
+    max-height: 500px;
+    width: 900px;
+    height: 500px;
+    flex-direction: row;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+  }
+
+  .logo {
+    width: var(--size-logo-lg);
+  }
+
+  .introCard {
+    flex: 1;
+    justify-content: flex-start;
+    padding: var(--space-2xl) var(--space-4xl);
+    border-top-left-radius: var(--radius-lg);
+    border-bottom-left-radius: var(--radius-lg);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .introTextContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    text-align: left;
+  }
+
+  .introDescription {
+    display: block;
+    font-size: var(--font-size-md);
+    color: var(--color-text-inverted);
+    font-weight: var(--font-weight-normal);
+  }
+
+  .loginCard {
+    flex: 1;
+    justify-content: flex-start;
+    padding: var(--space-2xl) var(--space-2xl);
+    border-top-right-radius: var(--radius-lg);
+    border-bottom-right-radius: var(--radius-lg);
+  }
+}

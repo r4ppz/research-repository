@@ -28,8 +28,8 @@
   /* ---------------------------------
      Semantic Colors (usage-oriented)
   ---------------------------------- */
-  --color-bg: var(--color-gray-50);
-  --color-surface: var(--color-gray-100);
+  --color-bg: var(--color-gray-100);
+  --color-surface: var(--color-gray-50);
   --color-overlay: rgba(0, 0, 0, 0.4);
 
   --color-primary: var(--color-brand-500);
@@ -48,9 +48,9 @@
   --color-success: var(--color-green-500);
   --color-warning: var(--color-yellow-500);
 
-  --color-border-default: var(--color-gray-700);
-  --color-border-hover: var(--color-gray-800);
-  --color-border-active: var(--color-gray-900);
+  --color-border-default: var(--color-gray-400);
+  --color-border-hover: var(--color-gray-500);
+  --color-border-active: var(--color-gray-600);
 
   --color-button-primary-bg: var(--color-primary);
   --color-button-primary-bg-hover: var(--color-primary-hover);
@@ -65,24 +65,18 @@
   /* ---------------------------------
      Typography
   ---------------------------------- */
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+  --font-sans:
+    "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;
   --font-mono: "Fira Code", monospace;
 
-  --font-size-xs: 0.75rem;
-  /* 12px */
-  --font-size-sm: 0.875rem;
-  /* 14px */
-  --font-size-md: 1rem;
-  /* 16px */
-  --font-size-lg: 1.125rem;
-  /* 18px */
-  --font-size-xl: 1.25rem;
-  /* 20px */
-  --font-size-2xl: 1.5rem;
-  /* 24px */
-  --font-size-3xl: 1.875rem;
-  /* 30px */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-md: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
 
   --line-height-tight: 1.25;
   --line-height-normal: 1.5;
@@ -102,24 +96,15 @@
      Spacing Scale
   ---------------------------------- */
   --space-0: 0;
-  --space-xs: 0.25rem;
-  /* 4px */
-  --space-sm: 0.5rem;
-  /* 8px */
-  --space-md: 0.75rem;
-  /* 12px */
-  --space-lg: 1rem;
-  /* 16px */
-  --space-xl: 1.5rem;
-  /* 24px */
-  --space-2xl: 2rem;
-  /* 32px */
-  --space-3xl: 2.5rem;
-  /* 40px */
-  --space-4xl: 3rem;
-  /* 48px */
-  --space-5xl: 4rem;
-  /* 64px */
+  --space-xs: 0.25rem; /* 4px */
+  --space-sm: 0.5rem; /* 8px */
+  --space-md: 0.75rem; /* 12px */
+  --space-lg: 1rem; /* 16px */
+  --space-xl: 1.5rem; /* 24px */
+  --space-2xl: 2rem; /* 32px */
+  --space-3xl: 2.5rem; /* 40px */
+  --space-4xl: 3rem; /* 48px */
+  --space-5xl: 4rem; /* 64px */
 
   /* ---------------------------------
      Radius
@@ -152,7 +137,7 @@
     Additional
   ---------------------------------- */
 
-  --size-logo-sm: 80px;
-  --size-logo-md: 120px;
-  --size-logo-lg: 160px;
+  --size-logo-sm: 100px;
+  --size-logo-md: 160px;
+  --size-logo-lg: 190px;
 }

@@ -7,7 +7,7 @@
 .inputWrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: var(--space-md);
 }
 
 .label {
@@ -17,4 +17,9 @@
 
 .loginButton {
   margin-top: var(--space-md);
+}
+
+.input {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
 }

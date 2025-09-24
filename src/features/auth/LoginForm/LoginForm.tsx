@@ -4,7 +4,7 @@ import Button from "../../../components/common/Button/Button";
 import Input from "../../../components/common/Input/Input";
 
 function LoginForm() {
-  const [username, setUsername] = useState<string>("");
+  const [id, setId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -14,15 +14,17 @@ function LoginForm() {
   return (
     <form className={style.form} onSubmit={onSubmit}>
       <div className={style.inputWrapper}>
-        <label className={style.label} htmlFor="username">
+        <label className={style.label} htmlFor="id">
           Username
         </label>
         <Input
-          placeholder="Username"
-          value={username}
-          id="username"
+          className={style.input}
+          placeholder="Enter your ID"
+          value={id}
+          id="id"
+          type="text"
           onChange={(e) => {
-            setUsername(e.target.value);
+            setId(e.target.value);
           }}
         />
       </div>
@@ -31,6 +33,7 @@ function LoginForm() {
           Password
         </label>
         <Input
+          className={style.input}
           placeholder="Password"
           value={password}
           id="password"

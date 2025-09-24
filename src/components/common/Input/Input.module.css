@@ -21,8 +21,9 @@
 
 .input {
   flex: 1;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
   color: var(--color-input-text);
-  font-size: var(--font-size-md);
   padding: var(--space-sm) var(--space-0);
   min-width: 0;
 }
