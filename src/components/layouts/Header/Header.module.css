@@ -1,0 +1,92 @@
+.header {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-header-bg);
+  color: var(--color-text-inverted);
+  padding: var(--space-md) var(--space-md);
+}
+
+.leftContainer {
+  display: flex;
+  gap: var(--space-md);
+  flex-direction: row;
+  align-items: center;
+}
+
+.logoContainer {
+  background-color: var(--color-surface);
+  padding: var(--space-sm);
+  border-radius: var(--radius-lg);
+}
+
+.schoolLogo {
+  width: var(--size-logo-xs);
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-weight: var(--font-weight-extrabold);
+  font-size: var(--font-size-md);
+}
+
+.userRoleIndicator {
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-sm);
+}
+
+.rightContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.desktopNavigation {
+  display: none;
+}
+
+.profileButton {
+  display: none;
+}
+
+.logoutButton {
+  display: none;
+}
+
+.menuButton {
+  background-color: var(--color-surface);
+  padding: var(--space-xs);
+  border-radius: var(--radius-md);
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-header-bg);
+  color: var(--color-text-inverted);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.mobileNavigation {
+  display: flex;
+  flex-direction: column;
+}
+
+.profileButton {
+  background-color: var(--color-surface);
+  padding: var(--space-xs);
+  border-radius: var(--radius-md);
+}
+
+@media (min-width: 768px) {
+}

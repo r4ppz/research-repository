@@ -62,6 +62,7 @@
   --color-input-bg-active: var(--color-gray-300);
   --color-input-text: var(--color-text);
 
+  --color-header-bg: var(--color-primary);
   /* ---------------------------------
      Typography
   ---------------------------------- */
@@ -137,7 +138,9 @@
     Additional
   ---------------------------------- */
 
-  --size-logo-sm: 100px;
-  --size-logo-md: 160px;
-  --size-logo-lg: 190px;
+  --size-logo-xs: 40px;
+  --size-logo-sm: 60px;
+  --size-logo-md: 100px;
+  --size-logo-lg: 150px;
+  --size-logo-xl: 200px;
 }
