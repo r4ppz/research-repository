@@ -18,17 +18,17 @@ function Header({ user }: HeaderProps) {
         </div>
         <div className={style.titleContainer}>
           <h1 className={style.title}>ACD Research Repository</h1>
-          <p className={style.userRoleIndicator}>{user.role} portal</p>
+          <p className={style.roleIndicator}>{user.role} portal</p>
         </div>
       </div>
+
       <div className={style.rightContainer}>
-        {/* Desktop navigation */}
         <nav className={style.desktopNavigation}>
           <a href="#">Request</a>
           <a href="#">Library</a>
         </nav>
 
-        <div className={style.desktopButtonsContainer}>
+        <div className={style.desktopButtonsWrapper}>
           <button className={style.desktopProfileButton} type="button">
             <UserIcon size={18} />
             <div className={style.desktopProfileContainer}>
@@ -42,7 +42,6 @@ function Header({ user }: HeaderProps) {
           </button>
         </div>
 
-        {/* Mobile menu */}
         <button
           className={style.menuButton}
           type="button"
@@ -53,7 +52,6 @@ function Header({ user }: HeaderProps) {
           <Menu size={18} />
         </button>
 
-        {/* Mobile dropdown */}
         {isMenuOpen && (
           <div className={style.dropDownMenu}>
             <nav className={style.mobileNavigation}>

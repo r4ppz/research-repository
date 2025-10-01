@@ -36,7 +36,7 @@
   font-size: var(--font-size-md);
 }
 
-.userRoleIndicator {
+.roleIndicator {
   font-weight: var(--font-weight-normal);
   font-size: var(--font-size-sm);
 }
@@ -50,7 +50,7 @@
   display: none;
 }
 
-.desktopProfileButton {
+.desktopButtonsWrapper {
   display: none;
 }
 
@@ -105,10 +105,14 @@
     font-weight: var(--font-weight-bold);
   }
 
-  .desktopButtonsContainer {
+  .desktopButtonsWrapper {
     display: flex;
     flex-direction: row;
     gap: var(--space-sm);
+  }
+
+  .dekstoplogoutButton {
+    display: none;
   }
 
   .desktopProfileButton {
