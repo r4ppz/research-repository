@@ -1,6 +1,5 @@
 import style from "./Header.module.css";
-import { Menu } from "lucide-react";
-import { User as UserIcon } from "lucide-react";
+import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { type User } from "../../../types/User";
 import { useState } from "react";
 
@@ -29,15 +28,19 @@ function Header({ user }: HeaderProps) {
           <a href="#">Library</a>
         </nav>
 
-        <button className={style.profileButton} type="button">
-          <UserIcon />
-          <h3 className={style.userName}>{user.name}</h3>
-          <p className={style.userRole}>{user.role}</p>
-        </button>
+        <div className={style.desktopButtonsContainer}>
+          <button className={style.desktopProfileButton} type="button">
+            <UserIcon size={18} />
+            <div className={style.desktopProfileContainer}>
+              <h3 className={style.userName}>{user.name}</h3>
+              <p className={style.userRole}>{user.role}</p>
+            </div>
+          </button>
 
-        <button type="button" className={style.logoutButton}>
-          <Menu className={style.menuIcon} />
-        </button>
+          <button type="button" className={style.dekstoplogoutButton}>
+            <LogOut size={18} />
+          </button>
+        </div>
 
         {/* Mobile menu */}
         <button
@@ -47,19 +50,19 @@ function Header({ user }: HeaderProps) {
             setIsMenuOpen((open) => !open);
           }}
         >
-          <Menu className={style.menuIcon} />
+          <Menu size={18} />
         </button>
 
         {/* Mobile dropdown */}
         {isMenuOpen && (
-          <div className={style.dropdownMenu}>
+          <div className={style.dropDownMenu}>
             <nav className={style.mobileNavigation}>
               <a href="#">Request</a>
               <a href="#">Library</a>
               <a href="#">Logout</a>
             </nav>
-            <button className={style.profileButton} type="button">
-              <UserIcon />
+            <button className={style.mobileProfileButton} type="button">
+              <UserIcon size={18} />
               <h3 className={style.userName}>{user.name}</h3>
               <p className={style.userRole}>{user.role}</p>
             </button>
