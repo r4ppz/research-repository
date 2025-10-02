@@ -5,6 +5,7 @@
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-md);
   padding: 0 var(--space-sm);
+  width: 100%;
 }
 
 .inputWrapper:focus-within {
@@ -21,10 +22,10 @@
 
 .input {
   flex: 1;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   font-weight: var(--font-weight-regular);
   color: var(--color-input-text);
-  padding: var(--space-sm) var(--space-0);
+  padding: var(--space-md) var(--space-0);
   min-width: 0;
 }
 

@@ -14,15 +14,16 @@ type InputType =
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: InputType;
-  icon?: ComponentType<{ className?: string }>;
+  icon?: ComponentType<{ className?: string; size?: number }>;
   className?: string;
   ref?: React.Ref<HTMLInputElement>;
+  size?: number;
 }
 
-function Input({ type = "text", icon: Icon, className, ref, ...props }: InputProps) {
+function Input({ type = "text", icon: Icon, className, ref, size = 18, ...props }: InputProps) {
   return (
     <div className={style.inputWrapper}>
-      {Icon && <Icon className={style.icon} />}
+      {Icon && <Icon className={style.icon} size={size} />}
       <input {...props} ref={ref} type={type} className={`${style.input} ${className ?? ""}`} />
     </div>
   );

@@ -1,0 +1,55 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  text-align: left;
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.authordateWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.author {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-normal);
+}
+
+.date {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-normal);
+}
+
+.departmentContainer {
+  background-color: var(--color-gray-300);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.department {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+}
+
+.abstract {
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}

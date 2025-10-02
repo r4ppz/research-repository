@@ -1,7 +1,8 @@
 import style from "./Header.module.css";
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
-import { type User } from "../../../types/User";
+import User from "../../../types/User";
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 interface HeaderProps {
   user: User;
@@ -24,8 +25,18 @@ function Header({ user }: HeaderProps) {
 
       <div className={style.rightContainer}>
         <nav className={style.desktopNavigation}>
-          <a href="#">Request</a>
-          <a href="#">Library</a>
+          <NavLink
+            className={({ isActive }) => `${style.navlink} ${isActive ? style.selected : ""}`}
+            to="#"
+          >
+            Request
+          </NavLink>
+          <NavLink
+            className={({ isActive }) => `${style.navlink} ${isActive ? style.selected : ""}`}
+            to="#"
+          >
+            Library
+          </NavLink>
         </nav>
 
         <div className={style.desktopButtonsWrapper}>
@@ -55,9 +66,24 @@ function Header({ user }: HeaderProps) {
         {isMenuOpen && (
           <div className={style.dropDownMenu}>
             <nav className={style.mobileNavigation}>
-              <a href="#">Request</a>
-              <a href="#">Library</a>
-              <a href="#">Logout</a>
+              <NavLink
+                className={({ isActive }) => `${style.navlink} ${isActive ? style.selected : ""}`}
+                to="#"
+              >
+                Request
+              </NavLink>
+              <NavLink
+                className={({ isActive }) => `${style.navlink} ${isActive ? style.selected : ""}`}
+                to="#"
+              >
+                Library
+              </NavLink>
+              <NavLink
+                className={({ isActive }) => `${style.navlink} ${isActive ? style.selected : ""}`}
+                to="#"
+              >
+                Logout
+              </NavLink>
             </nav>
             <button className={style.mobileProfileButton} type="button">
               <UserIcon size={18} />

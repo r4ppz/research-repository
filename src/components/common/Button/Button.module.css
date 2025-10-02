@@ -1,11 +1,17 @@
 .button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   padding: var(--space-md) var(--space-xl);
   border-radius: var(--radius-md);
-  cursor: pointer;
   font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-button-primary-text);
   width: 100%;
+  text-align: center;
+  cursor: pointer;
+  gap: var(--space-md);
 }
 
 .primary {
