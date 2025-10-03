@@ -1,16 +1,15 @@
 import style from "./Header.module.css";
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import User from "../../../types/User";
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 interface HeaderProps {
   user: User;
+  isMenuOpen: boolean;
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Header({ user }: HeaderProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+function Header({ user, isMenuOpen, setIsMenuOpen }: HeaderProps) {
   return (
     <header className={style.header}>
       <div className={style.leftContainer}>
@@ -57,7 +56,7 @@ function Header({ user }: HeaderProps) {
           className={style.menuButton}
           type="button"
           onClick={() => {
-            setIsMenuOpen((open) => !open);
+            setIsMenuOpen((open: boolean) => !open);
           }}
         >
           <Menu size={18} />

@@ -6,7 +6,7 @@
   align-items: center;
   background-color: var(--color-header-bg);
   color: var(--color-text-inverted);
-  padding: var(--space-md) var(--space-md);
+  padding: var(--space-md) var(--space-lg);
 }
 
 .leftContainer {
@@ -65,6 +65,8 @@
 }
 
 .navlink {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-inverted);
   text-decoration: none;
   transition: text-decoration 0.2s ease;
