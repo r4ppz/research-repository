@@ -7,6 +7,7 @@ import ResearchCard from "../../../components/layouts/ResearchCard/ResearchCard"
 import { userOne } from "../../../dummy/user";
 import { researches } from "../../../dummy/pdf";
 import { useEffect, useState } from "react";
+import Footer from "../../../components/layouts/Footer/Footer";
 
 function HomePage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -101,6 +102,8 @@ function HomePage() {
           </Button>
         </section>
       </main>
+
+      <Footer />
     </div>
   );
 }

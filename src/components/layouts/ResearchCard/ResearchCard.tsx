@@ -4,13 +4,19 @@ import style from "./ResearchCard.module.css";
 import Pdf from "../../../types/Pdf";
 
 function ResearchCard({ title, author, date, department, abstract }: Pdf) {
+  const formattedDate = new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <div className={style.card}>
       <div className={style.titleContainer}>
         <h1 className={style.title}>{title}</h1>
         <div className={style.authordateWrapper}>
           <p className={style.author}>{author}</p>
-          <p className={style.date}>{date}</p>
+          <p className={style.date}>{formattedDate}</p>
         </div>
       </div>
       <div className={style.departmentContainer}>

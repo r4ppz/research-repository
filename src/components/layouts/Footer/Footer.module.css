@@ -1,0 +1,131 @@
+.footer {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-primary);
+  padding: var(--space-lg);
+  color: var(--color-text-inverted);
+  gap: var(--space-sm);
+}
+@media (min-width: 768px) {
+  .footer {
+    padding: var(--space-2xl) var(--space-5xl);
+  }
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  border-bottom: 1px solid var(--color-border-default);
+  padding-bottom: var(--space-3xl);
+}
+@media (min-width: 768px) {
+  .mainContainer {
+    flex-direction: row;
+  }
+}
+
+.titlelogoContainer {
+  display: flex;
+  flex-direction: row;
+  flex: 2;
+  gap: var(--space-lg);
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  min-width: var(--size-logo-sm);
+}
+@media (min-width: 768px) {
+  .logoContainer {
+    min-width: var(--size-logo-2xl);
+  }
+}
+
+.schoolLogo {
+  width: var(--size-logo-sm);
+  height: auto;
+  flex-shrink: 0;
+}
+@media (min-width: 768px) {
+  .schoolLogo {
+    width: var(--size-logo-md);
+  }
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.schoolName {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+}
+
+.mobileDescription {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-normal);
+}
+@media (min-width: 768px) {
+  .mobileDescription {
+    display: none;
+  }
+}
+
+.desktopDescription {
+  display: none;
+}
+@media (min-width: 768px) {
+  .desktopDescription {
+    display: flex;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-normal);
+  }
+}
+
+.linkcontactContainer {
+  display: flex;
+  flex: 1;
+  justify-content: space-around;
+  gap: var(--space-lg);
+}
+@media (min-width: 768px) {
+  .linkcontactContainer {
+    justify-content: space-between;
+  }
+}
+
+.linksContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+links {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+}
+
+.contactContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+}
+
+.copyrightNotice {
+  text-align: center;
+}
