@@ -15,7 +15,7 @@
 .mainContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: var(--space-2xl);
   border-bottom: 1px solid var(--color-border-default);
   padding-bottom: var(--space-3xl);
 }
@@ -28,7 +28,7 @@
 .titlelogoContainer {
   display: flex;
   flex-direction: row;
-  flex: 2;
+  flex: 1;
   gap: var(--space-lg);
 }
 
@@ -61,10 +61,11 @@
 .titleContainer {
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
 }
 
 .title {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -102,7 +103,8 @@
 }
 @media (min-width: 768px) {
   .linkcontactContainer {
-    justify-content: space-between;
+    justify-content: center;
+    gap: var(--space-6xl);
   }
 }
 

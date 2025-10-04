@@ -3,8 +3,8 @@ import Button from "../../common/Button/Button";
 import style from "./ResearchCard.module.css";
 import Pdf from "../../../types/Pdf";
 
-function ResearchCard({ title, author, date, department, abstract }: Pdf) {
-  const formattedDate = new Date(date).toLocaleDateString("en-US", {
+function ResearchCard({ pdf, onView }: { pdf: Pdf; onView: () => void }) {
+  const formattedDate = new Date(pdf.date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -13,17 +13,17 @@ function ResearchCard({ title, author, date, department, abstract }: Pdf) {
   return (
     <div className={style.card}>
       <div className={style.titleContainer}>
-        <h1 className={style.title}>{title}</h1>
+        <h1 className={style.title}>{pdf.title}</h1>
         <div className={style.authordateWrapper}>
-          <p className={style.author}>{author}</p>
+          <p className={style.author}>{pdf.author}</p>
           <p className={style.date}>{formattedDate}</p>
         </div>
       </div>
       <div className={style.departmentContainer}>
-        <p className={style.department}>{department}</p>
+        <p className={style.department}>{pdf.department}</p>
       </div>
-      <p className={style.abstract}>{abstract}</p>
-      <Button>
+      <p className={style.abstract}>{pdf.abstract}</p>
+      <Button onClick={onView}>
         <Eye size={18} />
         Read Abstract
       </Button>

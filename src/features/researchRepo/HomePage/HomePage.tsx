@@ -1,4 +1,4 @@
-import { ArrowBigLeftDash, ArrowBigRightDash, ListFilter, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, ListFilter, Search } from "lucide-react";
 import Input from "../../../components/common/Input/Input";
 import Header from "../../../components/layouts/Header/Header";
 import style from "./HomePage.module.css";
@@ -8,11 +8,25 @@ import { userOne } from "../../../dummy/user";
 import { researches } from "../../../dummy/pdf";
 import { useEffect, useState } from "react";
 import Footer from "../../../components/layouts/Footer/Footer";
+import Pdf from "../../../types/Pdf";
+import ResearchModal from "../../../components/layouts/ResearchModal/ResearchModal";
 
 function HomePage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [itemsPerPage, setItemsPerPage] = useState<number>(9);
+  const [selectedResearch, setSelectedResearch] = useState<Pdf | null>(null);
+
+  useEffect(() => {
+    if (selectedResearch) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedResearch]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -36,6 +50,10 @@ function HomePage() {
   const totalPages = Math.ceil(researches.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentResearch = researches.slice(startIndex, startIndex + itemsPerPage);
+
+  const handleCloseModal = () => {
+    setSelectedResearch(null);
+  };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -82,13 +100,20 @@ function HomePage() {
 
         <section className={style.researchSection}>
           {currentResearch.map((research) => (
-            <ResearchCard key={research.paperId} {...research} />
+            <ResearchCard
+              key={research.paperId}
+              pdf={research}
+              onView={() => {
+                setSelectedResearch(research);
+              }}
+            />
           ))}
+          {selectedResearch && <ResearchModal pdf={selectedResearch} onClose={handleCloseModal} />}
         </section>
 
         <section className={style.paginationSection}>
           <Button onClick={handlePrevPage} disabled={currentPage === 1}>
-            <ArrowBigLeftDash size={18} />
+            <ChevronLeft size={18} />
             Previous
           </Button>
 
@@ -98,7 +123,7 @@ function HomePage() {
 
           <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
             Next
-            <ArrowBigRightDash size={18} />
+            <ChevronRight size={18} />
           </Button>
         </section>
       </main>
