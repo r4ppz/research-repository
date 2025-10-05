@@ -13,6 +13,18 @@
   text-align: center;
   cursor: pointer;
   gap: var(--space-sm);
+  transition: var(--transition-elevation);
+  box-shadow: var(--shadow-resting);
+}
+
+.button:hover {
+  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+  box-shadow: var(--shadow-hover);
+}
+
+.button:active {
+  transform: translateY(var(--translate-active)) scale(var(--scale-active));
+  box-shadow: var(--shadow-active);
 }
 
 .button svg {

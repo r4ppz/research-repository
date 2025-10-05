@@ -19,15 +19,6 @@
   }
 }
 
-.mainShift {
-  padding-top: 150px;
-}
-@media (min-width: 768px) {
-  .mainShift {
-    padding-top: 0;
-  }
-}
-
 .heroHeader {
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
@@ -108,6 +99,11 @@
   justify-content: center;
   gap: var(--space-md);
   margin-bottom: var(--space-xl);
+}
+
+.pagingButton {
+  font-size: var(--font-size-xs);
+  padding: var(--space-xs);
 }
 
 .pagingIndicator {

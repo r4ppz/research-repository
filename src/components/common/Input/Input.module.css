@@ -8,6 +8,18 @@
   padding: 0 var(--space-md);
   width: 100%;
   min-height: 40px;
+  transition: var(--transition-elevation);
+  box-shadow: var(--shadow-resting);
+}
+
+.inputWrapper:hover {
+  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+  box-shadow: var(--shadow-hover);
+}
+
+.inputWrapper:active {
+  transform: translateY(var(--translate-active)) scale(var(--scale-active));
+  box-shadow: var(--shadow-active);
 }
 
 .inputWrapper:focus-within {

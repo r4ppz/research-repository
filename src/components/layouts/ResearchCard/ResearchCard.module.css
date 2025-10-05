@@ -6,6 +6,13 @@
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
   text-align: left;
+  transition: var(--transition-elevation);
+  box-shadow: var(--shadow-resting);
+}
+
+.card:hover {
+  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+  box-shadow: var(--shadow-hover);
 }
 
 .titleContainer {
@@ -24,11 +31,7 @@
   justify-content: space-between;
 }
 
-.author {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-normal);
-}
-
+.author,
 .date {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-normal);

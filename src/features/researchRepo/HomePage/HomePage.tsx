@@ -1,20 +1,20 @@
-import { ChevronLeft, ChevronRight, ListFilter, Search } from "lucide-react";
-import Input from "../../../components/common/Input/Input";
-import Header from "../../../components/layouts/Header/Header";
-import style from "./HomePage.module.css";
-import Button from "../../../components/common/Button/Button";
-import ResearchCard from "../../../components/layouts/ResearchCard/ResearchCard";
 import { userOne } from "../../../dummy/user";
 import { researches } from "../../../dummy/pdf";
 import { useEffect, useState } from "react";
+import style from "./HomePage.module.css";
+import { ChevronLeft, ChevronRight, ListFilter, Search } from "lucide-react";
+import Input from "../../../components/common/Input/Input";
+import Header from "../../../components/layouts/Header/Header";
+import Button from "../../../components/common/Button/Button";
+import ResearchCard from "../../../components/layouts/ResearchCard/ResearchCard";
 import Footer from "../../../components/layouts/Footer/Footer";
-import Pdf from "../../../types/Pdf";
 import ResearchModal from "../../../components/layouts/ResearchModal/ResearchModal";
+import Pdf from "../../../types/Pdf";
 
 function HomePage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(9);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(12);
   const [selectedResearch, setSelectedResearch] = useState<Pdf | null>(null);
 
   useEffect(() => {
@@ -35,9 +35,9 @@ function HomePage() {
   useEffect(() => {
     const updateItemsPerPage = () => {
       if (window.innerWidth > 1536) {
-        setItemsPerPage(12);
+        setItemsPerPage(16);
       } else {
-        setItemsPerPage(9);
+        setItemsPerPage(12);
       }
     };
     updateItemsPerPage();
@@ -112,8 +112,12 @@ function HomePage() {
         </section>
 
         <section className={style.paginationSection}>
-          <Button onClick={handlePrevPage} disabled={currentPage === 1}>
-            <ChevronLeft size={18} />
+          <Button
+            className={style.pagingButton}
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft size={16} />
             Previous
           </Button>
 
@@ -121,9 +125,13 @@ function HomePage() {
             Page {currentPage} of {totalPages}
           </p>
 
-          <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
+          <Button
+            className={style.pagingButton}
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+          >
             Next
-            <ChevronRight size={18} />
+            <ChevronRight size={16} />
           </Button>
         </section>
       </main>

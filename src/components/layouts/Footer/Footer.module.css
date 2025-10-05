@@ -130,4 +130,6 @@ links {
 
 .copyrightNotice {
   text-align: center;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-light);
 }

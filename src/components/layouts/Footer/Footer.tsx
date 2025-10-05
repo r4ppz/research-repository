@@ -35,14 +35,14 @@ function Footer() {
 
           <div className={style.contactContainer}>
             <h3 className={style.contact}>Contact</h3>
-            <p>research@acd.edu.ph</p>
+            <a href="mailto:research@acd.edu.ph">research@acd.edu.ph</a>
             <p>+63 82 123 4567</p>
             <p>Davao City, Philippines</p>
           </div>
         </div>
       </div>
       <h4 className={style.copyrightNotice}>
-        © 2025 Assumption College of Davao. All rights reserved.
+        &copy; {new Date().getFullYear()} Assumption College of Davao. All rights reserved.
       </h4>
     </footer>
   );

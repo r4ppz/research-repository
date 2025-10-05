@@ -2,14 +2,37 @@ import style from "./Header.module.css";
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import User from "../../../types/User";
 import { NavLink } from "react-router-dom";
+import { Dispatch } from "react";
+import Button from "../../common/Button/Button";
 
 interface HeaderProps {
   user: User;
   isMenuOpen: boolean;
-  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsMenuOpen: Dispatch<React.SetStateAction<boolean>>;
+}
+
+function formatRole(role: string): string {
+  switch (role) {
+    case "STUDENT":
+      return "Student";
+    case "DEPARTMENT_ADMIN":
+      return "Admin";
+    case "SUPERADMIN":
+      return "Admin";
+    default:
+      return "Unknown specimen";
+  }
+}
+
+function navLinkClass({ isActive }: { isActive: boolean }) {
+  return `${style.navlink} ${isActive ? style.selected : ""}`;
 }
 
 function Header({ user, isMenuOpen, setIsMenuOpen }: HeaderProps) {
+  const role = formatRole(user.role);
+  const isAdmin = ["SUPERADMIN", "DEPARTMENT_ADMIN"].includes(user.role);
+  const firstName = user.name.split(" ")[0];
+
   return (
     <header className={style.header}>
       <div className={style.leftContainer}>
@@ -18,38 +41,38 @@ function Header({ user, isMenuOpen, setIsMenuOpen }: HeaderProps) {
         </div>
         <div className={style.titleContainer}>
           <h1 className={style.title}>ACD Research Repository</h1>
-          <p className={style.roleIndicator}>{user.role} portal</p>
+          <p className={style.roleIndicator}>{role} portal</p>
         </div>
       </div>
 
       <div className={style.rightContainer}>
         <nav className={style.desktopNavigation}>
-          <NavLink
-            className={({ isActive }) => `${style.navlink} ${isActive ? style.selected : ""}`}
-            to="#"
-          >
+          <NavLink className={navLinkClass} to="#">
             Request
           </NavLink>
-          <NavLink
-            className={({ isActive }) => `${style.navlink} ${isActive ? style.selected : ""}`}
-            to="#"
-          >
+          <NavLink className={navLinkClass} to="#">
             Library
           </NavLink>
+
+          {isAdmin && (
+            <NavLink className={navLinkClass} to={"#"}>
+              Research
+            </NavLink>
+          )}
         </nav>
 
         <div className={style.desktopButtonsWrapper}>
-          <button className={style.desktopProfileButton} type="button">
-            <UserIcon size={18} />
+          <Button variant="secondary" className={style.desktopProfileButton} type="button">
+            <UserIcon size={16} />
             <div className={style.desktopProfileContainer}>
-              <h3 className={style.userName}>{user.name}</h3>
-              <p className={style.userRole}>{user.role}</p>
+              <h3 className={style.userName}>{firstName}</h3>
+              <p className={style.userRole}>{role}</p>
             </div>
-          </button>
+          </Button>
 
-          <button type="button" className={style.dekstoplogoutButton}>
-            <LogOut size={18} />
-          </button>
+          <Button type="button" variant="secondary" className={style.dekstoplogoutButton}>
+            <LogOut size={16} />
+          </Button>
         </div>
 
         <button
@@ -65,29 +88,25 @@ function Header({ user, isMenuOpen, setIsMenuOpen }: HeaderProps) {
         {isMenuOpen && (
           <div className={style.dropDownMenu}>
             <nav className={style.mobileNavigation}>
-              <NavLink
-                className={({ isActive }) => `${style.navlink} ${isActive ? style.selected : ""}`}
-                to="#"
-              >
+              {isAdmin && (
+                <NavLink className={navLinkClass} to={"#"}>
+                  Research
+                </NavLink>
+              )}
+              <NavLink className={navLinkClass} to="#">
                 Request
               </NavLink>
-              <NavLink
-                className={({ isActive }) => `${style.navlink} ${isActive ? style.selected : ""}`}
-                to="#"
-              >
+              <NavLink className={navLinkClass} to="#">
                 Library
               </NavLink>
-              <NavLink
-                className={({ isActive }) => `${style.navlink} ${isActive ? style.selected : ""}`}
-                to="#"
-              >
+              <NavLink className={navLinkClass} to="#">
                 Logout
               </NavLink>
             </nav>
             <button className={style.mobileProfileButton} type="button">
               <UserIcon size={18} />
-              <h3 className={style.userName}>{user.name}</h3>
-              <p className={style.userRole}>{user.role}</p>
+              <h3 className={style.userName}>{firstName}</h3>
+              <p className={style.userRole}>{role}</p>
             </button>
           </div>
         )}

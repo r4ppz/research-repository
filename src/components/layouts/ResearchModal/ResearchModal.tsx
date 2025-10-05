@@ -3,6 +3,12 @@ import Button from "../../common/Button/Button";
 import style from "./ResearchModal.module.css";
 
 function ResearchModal({ pdf, onClose }: { pdf: Pdf; onClose: () => void }) {
+  const formattedDate = new Date(pdf.date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <div className={style.overlay} onClick={onClose}>
       <div
@@ -15,7 +21,7 @@ function ResearchModal({ pdf, onClose }: { pdf: Pdf; onClose: () => void }) {
           <h1 className={style.title}>{pdf.title}</h1>
           <div className={style.authordateWrapper}>
             <p className={style.author}>{pdf.author}</p>
-            <p className={style.date}>{pdf.date}</p>
+            <p className={style.date}>{formattedDate}</p>
           </div>
         </div>
         <div className={style.departmentContainer}>
