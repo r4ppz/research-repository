@@ -35,82 +35,84 @@ function Header({ user, isMenuOpen, setIsMenuOpen }: HeaderProps) {
 
   return (
     <header className={style.header}>
-      <div className={style.leftContainer}>
-        <div className={style.logoContainer}>
-          <img className={style.schoolLogo} src="/assets/school-logo.svg" alt="school-logo" />
-        </div>
-        <div className={style.titleContainer}>
-          <h1 className={style.title}>ACD Research Repository</h1>
-          <p className={style.roleIndicator}>{role} portal</p>
-        </div>
-      </div>
-
-      <div className={style.rightContainer}>
-        <nav className={style.desktopNavigation}>
-          <NavLink className={navLinkClass} to="#">
-            Request
-          </NavLink>
-          <NavLink className={navLinkClass} to="#">
-            Library
-          </NavLink>
-
-          {isAdmin && (
-            <NavLink className={navLinkClass} to={"#"}>
-              Research
-            </NavLink>
-          )}
-        </nav>
-
-        <div className={style.desktopButtonsWrapper}>
-          <Button variant="secondary" className={style.desktopProfileButton} type="button">
-            <UserIcon size={16} />
-            <div className={style.desktopProfileContainer}>
-              <h3 className={style.userName}>{firstName}</h3>
-              <p className={style.userRole}>{role}</p>
-            </div>
-          </Button>
-
-          <Button type="button" variant="secondary" className={style.dekstoplogoutButton}>
-            <LogOut size={16} />
-          </Button>
-        </div>
-
-        <button
-          className={style.menuButton}
-          type="button"
-          onClick={() => {
-            setIsMenuOpen((open: boolean) => !open);
-          }}
-        >
-          <Menu size={18} />
-        </button>
-
-        {isMenuOpen && (
-          <div className={style.dropDownMenu}>
-            <nav className={style.mobileNavigation}>
-              {isAdmin && (
-                <NavLink className={navLinkClass} to={"#"}>
-                  Research
-                </NavLink>
-              )}
-              <NavLink className={navLinkClass} to="#">
-                Request
-              </NavLink>
-              <NavLink className={navLinkClass} to="#">
-                Library
-              </NavLink>
-              <NavLink className={navLinkClass} to="#">
-                Logout
-              </NavLink>
-            </nav>
-            <button className={style.mobileProfileButton} type="button">
-              <UserIcon size={18} />
-              <h3 className={style.userName}>{firstName}</h3>
-              <p className={style.userRole}>{role}</p>
-            </button>
+      <div className={style.headerWrapper}>
+        <div className={style.leftWrapper}>
+          <div className={style.logoContainer}>
+            <img className={style.schoolLogo} src="/assets/school-logo.svg" alt="school-logo" />
           </div>
-        )}
+          <div className={style.titleContainer}>
+            <h1 className={style.title}>ACD Research Repository</h1>
+            <p className={style.roleIndicator}>{role} portal</p>
+          </div>
+        </div>
+
+        <div className={style.rightWrapper}>
+          <nav className={style.desktopNavigation}>
+            <NavLink className={navLinkClass} to="#">
+              Request
+            </NavLink>
+            <NavLink className={navLinkClass} to="#">
+              Library
+            </NavLink>
+
+            {isAdmin && (
+              <NavLink className={navLinkClass} to={"#"}>
+                Research
+              </NavLink>
+            )}
+          </nav>
+
+          <div className={style.desktopButtonsWrapper}>
+            <Button variant="secondary" className={style.desktopProfileButton} type="button">
+              <UserIcon size={16} />
+              <div className={style.desktopProfileContainer}>
+                <h3 className={style.userName}>{firstName}</h3>
+                <p className={style.userRole}>{role}</p>
+              </div>
+            </Button>
+
+            <Button type="button" variant="secondary" className={style.dekstoplogoutButton}>
+              <LogOut size={16} />
+            </Button>
+          </div>
+
+          <button
+            className={style.menuButton}
+            type="button"
+            onClick={() => {
+              setIsMenuOpen((open: boolean) => !open);
+            }}
+          >
+            <Menu size={18} />
+          </button>
+        </div>
       </div>
+
+      {isMenuOpen && (
+        <div className={style.dropDownMenu}>
+          <nav className={style.mobileNavigation}>
+            {isAdmin && (
+              <NavLink className={navLinkClass} to={"#"}>
+                Research
+              </NavLink>
+            )}
+            <NavLink className={navLinkClass} to="#">
+              Request
+            </NavLink>
+            <NavLink className={navLinkClass} to="#">
+              Library
+            </NavLink>
+            <NavLink className={navLinkClass} to="#">
+              Logout
+            </NavLink>
+          </nav>
+          <button className={style.mobileProfileButton} type="button">
+            <UserIcon size={18} />
+            <h3 className={style.userName}>{firstName}</h3>
+            <p className={style.userRole}>{role}</p>
+          </button>
+        </div>
+      )}
     </header>
   );
 }
