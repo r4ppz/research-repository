@@ -15,12 +15,12 @@ export default defineConfig([
     files: ["**/*.{ts,tsx}"],
     extends: [
       js.configs.recommended,
+      reactRefresh.configs.vite,
       tseslint.configs.strictTypeChecked,
       tseslint.configs.stylisticTypeChecked,
-      reactHooks.configs["recommended-latest"],
-      reactRefresh.configs.vite,
-      reactX.configs["recommended-typescript"],
       reactDom.configs.recommended,
+      reactX.configs["recommended-typescript"],
+      reactHooks.configs["recommended-latest"],
       prettier,
     ],
     plugins: {
