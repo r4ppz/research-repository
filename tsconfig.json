@@ -1,27 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "jsx": "react-jsx",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "composite": false,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "exactOptionalPropertyTypes": true,
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
-    "noEmit": true,
-    "types": [
-      "vite/client"
-    ],
     "baseUrl": ".",
     "paths": {
       "@/*": [
@@ -30,7 +11,8 @@
     }
   },
   "include": [
-    "src"
+    "src",
+    "vite.config.ts"
   ],
   "exclude": [
     "node_modules",
