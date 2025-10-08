@@ -113,9 +113,9 @@
   flex-direction: column;
 }
 
-links {
+.linkText {
   font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
 }
 
 .contactContainer {
@@ -123,9 +123,9 @@ links {
   flex-direction: column;
 }
 
-.contact {
+.contactText {
   font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
 }
 
 .copyrightNotice {

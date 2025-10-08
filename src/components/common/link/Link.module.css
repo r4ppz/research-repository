@@ -1,0 +1,19 @@
+.link {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-secondary);
+  transition: var(--transition-elevation);
+  box-shadow: var(--shadow-resting);
+}
+
+.link:hover {
+  color: var(--color-secondary-hover);
+  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+  box-shadow: var(--shadow-hover);
+}
+
+.link:active {
+  color: var(--color-secondary-active);
+  transform: translateY(var(--translate-active)) scale(var(--scale-active));
+  box-shadow: var(--shadow-active);
+}

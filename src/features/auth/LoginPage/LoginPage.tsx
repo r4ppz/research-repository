@@ -1,44 +1,8 @@
-import { useEffect } from "react";
 import style from "./LoginPage.module.css";
-import {
-  initializeGoogleSignIn,
-  renderGoogleSignInButton,
-  type AuthResponse,
-} from "../api/googleAuth";
 import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Initialize Google Sign-In when component mounts
-    const handleSignIn = (response: AuthResponse) => {
-      if (response.success && response.user) {
-        console.log("Sign-in successful:", response.user);
-        console.log("Backend message:", response.backendMessage);
-
-        // Store user data (you might want to use a state management solution)
-        localStorage.setItem("user", JSON.stringify(response.user));
-
-        // Show backend response message
-        if (response.backendMessage) {
-          alert(`${response.backendMessage}\nWelcome, ${response.user.name}!`);
-        } else {
-          alert(`Welcome, ${response.user.name}!`);
-        }
-
-        // TODO: Redirect to dashboard or home page based on user role
-        // Example: navigate('/dashboard');
-      } else {
-        console.error("Sign-in failed:", response.error);
-        alert(response.error ?? "Sign-in failed. Please try again.");
-      }
-    };
-
-    // Initialize Google Sign-In
-    initializeGoogleSignIn(handleSignIn);
-    renderGoogleSignInButton("gsi-button");
-  }, []);
 
   return (
     <div className={style.page}>

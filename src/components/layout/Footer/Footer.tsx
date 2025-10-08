@@ -1,3 +1,4 @@
+import Link from "@/components/common/link/Link";
 import style from "./Footer.module.css";
 
 function Footer() {
@@ -27,17 +28,23 @@ function Footer() {
 
         <div className={style.linkcontactContainer}>
           <div className={style.linksContainer}>
-            <h3 className={style.links}>Links</h3>
-            <a href="https://www.facebook.com/assumptiondavao.edu.ph">Facebook</a>
-            <a href="https://github.com/r4ppz19/research-repository">Github</a>
-            <a href="#">About</a>
+            <h3 className={style.linkText}>Links</h3>
+            <Link href="https://www.facebook.com/assumptiondavao.edu.ph">Facebook</Link>
+            <Link href="https://github.com/r4ppz19/research-repository">Github</Link>
+            <Link href="#">About</Link>
           </div>
 
           <div className={style.contactContainer}>
-            <h3 className={style.contact}>Contact</h3>
-            <a href="mailto:research@acd.edu.ph">research@acd.edu.ph</a>
-            <p>+63 82 123 4567</p>
-            <p>Davao City, Philippines</p>
+            <h3 className={style.contactText}>Contact</h3>
+            <Link href="mailto:research@acd.edu.ph">research@acd.edu.ph</Link>
+            <Link href={""}>+63 82 123 4567</Link>
+            <Link
+              href={
+                "https://www.google.com/maps/place/Assumption+College+of+Davao/@7.087841,125.6213166,17z/data=!3m1!4b1!4m6!3m5!1s0x32f9115554d3f877:0x88ff74ef25a00438!8m2!3d7.087841!4d125.6238969!16s%2Fm%2F04657vd?entry=ttu&g_ep=EgoyMDI1MTAwNC4wIKXMDSoASAFQAw%3D%3D"
+              }
+            >
+              Davao City, Philippines
+            </Link>
           </div>
         </div>
       </div>

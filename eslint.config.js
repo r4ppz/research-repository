@@ -12,6 +12,14 @@ import { defineConfig, globalIgnores } from "eslint/config";
 export default defineConfig([
   globalIgnores(["dist"]),
   {
+    settings: {
+      "import/resolver": {
+        alias: {
+          map: [["@", "./src"]],
+          extensions: [".ts", ".tsx", ".js", ".jsx"],
+        },
+      },
+    },
     files: ["**/*.{ts,tsx}"],
     extends: [
       js.configs.recommended,
@@ -25,6 +33,7 @@ export default defineConfig([
     ],
     plugins: {
       prettier: prettierPlugin,
+      import: require("eslint-plugin-import"),
     },
     rules: {
       "prettier/prettier": "error",

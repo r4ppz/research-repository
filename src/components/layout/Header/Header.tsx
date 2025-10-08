@@ -1,9 +1,9 @@
 import style from "./Header.module.css";
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
-import User from "../../../types/User";
 import { NavLink } from "react-router-dom";
 import { Dispatch } from "react";
-import Button from "../../common/Button/Button";
+import Button from "@/components/common/Button/Button";
+import { User } from "@/types";
 
 interface HeaderProps {
   user: User;
@@ -30,8 +30,8 @@ function navLinkClass({ isActive }: { isActive: boolean }) {
 
 function Header({ user, isMenuOpen, setIsMenuOpen }: HeaderProps) {
   const role = formatRole(user.role);
-  const isAdmin = ["SUPERADMIN", "DEPARTMENT_ADMIN"].includes(user.role);
-  const firstName = user.name.split(" ")[0];
+  const isAdmin = ["SUPER_ADMIN", "DEPARTMENT_ADMIN"].includes(user.role);
+  const firstName = user.fullName.split(" ")[0];
 
   return (
     <header className={style.header}>

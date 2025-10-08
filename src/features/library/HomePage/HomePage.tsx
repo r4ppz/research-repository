@@ -1,21 +1,20 @@
-import { userOne } from "../../../dummy/user";
-import { researches } from "../../../dummy/pdf";
-import { useEffect, useState } from "react";
 import style from "./HomePage.module.css";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, ListFilter, Search } from "lucide-react";
-import Input from "../../../components/common/Input/Input";
-import Header from "../../../components/layouts/Header/Header";
-import Button from "../../../components/common/Button/Button";
-import ResearchCard from "../../../components/layouts/ResearchCard/ResearchCard";
-import Footer from "../../../components/layouts/Footer/Footer";
-import ResearchModal from "../../../components/layouts/ResearchModal/ResearchModal";
-import Pdf from "../../../types/Pdf";
+import Input from "@/components/common/Input/Input";
+import Header from "@/components/layout/Header/Header";
+import Button from "@/components/common/Button/Button";
+import ResearchCard from "@/features/library/components/ResearchCard/ResearchCard";
+import Footer from "@/components/layout/Footer/Footer";
+import ResearchModal from "@/features/library/components/ResearchModal/ResearchModal";
+import { ResearchPaper } from "@/types";
+import { MOCK_PAPERS, MOCK_STUDENT } from "@/mocks/mockData";
 
 function HomePage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [itemsPerPage, setItemsPerPage] = useState<number>(12);
-  const [selectedResearch, setSelectedResearch] = useState<Pdf | null>(null);
+  const [selectedResearch, setSelectedResearch] = useState<ResearchPaper | null>(null);
 
   useEffect(() => {
     if (selectedResearch) {
@@ -47,9 +46,9 @@ function HomePage() {
     };
   }, []);
 
-  const totalPages = Math.ceil(researches.length / itemsPerPage);
+  const totalPages = Math.ceil(MOCK_PAPERS.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentResearch = researches.slice(startIndex, startIndex + itemsPerPage);
+  const currentResearch = MOCK_PAPERS.slice(startIndex, startIndex + itemsPerPage);
 
   const handleCloseModal = () => {
     setSelectedResearch(null);
@@ -65,7 +64,7 @@ function HomePage() {
 
   return (
     <div className={style.page}>
-      <Header user={userOne} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+      <Header user={MOCK_STUDENT} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
       <main className={`${style.main} ${isMenuOpen ? style.mainShift : ""}`}>
         <section className={style.heroSection}>
           <h1 className={style.heroHeader}>Discover Academic Research</h1>
@@ -102,13 +101,15 @@ function HomePage() {
           {currentResearch.map((research) => (
             <ResearchCard
               key={research.paperId}
-              pdf={research}
+              researchPaper={research}
               onView={() => {
                 setSelectedResearch(research);
               }}
             />
           ))}
-          {selectedResearch && <ResearchModal pdf={selectedResearch} onClose={handleCloseModal} />}
+          {selectedResearch && (
+            <ResearchModal researchPaper={selectedResearch} onClose={handleCloseModal} />
+          )}
         </section>
 
         <section className={style.paginationSection}>
