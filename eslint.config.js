@@ -14,12 +14,12 @@ import { defineConfig, globalIgnores } from "eslint/config";
 export default defineConfig([
   globalIgnores(["dist", "build", "coverage"]),
   {
-    files: ["**/*.{ts,tsx}"],
+    files: ["src/**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
       parserOptions: {
-        project: ["./tsconfig.app.json", "./tsconfig.node.json"],
+        project: ["./tsconfig.app.json"],
         tsconfigRootDir: import.meta.dirname,
       },
       globals: globals.browser,
@@ -51,10 +51,7 @@ export default defineConfig([
       "css-modules": cssModules,
     },
     rules: {
-      // Prettier
       "prettier/prettier": ["error", { endOfLine: "auto" }],
-
-      // TypeScript strictness
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
@@ -63,15 +60,11 @@ export default defineConfig([
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/array-type": ["error", { default: "generic" }],
       "@typescript-eslint/no-non-null-assertion": "error",
-
-      // React
       "react-x/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
       "react-x/jsx-no-literals": ["warn", { noStrings: true, allowedStrings: [] }],
       "react-x/no-namespace": "error",
       "react-x/no-danger": "error",
       "react-hooks/exhaustive-deps": "error",
-
-      // Import order & hygiene
       "import/no-unresolved": "error",
       "import/order": [
         "error",
@@ -85,8 +78,6 @@ export default defineConfig([
       ],
       "import/newline-after-import": "error",
       "import/no-duplicates": "error",
-
-      // CSS Modules
       "css-modules/no-unused-class": "warn",
       "css-modules/no-undef-class": "error",
     },

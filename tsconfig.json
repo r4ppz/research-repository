@@ -1,14 +1,36 @@
 {
   "compilerOptions": {
-    "composite": false,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    /* Alias */
     "baseUrl": ".",
     "paths": {
       "@/*": [
         "src/*"
       ]
-    }
+    },
+    /* Strictness */
+    "strict": true,
+    "exactOptionalPropertyTypes": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "forceConsistentCasingInFileNames": true,
+    /* JSX */
+    "jsx": "react-jsx",
+    /* Libs */
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ]
   },
   "include": [
     "src",
