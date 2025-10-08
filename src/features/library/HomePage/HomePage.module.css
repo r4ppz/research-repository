@@ -57,13 +57,6 @@
   }
 }
 
-.searchBar {
-}
-@media (min-width: 768px) {
-  .searchBar {
-  }
-}
-
 .filterButtonsContainer {
   display: flex;
   flex-direction: row;

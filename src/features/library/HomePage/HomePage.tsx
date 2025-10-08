@@ -7,7 +7,7 @@ import Button from "@/components/common/Button/Button";
 import ResearchCard from "@/features/library/components/ResearchCard/ResearchCard";
 import Footer from "@/components/layout/Footer/Footer";
 import ResearchModal from "@/features/library/components/ResearchModal/ResearchModal";
-import { ResearchPaper } from "@/types";
+import type { ResearchPaper } from "@/types";
 import { MOCK_PAPERS, MOCK_STUDENT } from "@/mocks/mockData";
 
 function HomePage() {
@@ -82,7 +82,7 @@ function HomePage() {
         </section>
 
         <section className={style.searchSection}>
-          <Input className={style.searchBar} type="search" icon={Search} />
+          <Input type="search" icon={Search} placeholder="Search paper title" />
 
           <div className={style.filterButtonsContainer}>
             <Button className={style.filterButton}>

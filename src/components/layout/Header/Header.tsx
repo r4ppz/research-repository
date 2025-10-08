@@ -1,9 +1,9 @@
 import style from "./Header.module.css";
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { Dispatch } from "react";
+import type { Dispatch } from "react";
 import Button from "@/components/common/Button/Button";
-import { User } from "@/types";
+import type { User } from "@/types";
 
 interface HeaderProps {
   user: User;

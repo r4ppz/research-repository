@@ -1,12 +1,6 @@
 import type { Department, User } from "./user";
 
-export interface Page<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  number: number;
-  size: number;
-}
+export type RequestStatus = "PENDING" | "ACCEPTED" | "REJECTED";
 
 export interface ResearchPaper {
   paperId: number;
@@ -14,13 +8,11 @@ export interface ResearchPaper {
   authorName: string;
   abstractText: string;
   department: Department;
-  submissionDate: string;
-  fileUrl: string;
+  submissionDate: string; // YYYY-MM-DD
+  fileUrl: string; // API path (gated), e.g. /api/files/uuid.pdf
   archived: boolean;
-  archivedAt?: string | null;
+  archivedAt?: string | null; // ISO datetime when archived (optional)
 }
-
-type RequestStatus = "PENDING" | "ACCEPTED" | "REJECTED";
 
 export interface DocumentRequest {
   requestId: number;

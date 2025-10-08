@@ -1,4 +1,4 @@
-import { ResearchPaper } from "@/types";
+import type { ResearchPaper } from "@/types";
 import Button from "@/components/common/Button/Button";
 import style from "./ResearchModal.module.css";
 
@@ -38,7 +38,7 @@ function ResearchModal({ researchPaper: researchPaper, onClose }: ResearchModalP
           <h3 className={style.abtractHeader}>Abstract</h3>
           <p className={style.abstractText}>{researchPaper.abstractText}</p>
         </div>
-        <Button onClick={onClose}>Request Document</Button>
+        <Button>Request Document</Button>
       </div>
     </div>
   );
