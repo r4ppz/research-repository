@@ -5,7 +5,7 @@
     "lib": [
       "ES2023"
     ],
-    "jsx": "preserve" // keep harmless if anything imports JSX accidentally
+    "jsx": "preserve"
   },
   "include": [
     "vite.config.ts"
