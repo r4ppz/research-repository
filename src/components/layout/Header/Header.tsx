@@ -1,12 +1,11 @@
-import clsx from "clsx";
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "@/components/common/Button/Button";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { type Role } from "@/types";
-import style from "./Header.module.css";
 import CustomNavLink from "../CustomNavLink/CustomNavLink";
+import style from "./Header.module.css";
 
 const ROLE_LABEL: Record<Role, string> = {
   STUDENT: "Student",
@@ -25,10 +24,7 @@ const RESEARCH_PATH: Partial<Record<Role, string>> = {
   SUPER_ADMIN: "/super-admin/research",
 };
 
-const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  clsx(style.navlink, isActive && style.selected);
-
-export default function Header() {
+function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -50,9 +46,13 @@ export default function Header() {
     <header className={style.header}>
       <div className={style.headerWrapper}>
         <div className={style.leftWrapper}>
-          <div className={style.logoContainer}>
+          <Button
+            variant="secondary"
+            className={style.logoContainerButton}
+            onClick={() => navigate("/")}
+          >
             <img className={style.schoolLogo} src="/assets/school-logo.svg" alt="school-logo" />
-          </div>
+          </Button>
           <div className={style.titleContainer}>
             <h1 className={style.title}>ACD Research Repository</h1>
             <p className={style.roleIndicator}>{roleLabel} portal</p>
@@ -98,29 +98,23 @@ export default function Header() {
       {isMenuOpen && (
         <div className={style.dropDownMenu}>
           <nav className={style.mobileNavigation}>
-            <NavLink className={navLinkClass} to="/">
-              Library
-            </NavLink>
-            <NavLink className={navLinkClass} to={requestPath}>
-              Request
-            </NavLink>
-            {researchPath && (
-              <NavLink className={navLinkClass} to={researchPath}>
-                Research
-              </NavLink>
-            )}
-            <button className={style.mobileLogoutButton} type="button" onClick={handleLogout}>
+            <CustomNavLink to="/">Library</CustomNavLink>
+            <CustomNavLink to={requestPath}>Request</CustomNavLink>
+            {researchPath && <CustomNavLink to={researchPath}>Research</CustomNavLink>}
+            <Button variant="secondary" onClick={handleLogout}>
               Logout
-            </button>
+            </Button>
           </nav>
 
-          <button className={style.mobileProfileButton} type="button">
+          <Button variant="secondary">
             <UserIcon size={18} />
             <h3 className={style.userName}>{firstName}</h3>
             <p className={style.userRole}>{roleLabel}</p>
-          </button>
+          </Button>
         </div>
       )}
     </header>
   );
 }
+
+export default Header;

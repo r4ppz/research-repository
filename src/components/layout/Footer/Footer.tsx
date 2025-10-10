@@ -1,14 +1,25 @@
+import { useNavigate } from "react-router-dom";
+import Button from "@/components/common/Button/Button";
 import Link from "@/components/common/link/Link";
 import style from "./Footer.module.css";
 
 function Footer() {
+  const navigate = useNavigate();
+
   return (
     <footer className={style.footer}>
       <div className={style.mainContainer}>
         <div className={style.titlelogoContainer}>
-          <div className={style.logoContainer}>
+          <Button
+            variant="secondary"
+            className={style.logoContainerButton}
+            onClick={() => {
+              navigate("/");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
             <img className={style.schoolLogo} src="/assets/school-logo.svg" alt="school-logo" />
-          </div>
+          </Button>
 
           <div className={style.titleContainer}>
             <h1 className={style.title}>ACD Research Repository</h1>

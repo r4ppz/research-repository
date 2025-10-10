@@ -1,3 +1,7 @@
+svg {
+  flex-shrink: 0;
+}
+
 .footer {
   display: flex;
   flex-direction: column;
@@ -32,7 +36,7 @@
   gap: var(--space-lg);
 }
 
-.logoContainer {
+.logoContainerButton {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,11 +44,7 @@
   padding: var(--space-md);
   border-radius: var(--radius-lg);
   min-width: var(--size-logo-sm);
-}
-@media (min-width: 768px) {
-  .logoContainer {
-    min-width: var(--size-logo-2xl);
-  }
+  width: auto;
 }
 
 .schoolLogo {
@@ -54,7 +54,7 @@
 }
 @media (min-width: 768px) {
   .schoolLogo {
-    width: var(--size-logo-md);
+    width: var(--size-logo-lg);
   }
 }
 

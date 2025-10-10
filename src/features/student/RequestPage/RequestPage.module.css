@@ -5,11 +5,94 @@
   width: 100vw;
 }
 
-.tempSection {
+.main {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
+  min-height: 90vh;
+  padding: var(--space-lg) var(--space-3xl);
+}
+
+.tableSection {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  overflow-x: auto;
+}
+
+.requestsTable {
+  width: 100%;
+  background-color: var(--color-surface);
+  transition: var(--transition-elevation);
+  box-shadow: var(--shadow-resting);
+}
+
+.requestsTable:hover {
+  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+  box-shadow: var(--shadow-hover);
+}
+
+.requestsTable th,
+.requestsTable td {
+  padding: var(--space-md);
+  text-align: left;
+  border: 1px solid var(--color-border-default);
+  font-size: var(--font-size-sm);
+}
+
+.requestsTable th {
+  background-color: var(--color-gray-100);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.requestsTable tbody tr:hover {
+  background-color: var(--color-gray-50);
+}
+
+.statusCell {
+  font-weight: var(--font-weight-medium);
+}
+
+.statusCell[data-status="PENDING"] {
+  color: var(--color-warning);
+}
+
+.statusCell[data-status="ACCEPTED"] {
+  color: var(--color-success);
+}
+
+.statusCell[data-status="REJECTED"] {
+  color: var(--color-error);
+}
+
+.actionCell {
+  text-align: center;
+}
+
+.titleHeader {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin-bottom: var(--space-lg);
+}
+
+.downloadButton {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
+}
+
+@media (max-width: 768px) {
+  .requestsTable th,
+  .requestsTable td {
+    padding: var(--space-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  .titleHeader {
+    font-size: var(--font-size-lg);
+  }
 }
