@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2023",
+    "target": "ES2024",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -17,18 +17,23 @@
     },
     /* Strictness */
     "strict": true,
-    "exactOptionalPropertyTypes": false,
+    "exactOptionalPropertyTypes": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noUncheckedIndexedAccess": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
     /* JSX */
     "jsx": "react-jsx",
+    "jsxImportSource": "react",
     /* Libs */
     "lib": [
-      "ES2023",
+      "ES2024",
       "DOM",
       "DOM.Iterable"
     ]

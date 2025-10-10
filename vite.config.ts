@@ -15,4 +15,11 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
+  build: {
+    target: "es2022",
+    sourcemap: true,
+  },
+  esbuild: {
+    target: "es2022",
+  },
 });
