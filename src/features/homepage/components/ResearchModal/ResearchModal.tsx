@@ -1,6 +1,5 @@
 import Button from "@/components/common/Button/Button";
 import { type ResearchPaper } from "@/types";
-
 import style from "./ResearchModal.module.css";
 
 interface ResearchModalProps {

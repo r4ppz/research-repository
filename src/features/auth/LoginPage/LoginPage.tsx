@@ -1,9 +1,18 @@
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
+import Button from "@/components/common/Button/Button";
+import { useAuth } from "@/features/auth/context/useAuth";
+import { MOCK_DEPT_ADMIN, MOCK_STUDENT, MOCK_SUPER_ADMIN } from "@/mocks/mockData";
 import style from "./LoginPage.module.css";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated, login } = useAuth();
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? "/";
+
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className={style.page}>
@@ -22,14 +31,34 @@ function LoginPage() {
         <div className={style.googleButtonContainer}>
           <div id="gsi-button" />
 
-          <button
+          <Button
             type="button"
             onClick={() => {
-              void navigate("/homepage");
+              login(MOCK_SUPER_ADMIN);
+              void navigate(from, { replace: true });
             }}
           >
-            Navigate to home (test)
-          </button>
+            Sign in as SUPER_ADMIN
+          </Button>
+          <Button
+            type="button"
+            onClick={() => {
+              login(MOCK_DEPT_ADMIN);
+              void navigate(from, { replace: true });
+            }}
+          >
+            Sign in as DEPARTMENT_ADMIN
+          </Button>
+          <Button
+            className={style.tempButton}
+            type="button"
+            onClick={() => {
+              login(MOCK_STUDENT);
+              void navigate(from, { replace: true });
+            }}
+          >
+            Sign in as STUDENT
+          </Button>
         </div>
         <p className={style.textNotice}>Single Sign-On via Google Workspace for Education</p>
       </div>

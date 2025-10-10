@@ -1,4 +1,4 @@
-type Role = "STUDENT" | "DEPARTMENT_ADMIN" | "SUPER_ADMIN";
+export type Role = "STUDENT" | "DEPARTMENT_ADMIN" | "SUPER_ADMIN";
 
 export interface Department {
   departmentId: number;

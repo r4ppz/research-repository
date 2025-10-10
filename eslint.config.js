@@ -2,7 +2,8 @@ import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
-import tseslint from "typescript-eslint";
+import tsPlugin from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
 import importPlugin from "eslint-plugin-import";
 import prettierPlugin from "eslint-plugin-prettier";
 
@@ -14,24 +15,19 @@ export default [
   js.configs.recommended,
 
   {
+    files: ["**/*.{ts,tsx}"],
     languageOptions: {
-      parser: tseslint.parser,
+      parser: tsParser,
       parserOptions: {
         project: "./tsconfig.json",
         tsconfigRootDir: import.meta.dirname,
+        ecmaVersion: 2024,
+        sourceType: "module",
       },
-      ecmaVersion: 2024,
-      sourceType: "module",
       globals: globals.browser,
     },
-  },
-
-  {
-    files: ["**/*.{ts,tsx}"],
-    ...tseslint.configs.strictTypeChecked[0],
-    ...tseslint.configs.stylisticTypeChecked[0],
     plugins: {
-      "@typescript-eslint": tseslint.plugin,
+      "@typescript-eslint": tsPlugin,
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
       import: importPlugin,
@@ -53,8 +49,9 @@ export default [
       },
     },
     rules: {
+      ...(tsPlugin.configs?.recommended?.rules ?? {}),
+      ...(reactHooks.configs?.recommended?.rules ?? {}),
       "prettier/prettier": ["error", { endOfLine: "auto" }],
-      ...reactHooks.configs.recommended.rules,
       "react-hooks/exhaustive-deps": "error",
       "react-refresh/only-export-components": [
         "warn",
@@ -72,7 +69,7 @@ export default [
           groups: ["builtin", "external", "internal", "parent", "sibling", "index", "type"],
           pathGroups: [{ pattern: "@/**", group: "internal" }],
           pathGroupsExcludedImportTypes: ["builtin"],
-          "newlines-between": "always",
+          "newlines-between": "never",
           alphabetize: { order: "asc", caseInsensitive: true },
         },
       ],

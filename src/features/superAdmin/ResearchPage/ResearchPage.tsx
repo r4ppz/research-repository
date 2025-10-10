@@ -5,7 +5,7 @@ function RequestPage() {
   return (
     <div>
       <Header></Header>
-      This is a request page for SUPERADMIN
+      This is a research page for SUPERADMIN
       <Footer></Footer>
     </div>
   );

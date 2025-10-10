@@ -1,17 +1,9 @@
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
-import { type Dispatch, type SetStateAction } from "react";
-import { NavLink } from "react-router-dom";
-
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import Button from "@/components/common/Button/Button";
-import { type User } from "@/types";
-
+import { useAuth } from "@/features/auth/context/useAuth";
 import style from "./Header.module.css";
-
-interface HeaderProps {
-  user: User;
-  isMenuOpen: boolean;
-  setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
-}
 
 function formatRole(role: string): string {
   switch (role) {
@@ -19,7 +11,7 @@ function formatRole(role: string): string {
       return "Student";
     case "DEPARTMENT_ADMIN":
       return "Admin";
-    case "SUPERADMIN":
+    case "SUPER_ADMIN":
       return "Admin";
     default:
       return "Unknown specimen";
@@ -30,10 +22,34 @@ function navLinkClass({ isActive }: { isActive: boolean }) {
   return `${style.navlink} ${isActive ? style.selected : ""}`;
 }
 
-function Header({ user, isMenuOpen, setIsMenuOpen }: HeaderProps) {
+function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  if (!user) {
+    return null;
+  }
+
   const role = formatRole(user.role);
   const isAdmin = ["SUPER_ADMIN", "DEPARTMENT_ADMIN"].includes(user.role);
   const firstName = user.fullName.split(" ")[0];
+
+  // Dynamic paths based on role (per spec)
+  const requestPath =
+    user.role === "STUDENT"
+      ? "/student/requests"
+      : user.role === "DEPARTMENT_ADMIN"
+        ? "/department-admin/requests"
+        : "/super-admin/requests";
+  const researchPath =
+    user.role === "DEPARTMENT_ADMIN" ? "/department-admin/research" : "/super-admin/research";
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <header className={style.header}>
@@ -50,15 +66,15 @@ function Header({ user, isMenuOpen, setIsMenuOpen }: HeaderProps) {
 
         <div className={style.rightWrapper}>
           <nav className={style.desktopNavigation}>
-            <NavLink className={navLinkClass} to="#">
+            <NavLink className={navLinkClass} to={requestPath}>
               Request
             </NavLink>
-            <NavLink className={navLinkClass} to="#">
+            <NavLink className={navLinkClass} to="/">
               Library
             </NavLink>
 
             {isAdmin && (
-              <NavLink className={navLinkClass} to={"#"}>
+              <NavLink className={navLinkClass} to={researchPath}>
                 Research
               </NavLink>
             )}
@@ -73,7 +89,12 @@ function Header({ user, isMenuOpen, setIsMenuOpen }: HeaderProps) {
               </div>
             </Button>
 
-            <Button type="button" variant="secondary" className={style.dekstoplogoutButton}>
+            <Button
+              type="button"
+              variant="secondary"
+              className={style.dekstoplogoutButton}
+              onClick={handleLogout}
+            >
               <LogOut size={16} />
             </Button>
           </div>
@@ -94,19 +115,19 @@ function Header({ user, isMenuOpen, setIsMenuOpen }: HeaderProps) {
         <div className={style.dropDownMenu}>
           <nav className={style.mobileNavigation}>
             {isAdmin && (
-              <NavLink className={navLinkClass} to={"#"}>
+              <NavLink className={navLinkClass} to={researchPath}>
                 Research
               </NavLink>
             )}
-            <NavLink className={navLinkClass} to="#">
+            <NavLink className={navLinkClass} to={requestPath}>
               Request
             </NavLink>
-            <NavLink className={navLinkClass} to="#">
+            <NavLink className={navLinkClass} to="/">
               Library
             </NavLink>
-            <NavLink className={navLinkClass} to="#">
+            <button className={style.mobileLogoutButton} type="button" onClick={handleLogout}>
               Logout
-            </NavLink>
+            </button>
           </nav>
           <button className={style.mobileProfileButton} type="button">
             <UserIcon size={18} />

@@ -1,20 +1,17 @@
 import { ChevronLeft, ChevronRight, ListFilter, Search } from "lucide-react";
 import { useEffect, useState } from "react";
-
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
-import ResearchCard from "@/features/library/components/ResearchCard/ResearchCard";
-import ResearchModal from "@/features/library/components/ResearchModal/ResearchModal";
-import { MOCK_PAPERS, MOCK_STUDENT } from "@/mocks/mockData";
+import ResearchCard from "@/features/homepage/components/ResearchCard/ResearchCard";
+import ResearchModal from "@/features/homepage/components/ResearchModal/ResearchModal";
+import { MOCK_PAPERS } from "@/mocks/mockData";
 import { type ResearchPaper } from "@/types";
-
-import style from "./HomePage.module.css";
+import style from "./LibraryPage.module.css";
 
 function HomePage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [itemsPerPage, setItemsPerPage] = useState<number>(12);
   const [selectedResearch, setSelectedResearch] = useState<ResearchPaper | null>(null);
 
@@ -66,8 +63,8 @@ function HomePage() {
 
   return (
     <div className={style.page}>
-      <Header user={MOCK_STUDENT} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
-      <main className={`${style.main} ${isMenuOpen ? style.mainShift : ""}`}>
+      <Header />
+      <main className={style.main}>
         <section className={style.heroSection}>
           <h1 className={style.heroHeader}>Discover Academic Research</h1>
 

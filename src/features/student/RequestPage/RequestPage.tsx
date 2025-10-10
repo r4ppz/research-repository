@@ -1,10 +1,11 @@
 import Footer from "@/components/layout/Footer/Footer";
-
-import style from "./RequestPage.module.css";
+import Header from "../../../components/layout/Header/Header";
 
 function RequestPage() {
   return (
-    <div className={style.page}>
+    <div>
+      <Header></Header>
+      This is a request page for STUDENT
       <Footer></Footer>
     </div>
   );

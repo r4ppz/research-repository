@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { type InputHTMLAttributes, type ComponentType, type Ref } from "react";
-
 import style from "./Input.module.css";
 
 type InputType =

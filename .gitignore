@@ -26,3 +26,5 @@ tsconfig.tsbuildinfo
 *.njsproj
 *.sln
 *.sw?
+
+.github/
