@@ -1,50 +1,44 @@
+import clsx from "clsx";
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Button from "@/components/common/Button/Button";
 import { useAuth } from "@/features/auth/context/useAuth";
+import { type Role } from "@/types";
 import style from "./Header.module.css";
 
-function formatRole(role: string): string {
-  switch (role) {
-    case "STUDENT":
-      return "Student";
-    case "DEPARTMENT_ADMIN":
-      return "Admin";
-    case "SUPER_ADMIN":
-      return "Admin";
-    default:
-      return "Unknown specimen";
-  }
-}
+const ROLE_LABEL: Record<Role, string> = {
+  STUDENT: "Student",
+  DEPARTMENT_ADMIN: "Admin",
+  SUPER_ADMIN: "Admin",
+};
 
-function navLinkClass({ isActive }: { isActive: boolean }) {
-  return `${style.navlink} ${isActive ? style.selected : ""}`;
-}
+const REQUEST_PATH: Record<Role, string> = {
+  STUDENT: "/student/requests",
+  DEPARTMENT_ADMIN: "/department-admin/requests",
+  SUPER_ADMIN: "/super-admin/requests",
+};
 
-function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+const RESEARCH_PATH: Partial<Record<Role, string>> = {
+  DEPARTMENT_ADMIN: "/department-admin/research",
+  SUPER_ADMIN: "/super-admin/research",
+};
 
+const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+  clsx(style.navlink, isActive && style.selected);
+
+export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
-  const role = formatRole(user.role);
-  const isAdmin = ["SUPER_ADMIN", "DEPARTMENT_ADMIN"].includes(user.role);
+  const role = user.role;
+  const roleLabel = ROLE_LABEL[role];
   const firstName = user.fullName.split(" ")[0];
-
-  // Dynamic paths based on role (per spec)
-  const requestPath =
-    user.role === "STUDENT"
-      ? "/student/requests"
-      : user.role === "DEPARTMENT_ADMIN"
-        ? "/department-admin/requests"
-        : "/super-admin/requests";
-  const researchPath =
-    user.role === "DEPARTMENT_ADMIN" ? "/department-admin/research" : "/super-admin/research";
+  const requestPath = REQUEST_PATH[role];
+  const researchPath = RESEARCH_PATH[role];
 
   const handleLogout = () => {
     logout();
@@ -60,20 +54,19 @@ function Header() {
           </div>
           <div className={style.titleContainer}>
             <h1 className={style.title}>ACD Research Repository</h1>
-            <p className={style.roleIndicator}>{role} portal</p>
+            <p className={style.roleIndicator}>{roleLabel} portal</p>
           </div>
         </div>
 
         <div className={style.rightWrapper}>
           <nav className={style.desktopNavigation}>
-            <NavLink className={navLinkClass} to={requestPath}>
-              Request
-            </NavLink>
             <NavLink className={navLinkClass} to="/">
               Library
             </NavLink>
-
-            {isAdmin && (
+            <NavLink className={navLinkClass} to={requestPath}>
+              Request
+            </NavLink>
+            {researchPath && (
               <NavLink className={navLinkClass} to={researchPath}>
                 Research
               </NavLink>
@@ -85,7 +78,7 @@ function Header() {
               <UserIcon size={16} />
               <div className={style.desktopProfileContainer}>
                 <h3 className={style.userName}>{firstName}</h3>
-                <p className={style.userRole}>{role}</p>
+                <p className={style.userRole}>{roleLabel}</p>
               </div>
             </Button>
 
@@ -102,9 +95,7 @@ function Header() {
           <button
             className={style.menuButton}
             type="button"
-            onClick={() => {
-              setIsMenuOpen((open: boolean) => !open);
-            }}
+            onClick={() => setIsMenuOpen((prev) => !prev)}
           >
             <Menu size={18} />
           </button>
@@ -114,30 +105,29 @@ function Header() {
       {isMenuOpen && (
         <div className={style.dropDownMenu}>
           <nav className={style.mobileNavigation}>
-            {isAdmin && (
+            <NavLink className={navLinkClass} to="/">
+              Library
+            </NavLink>
+            <NavLink className={navLinkClass} to={requestPath}>
+              Request
+            </NavLink>
+            {researchPath && (
               <NavLink className={navLinkClass} to={researchPath}>
                 Research
               </NavLink>
             )}
-            <NavLink className={navLinkClass} to={requestPath}>
-              Request
-            </NavLink>
-            <NavLink className={navLinkClass} to="/">
-              Library
-            </NavLink>
             <button className={style.mobileLogoutButton} type="button" onClick={handleLogout}>
               Logout
             </button>
           </nav>
+
           <button className={style.mobileProfileButton} type="button">
             <UserIcon size={18} />
             <h3 className={style.userName}>{firstName}</h3>
-            <p className={style.userRole}>{role}</p>
+            <p className={style.userRole}>{roleLabel}</p>
           </button>
         </div>
       )}
     </header>
   );
 }
-
-export default Header;
