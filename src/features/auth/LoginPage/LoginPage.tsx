@@ -31,34 +31,36 @@ function LoginPage() {
         <div className={style.googleButtonContainer}>
           <div id="gsi-button" />
 
-          <Button
-            type="button"
-            onClick={() => {
-              login(MOCK_SUPER_ADMIN);
-              void navigate(from, { replace: true });
-            }}
-          >
-            Sign in as SUPER_ADMIN
-          </Button>
-          <Button
-            type="button"
-            onClick={() => {
-              login(MOCK_DEPT_ADMIN);
-              void navigate(from, { replace: true });
-            }}
-          >
-            Sign in as DEPARTMENT_ADMIN
-          </Button>
-          <Button
-            className={style.tempButton}
-            type="button"
-            onClick={() => {
-              login(MOCK_STUDENT);
-              void navigate(from, { replace: true });
-            }}
-          >
-            Sign in as STUDENT
-          </Button>
+          <div className={style.tempButtonWrapper}>
+            <Button
+              type="button"
+              onClick={() => {
+                login(MOCK_SUPER_ADMIN);
+                void navigate(from, { replace: true });
+              }}
+            >
+              Sign in as SUPER_ADMIN
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                login(MOCK_DEPT_ADMIN);
+                void navigate(from, { replace: true });
+              }}
+            >
+              Sign in as DEPARTMENT_ADMIN
+            </Button>
+            <Button
+              className={style.tempButton}
+              type="button"
+              onClick={() => {
+                login(MOCK_STUDENT);
+                void navigate(from, { replace: true });
+              }}
+            >
+              Sign in as STUDENT
+            </Button>
+          </div>
         </div>
         <p className={style.textNotice}>Single Sign-On via Google Workspace for Education</p>
       </div>
