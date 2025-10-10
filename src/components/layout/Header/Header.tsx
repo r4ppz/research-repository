@@ -6,6 +6,7 @@ import Button from "@/components/common/Button/Button";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { type Role } from "@/types";
 import style from "./Header.module.css";
+import CustomNavLink from "../CustomNavLink/CustomNavLink";
 
 const ROLE_LABEL: Record<Role, string> = {
   STUDENT: "Student",
@@ -60,17 +61,9 @@ export default function Header() {
 
         <div className={style.rightWrapper}>
           <nav className={style.desktopNavigation}>
-            <NavLink className={navLinkClass} to="/">
-              Library
-            </NavLink>
-            <NavLink className={navLinkClass} to={requestPath}>
-              Request
-            </NavLink>
-            {researchPath && (
-              <NavLink className={navLinkClass} to={researchPath}>
-                Research
-              </NavLink>
-            )}
+            <CustomNavLink to="/">Library</CustomNavLink>
+            <CustomNavLink to={requestPath}>Request</CustomNavLink>
+            {researchPath && <CustomNavLink to={researchPath}>Research</CustomNavLink>}
           </nav>
 
           <div className={style.desktopButtonsWrapper}>

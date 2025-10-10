@@ -1,0 +1,19 @@
+.navlink {
+  color: var(--color-text-inverted);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-weight-medium);
+  transition: var(--transition-elevation);
+  box-shadow: var(--shadow-resting);
+}
+
+.navlink:hover {
+  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+  box-shadow: var(--shadow-hover);
+  border-bottom: 1px solid var(--color-surface);
+}
+
+.active {
+  transform: translateY(var(--translate-active)) scale(var(--scale-active));
+  box-shadow: var(--shadow-active);
+  border-bottom: 1px solid var(--color-surface);
+}
