@@ -1,4 +1,5 @@
 import Link from "@/components/common/link/Link";
+
 import style from "./Footer.module.css";
 
 function Footer() {

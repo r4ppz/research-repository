@@ -1,5 +1,6 @@
-import type { InputHTMLAttributes, ComponentType } from "react";
 import clsx from "clsx";
+import { type InputHTMLAttributes, type ComponentType, type Ref } from "react";
+
 import style from "./Input.module.css";
 
 type InputType =
@@ -17,7 +18,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: InputType;
   icon?: ComponentType<{ className?: string; size?: number }>;
   className?: string;
-  ref?: React.Ref<HTMLInputElement>;
+  ref?: Ref<HTMLInputElement>;
   size?: number;
 }
 

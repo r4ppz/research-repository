@@ -1,3 +1,6 @@
+import { ChevronLeft, ChevronRight, ListFilter, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Footer from "@/components/layout/Footer/Footer";
@@ -5,9 +8,8 @@ import Header from "@/components/layout/Header/Header";
 import ResearchCard from "@/features/library/components/ResearchCard/ResearchCard";
 import ResearchModal from "@/features/library/components/ResearchModal/ResearchModal";
 import { MOCK_PAPERS, MOCK_STUDENT } from "@/mocks/mockData";
-import type { ResearchPaper } from "@/types";
-import { ChevronLeft, ChevronRight, ListFilter, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { type ResearchPaper } from "@/types";
+
 import style from "./HomePage.module.css";
 
 function HomePage() {

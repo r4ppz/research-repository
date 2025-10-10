@@ -1,4 +1,4 @@
-import type { User, Department, ResearchPaper, DocumentRequest } from "@/types";
+import { type User, type Department, type ResearchPaper, type DocumentRequest } from "@/types";
 
 export const MOCK_DEPARTMENTS: Department[] = [
   { departmentId: 1, departmentName: "Computer Science" },

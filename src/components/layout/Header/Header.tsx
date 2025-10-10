@@ -1,14 +1,16 @@
-import style from "./Header.module.css";
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
+import { type Dispatch, type SetStateAction } from "react";
 import { NavLink } from "react-router-dom";
-import type { Dispatch } from "react";
+
 import Button from "@/components/common/Button/Button";
-import type { User } from "@/types";
+import { type User } from "@/types";
+
+import style from "./Header.module.css";
 
 interface HeaderProps {
   user: User;
   isMenuOpen: boolean;
-  setIsMenuOpen: Dispatch<React.SetStateAction<boolean>>;
+  setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 function formatRole(role: string): string {
