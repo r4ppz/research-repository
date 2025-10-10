@@ -1,14 +1,14 @@
-import style from "./HomePage.module.css";
-import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, ListFilter, Search } from "lucide-react";
-import Input from "@/components/common/Input/Input";
-import Header from "@/components/layout/Header/Header";
 import Button from "@/components/common/Button/Button";
-import ResearchCard from "@/features/library/components/ResearchCard/ResearchCard";
+import Input from "@/components/common/Input/Input";
 import Footer from "@/components/layout/Footer/Footer";
+import Header from "@/components/layout/Header/Header";
+import ResearchCard from "@/features/library/components/ResearchCard/ResearchCard";
 import ResearchModal from "@/features/library/components/ResearchModal/ResearchModal";
-import type { ResearchPaper } from "@/types";
 import { MOCK_PAPERS, MOCK_STUDENT } from "@/mocks/mockData";
+import type { ResearchPaper } from "@/types";
+import { ChevronLeft, ChevronRight, ListFilter, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import style from "./HomePage.module.css";
 
 function HomePage() {
   const [currentPage, setCurrentPage] = useState<number>(1);

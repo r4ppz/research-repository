@@ -101,7 +101,7 @@
   .desktopProfileButton {
     display: flex;
     flex-direction: row;
-    padding: var(--space-xs) var(--space-md) !important;
+    padding: var(--space-xs) var(--space-md);
     border-radius: var(--radius-lg);
     gap: var(--space-sm);
   }
@@ -134,7 +134,7 @@
 }
 @media (min-width: 768px) {
   .dekstoplogoutButton {
-    padding: var(--space-xs) var(--space-md) !important;
+    padding: var(--space-xs) var(--space-md);
   }
 }
 

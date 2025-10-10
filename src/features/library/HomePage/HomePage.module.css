@@ -95,8 +95,8 @@
 }
 
 .pagingButton {
-  font-size: var(--font-size-xs);
-  padding: var(--space-xs);
+  font-size: var(--font-size-sm);
+  padding: var(--space-sm);
 }
 
 .pagingIndicator {

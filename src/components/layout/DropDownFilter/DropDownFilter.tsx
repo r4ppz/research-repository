@@ -1,9 +1,8 @@
 import Button from "../../common/Button/Button";
-import style from "./DropDownFilter.module.css";
 
 function DropDownFilter() {
   return (
-    <div className={style.filterButtonsContainer}>
+    <div>
       <Button></Button>
       <Button></Button>
     </div>

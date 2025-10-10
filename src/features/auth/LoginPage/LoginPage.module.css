@@ -23,6 +23,13 @@
   background-color: var(--color-surface);
   text-align: center;
 }
+@media (min-width: 768px) {
+  .loginCard {
+    max-width: 450px;
+    padding: var(--space-2xl) var(--space-xl);
+    box-shadow: var(--shadow-lg);
+  }
+}
 
 .schoolLogo {
   width: var(--size-logo-lg);
@@ -63,12 +70,4 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-light);
   color: var(--color-text-muted);
-}
-
-@media (min-width: 768px) {
-  .loginCard {
-    max-width: 450px;
-    padding: var(--space-2xl) var(--space-xl);
-    box-shadow: var(--shadow-lg);
-  }
 }
