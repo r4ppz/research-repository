@@ -17,7 +17,9 @@
     /* === Path Aliases === */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     },
     /* === Type Checking Behavior === */
     "skipLibCheck": true,
@@ -25,6 +27,11 @@
     /* === Emission === */
     "noEmit": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

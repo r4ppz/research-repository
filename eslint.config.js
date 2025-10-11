@@ -3,72 +3,76 @@ import tseslint from "typescript-eslint";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import importPlugin from "eslint-plugin-import";
-import prettier from "eslint-plugin-prettier";
+import prettierPlugin from "eslint-plugin-prettier";
 
 export default [
+  // Global ignores
   {
-    ignores: ["dist", "node_modules"],
+    ignores: ["dist", "node_modules", "*.env", "*.d.ts", "vite.config.ts"],
   },
 
-  // Base TypeScript support
-  ...tseslint.configs.recommended,
+  // Type-aware TypeScript rules
+  ...tseslint.configs.strictTypeChecked,
 
   {
-    files: ["src/**/*.{ts,tsx,js,jsx}"],
+    files: ["src/**/*.{ts,tsx}"],
 
     languageOptions: {
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module",
+        projectService: true,
+        tsconfigRootDir: new URL(".", import.meta.url).pathname,
       },
       globals: globals.browser,
     },
 
-    // All plugins registered
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
       import: importPlugin,
-      prettier,
+      prettier: prettierPlugin,
+    },
+
+    settings: {
+      "import/resolver": {
+        typescript: {
+          project: "./tsconfig.json",
+        },
+        node: {
+          extensions: [".ts", ".tsx"],
+        },
+      },
     },
 
     rules: {
-      // --- General ---
-      "no-unused-vars": "warn",
-      "no-console": "warn",
-      "no-debugger": "error",
-      "no-var": "error",
+      // TypeScript / base
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { args: "after-used", argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
+      "no-var": "warn",
+      "prefer-const": "warn",
+      "prefer-arrow-callback": "warn",
+      "no-debugger": "warn",
 
-      // --- Import sorting ---
+      // React Hooks + Fast Refresh
+      ...reactHooks.configs.recommended.rules,
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+
+      // Import sorting
       "import/order": [
         "warn",
         {
           groups: ["builtin", "external", "internal", ["sibling", "parent"], "index"],
           "newlines-between": "never",
+          alphabetize: { order: "asc", caseInsensitive: true },
         },
       ],
 
-      // --- React hooks + Fast Refresh (Vite) ---
-      ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
-
-      // --- Formatting style rules ---
-      "max-len": [
-        "warn",
-        {
-          code: 100,
-          ignoreStrings: true,
-          ignoreTemplateLiterals: true,
-          ignoreComments: true,
-        },
-      ],
-      semi: ["error", "always"],
-      quotes: ["error", "double"],
-      "comma-dangle": ["error", "always-multiline"],
-      indent: ["error", 2],
-
-      // Enforce Prettier formatting inside ESLint
-      "prettier/prettier": "error",
+      // Formatting rules
+      "prettier/prettier": "warn",
     },
   },
 ];
