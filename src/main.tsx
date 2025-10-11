@@ -15,6 +15,6 @@ if (container) {
           <App />
         </AuthProvider>
       </BrowserRouter>
-    </StrictMode>
+    </StrictMode>,
   );
 }

@@ -51,7 +51,6 @@ function LoginPage() {
               Sign in as DEPARTMENT_ADMIN
             </Button>
             <Button
-              className={style.tempButton}
               type="button"
               onClick={() => {
                 login(MOCK_STUDENT);

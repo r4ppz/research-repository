@@ -24,7 +24,7 @@ function ResearchModal({ researchPaper: researchPaper, onClose }: ResearchModalP
           e.stopPropagation();
         }}
       >
-        <div className={style.headerWrapper}>
+        <div className={style.infoWrapper}>
           <h1 className={style.title}>{researchPaper.title}</h1>
           <div className={style.authordateWrapper}>
             <p className={style.author}>{researchPaper.authorName}</p>

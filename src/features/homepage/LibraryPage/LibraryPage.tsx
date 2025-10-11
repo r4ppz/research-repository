@@ -65,7 +65,7 @@ function HomePage() {
     <div className={style.page}>
       <Header />
       <main className={style.main}>
-        <section className={style.heroSection}>
+        <section>
           <h1 className={style.heroHeader}>Discover Academic Research</h1>
 
           <p className={style.mobileHeroText}>
