@@ -1,37 +1,30 @@
 {
   "compilerOptions": {
-    "target": "ES2024",
+    /* === Output & Module Resolution === */
     "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "skipLibCheck": true,
-    /* Alias */
+    "target": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    /* === React & JSX === */
+    "jsx": "react-jsx",
+    /* === Strictness === */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    /* === Path Aliases === */
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
-    /* Strictness */
-    "strict": true,
-    "exactOptionalPropertyTypes": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noUncheckedIndexedAccess": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noImplicitOverride": true,
-    "allowUnusedLabels": false,
-    "allowUnreachableCode": false,
-    /* JSX */
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    /* Libs */
-    "lib": ["ES2024", "DOM", "DOM.Iterable"]
+    /* === Type Checking Behavior === */
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    /* === Emission === */
+    "noEmit": true
   },
-  "include": ["src", "vite.config.ts"],
-  "exclude": ["node_modules", "dist", "build"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

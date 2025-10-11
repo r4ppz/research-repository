@@ -1,109 +1,74 @@
-import js from "@eslint/js";
 import globals from "globals";
-import reactPlugin from "eslint-plugin-react";
+import tseslint from "typescript-eslint";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
-import tsPlugin from "@typescript-eslint/eslint-plugin";
-import tsParser from "@typescript-eslint/parser";
 import importPlugin from "eslint-plugin-import";
-import prettierPlugin from "eslint-plugin-prettier";
+import prettier from "eslint-plugin-prettier";
 
 export default [
   {
-    ignores: ["dist/**", "build/**", "node_modules/**", "eslint.config.js"],
+    ignores: ["dist", "node_modules"],
   },
 
-  js.configs.recommended,
+  // Base TypeScript support
+  ...tseslint.configs.recommended,
 
   {
-    files: ["**/*.{ts,tsx,js,jsx}"],
+    files: ["src/**/*.{ts,tsx,js,jsx}"],
+
     languageOptions: {
-      parser: tsParser,
       parserOptions: {
-        project: "./tsconfig.json",
-        tsconfigRootDir: import.meta.dirname,
-        ecmaVersion: 2024,
+        ecmaVersion: "latest",
         sourceType: "module",
       },
       globals: globals.browser,
     },
+
+    // All plugins registered
     plugins: {
-      "@typescript-eslint": tsPlugin,
-      react: reactPlugin,
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
       import: importPlugin,
-      prettier: prettierPlugin,
+      prettier,
     },
-    settings: {
-      "import/resolver": {
-        typescript: {
-          alwaysTryTypes: true,
-          project: "./tsconfig.json",
-        },
-        alias: {
-          map: [["@", "./src"]],
-          extensions: [".ts", ".tsx", ".js", ".jsx"],
-        },
-      },
-      react: {
-        version: "detect",
-      },
-    },
+
     rules: {
-      ...(tsPlugin.configs?.recommended?.rules ?? {}),
-      ...(reactPlugin.configs?.recommended?.rules ?? {}),
-      ...(reactHooks.configs?.recommended?.rules ?? {}),
-      "prettier/prettier": ["error", { endOfLine: "auto" }],
-      "react-hooks/exhaustive-deps": "error",
-      "react/react-in-jsx-scope": "off",
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true, allowExportNames: ["meta", "links", "headers"] },
-      ],
-      "import/no-unused-modules": "off",
-      "import/no-unresolved": "error",
-      "import/no-cycle": ["error", { maxDepth: 10 }],
-      "import/no-self-import": "error",
-      "import/no-duplicates": ["error", { "prefer-inline": true }],
-      "import/consistent-type-specifier-style": ["error", "prefer-inline"],
+      // --- General ---
+      "no-unused-vars": "warn",
+      "no-console": "warn",
+      "no-debugger": "error",
+      "no-var": "error",
+
+      // --- Import sorting ---
       "import/order": [
-        "error",
+        "warn",
         {
-          groups: ["builtin", "external", "internal", "parent", "sibling", "index", "type"],
-          pathGroups: [{ pattern: "@/**", group: "internal" }],
-          pathGroupsExcludedImportTypes: ["builtin"],
+          groups: ["builtin", "external", "internal", ["sibling", "parent"], "index"],
           "newlines-between": "never",
-          alphabetize: { order: "asc", caseInsensitive: true },
         },
       ],
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+
+      // --- React hooks + Fast Refresh (Vite) ---
+      ...reactHooks.configs.recommended.rules,
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+
+      // --- Formatting style rules ---
+      "max-len": [
+        "warn",
+        {
+          code: 100,
+          ignoreStrings: true,
+          ignoreTemplateLiterals: true,
+          ignoreComments: true,
+        },
       ],
-      "@typescript-eslint/consistent-type-imports": ["error"],
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-non-null-assertion": "off",
-      "@typescript-eslint/prefer-nullish-coalescing": "error",
-      "@typescript-eslint/switch-exhaustiveness-check": "error",
-    },
-  },
+      semi: ["error", "always"],
+      quotes: ["error", "double"],
+      "comma-dangle": ["error", "always-multiline"],
+      indent: ["error", 2],
 
-  {
-    files: ["**/*.js"],
-    languageOptions: {
-      globals: globals.node,
-    },
-  },
-
-  {
-    files: ["vite.config.ts"],
-    languageOptions: {
-      globals: {
-        __dirname: "readonly",
-        process: "readonly",
-        require: "readonly",
-      },
+      // Enforce Prettier formatting inside ESLint
+      "prettier/prettier": "error",
     },
   },
 ];
