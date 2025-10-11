@@ -1,6 +1,6 @@
 import { useState, useCallback, type ReactNode } from "react";
-import { type User } from "@/types";
 import { AuthContext } from "./AuthContext";
+import { type User } from "@/types";
 
 interface AuthProviderProps {
   children: ReactNode;

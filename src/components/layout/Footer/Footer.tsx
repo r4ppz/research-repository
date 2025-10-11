@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
+import style from "./Footer.module.css";
 import Button from "@/components/common/Button/Button";
 import Link from "@/components/common/link/Link";
-import style from "./Footer.module.css";
 
 function Footer() {
   const navigate = useNavigate();

@@ -1,8 +1,8 @@
+import style from "./RequestPage.module.css";
 import Button from "@/components/common/Button/Button";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import { MOCK_REQUESTS } from "@/mocks/mockData";
-import style from "./RequestPage.module.css";
 
 function RequestPage() {
   return (

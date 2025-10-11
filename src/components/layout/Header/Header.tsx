@@ -1,11 +1,11 @@
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CustomNavLink from "../CustomNavLink/CustomNavLink";
+import style from "./Header.module.css";
 import Button from "@/components/common/Button/Button";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { type Role } from "@/types";
-import CustomNavLink from "../CustomNavLink/CustomNavLink";
-import style from "./Header.module.css";
 
 const ROLE_LABEL: Record<Role, string> = {
   STUDENT: "Student",
