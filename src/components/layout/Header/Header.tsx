@@ -1,11 +1,11 @@
-import { Menu, LogOut, User as UserIcon } from "lucide-react";
+import { LogOut, Menu, User as UserIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CustomNavLink from "../CustomNavLink/CustomNavLink";
-import style from "./Header.module.css";
 import Button from "@/components/common/Button/Button";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { type Role } from "@/types";
+import style from "./Header.module.css";
+import CustomNavLink from "../CustomNavLink/CustomNavLink";
 
 const ROLE_LABEL: Record<Role, string> = {
   STUDENT: "Student",
@@ -39,7 +39,7 @@ function Header() {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    void navigate("/login");
   };
 
   return (
@@ -49,7 +49,7 @@ function Header() {
           <Button
             variant="secondary"
             className={style.logoContainerButton}
-            onClick={() => navigate("/")}
+            onClick={() => void navigate("/")}
           >
             <img className={style.schoolLogo} src="/assets/school-logo.svg" alt="school-logo" />
           </Button>
@@ -88,7 +88,9 @@ function Header() {
           <button
             className={style.menuButton}
             type="button"
-            onClick={() => setIsMenuOpen((prev) => !prev)}
+            onClick={() => {
+              setIsMenuOpen((prev) => !prev);
+            }}
           >
             <Menu size={18} />
           </button>

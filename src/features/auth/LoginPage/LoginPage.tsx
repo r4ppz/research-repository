@@ -1,14 +1,14 @@
-import { useNavigate, useLocation, Navigate } from "react-router-dom";
-import style from "./LoginPage.module.css";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Button from "@/components/common/Button/Button";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { MOCK_DEPT_ADMIN, MOCK_STUDENT, MOCK_SUPER_ADMIN } from "@/mocks/mockData";
+import style from "./LoginPage.module.css";
 
 function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, login } = useAuth();
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? "/";
+  const from = (location.state as { from?: { pathname: string } }).from?.pathname ?? "/";
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;

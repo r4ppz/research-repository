@@ -1,6 +1,5 @@
 import { ChevronLeft, ChevronRight, ListFilter, Search } from "lucide-react";
 import { useEffect, useState } from "react";
-import style from "./LibraryPage.module.css";
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Footer from "@/components/layout/Footer/Footer";
@@ -9,6 +8,7 @@ import ResearchCard from "@/features/homepage/components/ResearchCard/ResearchCa
 import ResearchModal from "@/features/homepage/components/ResearchModal/ResearchModal";
 import { MOCK_PAPERS } from "@/mocks/mockData";
 import { type ResearchPaper } from "@/types";
+import style from "./LibraryPage.module.css";
 
 function HomePage() {
   const [currentPage, setCurrentPage] = useState<number>(1);

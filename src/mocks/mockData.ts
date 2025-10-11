@@ -1,4 +1,4 @@
-import { type User, type Department, type ResearchPaper, type DocumentRequest } from "@/types";
+import { type Department, type DocumentRequest, type ResearchPaper, type User } from "@/types";
 
 export const MOCK_DEPARTMENTS: Department[] = [
   { departmentId: 1, departmentName: "Computer Science" },
@@ -179,28 +179,28 @@ export const MOCK_REQUESTS: DocumentRequest[] = [
     requestId: 1,
     status: "ACCEPTED",
     requestDate: "2025-10-01",
-    paper: MOCK_PAPERS[0]!,
+    paper: MOCK_PAPERS[0],
     requester: MOCK_STUDENT,
   },
   {
     requestId: 2,
     status: "PENDING",
     requestDate: "2025-10-05",
-    paper: MOCK_PAPERS[1]!,
+    paper: MOCK_PAPERS[1],
     requester: MOCK_STUDENT,
   },
   {
     requestId: 3,
     status: "REJECTED",
     requestDate: "2025-09-28",
-    paper: MOCK_PAPERS[3]!,
+    paper: MOCK_PAPERS[3],
     requester: MOCK_STUDENT,
   },
   {
     requestId: 4,
     status: "ACCEPTED",
     requestDate: "2025-10-28",
-    paper: MOCK_PAPERS[3]!,
+    paper: MOCK_PAPERS[3],
     requester: MOCK_STUDENT,
   },
 ];

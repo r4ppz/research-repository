@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { type InputHTMLAttributes, type ComponentType, type Ref } from "react";
+import { type ComponentType, type InputHTMLAttributes, type Ref } from "react";
 import style from "./Input.module.css";
 
 type InputType =
@@ -24,7 +24,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 function Input({ type = "text", icon: Icon, className, ref, size = 18, ...props }: InputProps) {
   return (
     <div className={clsx(style.inputWrapper, className)}>
-      {Icon && <Icon className={style.icon ?? ""} size={size} />}
+      {Icon && <Icon className={style.icon} size={size} />}
       <input {...props} ref={ref} type={type} className={style.input} />
     </div>
   );

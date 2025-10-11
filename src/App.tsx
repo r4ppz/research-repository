@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "@/components/common/ProtectedRoute/ProtectedRoute";
 import LoginPage from "@/features/auth/LoginPage/LoginPage";
 import DepartmentAdminRequestsPage from "@/features/departmentAdmin/RequestPage/RequestPage";
