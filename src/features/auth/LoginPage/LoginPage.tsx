@@ -4,11 +4,17 @@ import { useAuth } from "@/features/auth/context/useAuth";
 import { MOCK_DEPT_ADMIN, MOCK_STUDENT, MOCK_SUPER_ADMIN } from "@/mocks/mockData";
 import style from "./LoginPage.module.css";
 
+interface LocationState {
+  from?: { pathname: string };
+}
+
 function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, login } = useAuth();
-  const from = (location.state as { from?: { pathname: string } }).from?.pathname ?? "/";
+
+  const state = location.state as LocationState | null;
+  const from = state?.from?.pathname ?? "/";
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;

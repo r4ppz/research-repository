@@ -6,7 +6,6 @@ import importPlugin from "eslint-plugin-import";
 import prettierPlugin from "eslint-plugin-prettier";
 
 export default [
-  // Global ignores
   {
     ignores: ["dist", "node_modules", "*.env", "*.d.ts", "vite.config.ts"],
   },
@@ -61,7 +60,6 @@ export default [
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
 
-      // Import sorting
       "import/order": [
         "warn",
         {
@@ -71,7 +69,6 @@ export default [
         },
       ],
 
-      // Formatting rules
       "prettier/prettier": "warn",
     },
   },

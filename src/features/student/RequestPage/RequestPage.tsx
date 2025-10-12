@@ -8,12 +8,14 @@ function RequestPage() {
   return (
     <div className={style.page}>
       <Header />
+
       <main className={style.main}>
         <section className={style.titleSection}>
           <h1 className={style.titleHeader}>Research Paper Requests</h1>
         </section>
+
         <section className={style.tableSection}>
-          <table className={style.requestsTable}>
+          <table className={style.Table}>
             <thead>
               <tr>
                 <th>Title</th>
@@ -23,6 +25,7 @@ function RequestPage() {
                 <th>Actions</th>
               </tr>
             </thead>
+
             <tbody>
               {MOCK_REQUESTS.map((request) => (
                 <tr key={request.requestId}>
