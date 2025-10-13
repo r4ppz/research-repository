@@ -1,28 +1,35 @@
-import { ChevronLeft, ChevronRight, ListFilter, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
-import ResearchCard from "@/features/homepage/components/ResearchCard/ResearchCard";
-import ResearchModal from "@/features/homepage/components/ResearchModal/ResearchModal";
-import { MOCK_PAPERS } from "@/mocks/mockData";
+import FilterButtons from "@/features/library/components/FilterButtons/FilterButtons";
+import ResearchCard from "@/features/library/components/ResearchCard/ResearchCard";
+import ResearchModal from "@/features/library/components/ResearchModal/ResearchModal";
+import { usePagination } from "@/hooks/usePagination";
+import { useSearchAndFilter } from "@/hooks/useSearchAndFilter";
 import { type ResearchPaper } from "@/types";
 import style from "./LibraryPage.module.css";
 
-function HomePage() {
-  const [currentPage, setCurrentPage] = useState<number>(1);
+function LibraryPage() {
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [itemsPerPage, setItemsPerPage] = useState<number>(12);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
+  const [selectedYear, setSelectedYear] = useState<string | null>(null);
+  const filteredPapers = useSearchAndFilter(searchQuery, selectedDepartment, selectedYear);
+  const pageData = usePagination(filteredPapers, currentPage, itemsPerPage);
   const [selectedResearch, setSelectedResearch] = useState<ResearchPaper | null>(null);
 
   useEffect(() => {
     if (selectedResearch) {
-      document.body.style.overflow = "hidden";
+      document.body.classList.add("modal-open");
     } else {
-      document.body.style.overflow = "";
+      document.body.classList.remove("modal-open");
     }
     return () => {
-      document.body.style.overflow = "";
+      document.body.classList.remove("modal-open");
     };
   }, [selectedResearch]);
 
@@ -45,21 +52,25 @@ function HomePage() {
     };
   }, []);
 
-  const totalPages = Math.ceil(MOCK_PAPERS.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentResearch = MOCK_PAPERS.slice(startIndex, startIndex + itemsPerPage);
-
   const handleCloseModal = () => {
     setSelectedResearch(null);
   };
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    if (pageData && currentPage < pageData.totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
   };
+
+  if (!pageData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={style.page}>
@@ -81,23 +92,24 @@ function HomePage() {
         </section>
 
         <section className={style.searchSection}>
-          <Input type="search" icon={Search} placeholder="Search paper title" />
+          <Input
+            type="search"
+            icon={Search}
+            placeholder="Search paper title"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+            }}
+          />
 
-          <div className={style.filterButtonsContainer}>
-            <Button className={style.filterButton}>
-              Department
-              <ListFilter size={16} />
-            </Button>
-
-            <Button className={style.filterButton}>
-              Year
-              <ListFilter size={16} />
-            </Button>
-          </div>
+          <FilterButtons
+            onDepartmentChange={setSelectedDepartment}
+            onYearChange={setSelectedYear}
+          />
         </section>
 
         <section className={style.researchSection}>
-          {currentResearch.map((research) => (
+          {pageData.content.map((research) => (
             <ResearchCard
               key={research.paperId}
               researchPaper={research}
@@ -111,29 +123,31 @@ function HomePage() {
           )}
         </section>
 
-        <section className={style.paginationSection}>
-          <Button
-            className={style.pagingButton}
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft size={16} />
-            Previous
-          </Button>
+        {pageData.totalPages > 1 && (
+          <section className={style.paginationSection}>
+            <Button
+              className={style.pagingButton}
+              onClick={handlePrevPage}
+              disabled={currentPage === 0}
+            >
+              <ChevronLeft size={16} />
+              Previous
+            </Button>
 
-          <p className={style.pagingIndicator}>
-            Page {currentPage} of {totalPages}
-          </p>
+            <p className={style.pagingIndicator}>
+              Page {currentPage + 1} of {pageData.totalPages}
+            </p>
 
-          <Button
-            className={style.pagingButton}
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-          >
-            Next
-            <ChevronRight size={16} />
-          </Button>
-        </section>
+            <Button
+              className={style.pagingButton}
+              onClick={handleNextPage}
+              disabled={currentPage >= pageData.totalPages - 1}
+            >
+              Next
+              <ChevronRight size={16} />
+            </Button>
+          </section>
+        )}
       </main>
 
       <Footer />
@@ -141,4 +155,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default LibraryPage;

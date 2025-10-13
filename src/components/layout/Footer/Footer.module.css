@@ -9,6 +9,7 @@ svg {
   padding: var(--space-lg);
   color: var(--color-text-inverted);
   gap: var(--space-sm);
+  width: 100vw;
 }
 @media (min-width: 768px) {
   .footer {

@@ -3,7 +3,7 @@ import ProtectedRoute from "@/components/common/ProtectedRoute/ProtectedRoute";
 import LoginPage from "@/features/auth/LoginPage/LoginPage";
 import DepartmentAdminRequestsPage from "@/features/departmentAdmin/RequestPage/RequestPage";
 import DepartmentAdminResearchPage from "@/features/departmentAdmin/ResearchPage/ResearchPage";
-import LibraryPage from "@/features/homepage/LibraryPage/LibraryPage";
+import LibraryPage from "@/features/library/LibraryPage/LibraryPage";
 import StudentRequestsPage from "@/features/student/RequestPage/RequestPage";
 import SuperAdminRequestsPage from "@/features/superAdmin/RequestPage/RequestPage";
 import SuperAdminResearchPage from "@/features/superAdmin/ResearchPage/ResearchPage";
