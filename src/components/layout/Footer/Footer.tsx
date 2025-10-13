@@ -1,13 +1,18 @@
+import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/common/Button/Button";
 import Link from "@/components/common/link/Link";
 import style from "./Footer.module.css";
 
-function Footer() {
+interface ComponentProps {
+  className?: string;
+}
+
+function Footer({ className, ...props }: ComponentProps) {
   const navigate = useNavigate();
 
   return (
-    <footer className={style.footer}>
+    <footer className={clsx(style.footer, className)} {...props}>
       <div className={style.mainContainer}>
         <div className={style.titlelogoContainer}>
           <Button

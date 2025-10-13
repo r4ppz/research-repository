@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { LogOut, Menu, User as UserIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +25,11 @@ const RESEARCH_PATH: Partial<Record<Role, string>> = {
   SUPER_ADMIN: "/super-admin/research",
 };
 
-function Header() {
+interface ComponentProps {
+  className?: string;
+}
+
+function Header({ className, ...props }: ComponentProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -43,7 +48,7 @@ function Header() {
   };
 
   return (
-    <header className={style.header}>
+    <header className={clsx(style.header, className)} {...props}>
       <div className={style.headerWrapper}>
         <div className={style.leftWrapper}>
           <Button

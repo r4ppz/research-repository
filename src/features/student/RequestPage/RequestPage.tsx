@@ -15,7 +15,7 @@ function RequestPage() {
         overflowY: tableActive ? "hidden" : "auto",
       }}
     >
-      <Header />
+      <Header className={style.header} />
 
       <main className={style.main}>
         <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
@@ -79,7 +79,7 @@ function RequestPage() {
           </table>
         </section>
       </main>
-      <Footer />
+      <Footer className={style.footer} />
     </div>
   );
 }

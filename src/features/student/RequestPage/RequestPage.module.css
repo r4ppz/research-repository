@@ -1,8 +1,19 @@
 .page {
   display: flex;
   flex-direction: column;
-  height: 100dvh;
   width: 100%;
+  overflow-y: auto;
+  height: 100vh;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
+.header {
+  width: 100%;
+  flex-shrink: 0;
+  height: 20vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .main {
@@ -11,8 +22,10 @@
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  padding: var(--space-2xl) var(--space-7xl);
+  padding: var(--space-xl) var(--space-7xl);
   gap: var(--space-md);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .titleHeader {
@@ -29,6 +42,12 @@
   flex-direction: column;
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-lg);
+  transition: var(--transition-elevation);
+  box-shadow: var(--shadow-resting);
+}
+.tableSection:hover {
+  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+  box-shadow: var(--shadow-hover);
 }
 
 .table {
@@ -43,7 +62,7 @@
 }
 
 thead {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
 }
 
@@ -89,4 +108,11 @@ tbody {
 .downloadButton {
   font-size: var(--font-size-sm);
   padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+}
+
+.footer {
+  width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
