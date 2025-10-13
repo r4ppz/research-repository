@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
@@ -5,13 +6,34 @@ import { MOCK_REQUESTS } from "@/mocks/mockData";
 import style from "./RequestPage.module.css";
 
 function RequestPage() {
+  const [tableActive, setTableActive] = useState(false);
+
   return (
-    <div className={style.page}>
+    <div
+      className={style.page}
+      style={{
+        overflowY: tableActive ? "hidden" : "auto",
+      }}
+    >
       <Header />
 
       <main className={style.main}>
         <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
-        <section className={style.tableSection}>
+        <section
+          className={style.tableSection}
+          onMouseEnter={() => {
+            setTableActive(true);
+          }}
+          onMouseLeave={() => {
+            setTableActive(false);
+          }}
+          onFocus={() => {
+            setTableActive(true);
+          }}
+          onBlur={() => {
+            setTableActive(false);
+          }}
+        >
           <table className={style.table}>
             <thead>
               <tr>
@@ -45,9 +67,7 @@ function RequestPage() {
                           ? () => {
                               console.log("Test Only");
                             }
-                          : () => {
-                              console.log("");
-                            }
+                          : () => {}
                       }
                     >
                       Download
