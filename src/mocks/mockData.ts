@@ -21,7 +21,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     abstractText:
       "This humorous yet methodologically grounded study explores quantum entanglement through analogies in feline behavioral unpredictability. A simulated two-state model is introduced to represent observation-induced behavioral collapse. While the work draws from Schrödinger's Cat thought experiment, it extends the analogy to cognitive uncertainty in animal perception, illustrating how measurement and environment interactions produce non-deterministic responses.",
     department: { departmentId: 3, departmentName: "Physics" },
-    submissionDate: "2025-09-15",
+    submissionDate: "2024-09-15",
     fileUrl: "/api/files/quantum-cats.pdf",
     archived: false,
   },
@@ -32,7 +32,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     abstractText:
       "This paper introduces a multimodal machine learning framework for large-scale climate forecasting using hybrid convolutional-recurrent networks. By combining satellite imagery, atmospheric pressure readings, and historical temperature datasets, the model achieves improved long-term pattern recognition. The proposed approach reduces mean absolute error by 12% compared to traditional statistical models, demonstrating the potential of AI in environmental modeling.",
     department: { departmentId: 2, departmentName: "Information Technology" },
-    submissionDate: "2025-08-20",
+    submissionDate: "2024-08-20",
     fileUrl: "/api/files/ml-climate.pdf",
     archived: false,
   },
