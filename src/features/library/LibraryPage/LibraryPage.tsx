@@ -7,8 +7,8 @@ import Header from "@/components/layout/Header/Header";
 import FilterButtons from "@/features/library/components/FilterButtons/FilterButtons";
 import ResearchCard from "@/features/library/components/ResearchCard/ResearchCard";
 import ResearchModal from "@/features/library/components/ResearchModal/ResearchModal";
-import { usePagination } from "@/hooks/usePagination";
-import { useSearchAndFilter } from "@/hooks/useSearchAndFilter";
+import { usePagination } from "@/features/library/hooks/usePagination";
+import { useSearchAndFilter } from "@/features/library/hooks/useSearchAndFilter";
 import { type ResearchPaper } from "@/types";
 import style from "./LibraryPage.module.css";
 
@@ -18,9 +18,10 @@ function LibraryPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
+  const [selectedResearch, setSelectedResearch] = useState<ResearchPaper | null>(null);
+
   const filteredPapers = useSearchAndFilter(searchQuery, selectedDepartment, selectedYear);
   const pageData = usePagination(filteredPapers, currentPage, itemsPerPage);
-  const [selectedResearch, setSelectedResearch] = useState<ResearchPaper | null>(null);
 
   useEffect(() => {
     if (selectedResearch) {
