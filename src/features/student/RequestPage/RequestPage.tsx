@@ -10,26 +10,26 @@ function RequestPage() {
       <Header />
 
       <main className={style.main}>
-        <section className={style.titleSection}>
-          <h1 className={style.titleHeader}>Research Paper Requests</h1>
-        </section>
-
+        <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
         <section className={style.tableSection}>
-          <table className={style.Table}>
+          <table className={style.table}>
             <thead>
               <tr>
                 <th>Title</th>
                 <th>Author</th>
                 <th>Status</th>
                 <th>Request Date</th>
-                <th>Actions</th>
+                <th>Action</th>
               </tr>
             </thead>
 
             <tbody>
               {MOCK_REQUESTS.map((request) => (
                 <tr key={request.requestId}>
-                  <td>{request.paper.title}</td>
+                  <td>
+                    <h3 className={style.paperTitle}>{request.paper.title}</h3>
+                  </td>
+
                   <td>{request.paper.authorName}</td>
                   <td className={style.statusCell} data-status={request.status}>
                     {request.status}
