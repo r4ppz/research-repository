@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Footer from "@/components/layout/Footer/Footer";
@@ -9,16 +10,11 @@ function RequestPage() {
   const [tableActive, setTableActive] = useState(false);
 
   return (
-    <div
-      className={style.page}
-      style={{
-        overflowY: tableActive ? "hidden" : "auto",
-      }}
-    >
-      <Header className={style.header} />
-
+    <div className={clsx(style.page, tableActive && style.tableActive)}>
+      <Header />
       <main className={style.main}>
         <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
+
         <section
           className={style.tableSection}
           onMouseEnter={() => {
@@ -51,7 +47,6 @@ function RequestPage() {
                   <td>
                     <h3 className={style.paperTitle}>{request.paper.title}</h3>
                   </td>
-
                   <td>{request.paper.authorName}</td>
                   <td className={style.statusCell} data-status={request.status}>
                     {request.status}
@@ -65,7 +60,7 @@ function RequestPage() {
                       onClick={
                         request.status === "ACCEPTED"
                           ? () => {
-                              console.log("Test Only");
+                              console.log("Download");
                             }
                           : () => {}
                       }
@@ -79,7 +74,8 @@ function RequestPage() {
           </table>
         </section>
       </main>
-      <Footer className={style.footer} />
+
+      <Footer />
     </div>
   );
 }
