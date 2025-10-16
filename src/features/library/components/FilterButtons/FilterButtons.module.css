@@ -14,11 +14,6 @@
   transition: var(--transition-fast);
 }
 
-.filterButton:hover {
-  transform: translateY(var(--translate-hover));
-  box-shadow: var(--shadow-hover);
-}
-
 .options {
   position: absolute;
   top: 100%;
@@ -32,6 +27,8 @@
   flex-direction: column;
   gap: var(--space-xs);
   box-shadow: var(--shadow-modal);
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .options button {
@@ -42,10 +39,8 @@
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);
   color: var(--color-text);
-  transition: var(--transition-fast);
 }
 
 .options button:hover {
   background: var(--color-gray-100);
-  color: var(--color-primary);
 }
