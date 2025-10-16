@@ -14,7 +14,7 @@ function FilterButtons({ onDepartmentChange, onYearChange }: FilterButtonsProps)
   const [showYearOptions, setShowYearOptions] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const years = ["2025", "2024", "2023"]; // NOTE: I might need API for this
+  const years = ["2025", "2024", "2023"]; // NOTE: I might need API for this idk
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -45,6 +45,7 @@ function FilterButtons({ onDepartmentChange, onYearChange }: FilterButtonsProps)
         <Button className={style.filterButton} onClick={toggleDepartment}>
           Department <ListFilter size={16} />
         </Button>
+
         {showDepartmentOptions && (
           <div className={style.options}>
             <button

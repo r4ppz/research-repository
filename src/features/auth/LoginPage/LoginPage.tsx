@@ -35,8 +35,10 @@ function LoginPage() {
         </p>
 
         <div className={style.googleButtonContainer}>
+          {/* TODO: implement google sso button */}
           <div id="gsi-button" />
 
+          {/* INFO: temp buttons to switch users */}
           <div className={style.tempButtonWrapper}>
             <Button
               type="button"

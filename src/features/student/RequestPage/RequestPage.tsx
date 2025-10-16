@@ -45,6 +45,7 @@ function RequestPage() {
               {MOCK_REQUESTS.map((request) => (
                 <tr key={request.requestId}>
                   <td>
+                    {/* NOTE: make it clickable or add new view button? i dont fucking know*/}
                     <h3 className={style.paperTitle}>{request.paper.title}</h3>
                   </td>
                   <td>{request.paper.authorName}</td>
