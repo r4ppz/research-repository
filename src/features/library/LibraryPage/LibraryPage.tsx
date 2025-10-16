@@ -9,8 +9,10 @@ import ResearchCard from "@/features/library/components/ResearchCard/ResearchCar
 import ResearchModal from "@/features/library/components/ResearchModal/ResearchModal";
 import { usePagination } from "@/features/library/hooks/usePagination";
 import { useSearchAndFilter } from "@/features/library/hooks/useSearchAndFilter";
+import { MOCK_PAPERS } from "@/mocks/mockData";
 import { type ResearchPaper } from "@/types";
 import style from "./LibraryPage.module.css";
+import { useModalScrollLock } from "../hooks/useModalBodyClass";
 
 function LibraryPage() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -23,19 +25,15 @@ function LibraryPage() {
   const [selectedResearch, setSelectedResearch] = useState<ResearchPaper | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const filteredPapers = useSearchAndFilter(searchQuery, selectedDepartment, selectedYear);
+  const filteredPapers = useSearchAndFilter(
+    searchQuery,
+    selectedDepartment,
+    selectedYear,
+    MOCK_PAPERS,
+  );
   const pageData = usePagination(filteredPapers, currentPage, itemsPerPage);
 
-  useEffect(() => {
-    if (selectedResearch) {
-      document.body.classList.add("modal-open");
-    } else {
-      document.body.classList.remove("modal-open");
-    }
-    return () => {
-      document.body.classList.remove("modal-open");
-    };
-  }, [selectedResearch]);
+  useModalScrollLock(isModalOpen);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -74,6 +72,7 @@ function LibraryPage() {
   };
 
   if (!pageData) {
+    // TODO: make it a modal? or just do it proper loading. i dont fucking know
     return <div>Loading...</div>;
   }
 
