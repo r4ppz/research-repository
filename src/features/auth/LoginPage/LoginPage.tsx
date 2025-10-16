@@ -1,25 +1,15 @@
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
 import Button from "@/components/common/Button/Button";
-import { useAuth } from "@/features/auth/context/useAuth";
-import { MOCK_DEPT_ADMIN, MOCK_STUDENT, MOCK_SUPER_ADMIN } from "@/mocks/mockData";
 import style from "./LoginPage.module.css";
-
-interface LocationState {
-  from?: { pathname: string };
-}
+import SignInUserModal from "../../../components/temporary/SignInUserModal/SignInUserModal";
 
 function LoginPage() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { isAuthenticated, login } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const state = location.state as LocationState | null;
-  const from = state?.from?.pathname ?? "/";
-
-  if (isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
-
+  const onClose = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className={style.page}>
       <div className={style.loginCard}>
@@ -38,37 +28,23 @@ function LoginPage() {
           {/* TODO: implement google sso button */}
           <div id="gsi-button" />
 
-          {/* INFO: temp buttons to switch users */}
-          <div className={style.tempButtonWrapper}>
-            <Button
-              type="button"
-              onClick={() => {
-                login(MOCK_SUPER_ADMIN);
-                void navigate(from, { replace: true });
-              }}
-            >
-              Sign in as SUPER_ADMIN
-            </Button>
-            <Button
-              type="button"
-              onClick={() => {
-                login(MOCK_DEPT_ADMIN);
-                void navigate(from, { replace: true });
-              }}
-            >
-              Sign in as DEPARTMENT_ADMIN
-            </Button>
-            <Button
-              type="button"
-              onClick={() => {
-                login(MOCK_STUDENT);
-                void navigate(from, { replace: true });
-              }}
-            >
-              Sign in as STUDENT
-            </Button>
-          </div>
+          {/* NOTE: this is just a temp singin button */}
+          <Button
+            className={style.signInButton}
+            variant="secondary"
+            onClick={() => {
+              setIsModalOpen(
+                confirm(
+                  "Google SSO is not configured yet and backend development hasn't started. Continue with temporary login?",
+                ),
+              );
+            }}
+          >
+            <FcGoogle size={20} />
+            Sign In with Google
+          </Button>
         </div>
+        <SignInUserModal onClose={onClose} isOpen={isModalOpen} />
         <p className={style.textNotice}>Single Sign-On via Google Workspace for Education</p>
       </div>
     </div>
