@@ -60,7 +60,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-      <Route path="*" element={<LibraryPage />} />
     </Routes>
   );
 }
