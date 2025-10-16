@@ -1,6 +1,6 @@
-import ReactDOM from "react-dom";
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import Button from "@/components/common/Button/Button";
+import Modal from "@/components/common/Modal/Modal";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { MOCK_DEPT_ADMIN, MOCK_STUDENT, MOCK_SUPER_ADMIN } from "@/mocks/mockData";
 import style from "./SignInUserModal.module.css";
@@ -26,52 +26,40 @@ function SignInUserModal({ isOpen, onClose }: SignInUserModalProps) {
     return <Navigate to="/" replace />;
   }
 
-  if (!isOpen) {
-    return null;
-  }
-
-  return ReactDOM.createPortal(
-    <div className={style.overlay} onClick={onClose}>
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
       {/* INFO: temp buttons to switch users */}
-
-      <div
-        className={style.modal}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        <div className={style.tempButtonWrapper}>
-          <Button
-            type="button"
-            onClick={() => {
-              login(MOCK_SUPER_ADMIN);
-              void navigate(from, { replace: true });
-            }}
-          >
-            Sign in as Super Admin (Alice)
-          </Button>
-          <Button
-            type="button"
-            onClick={() => {
-              login(MOCK_DEPT_ADMIN);
-              void navigate(from, { replace: true });
-            }}
-          >
-            Sign in as Department Admin (Bob)
-          </Button>
-          <Button
-            type="button"
-            onClick={() => {
-              login(MOCK_STUDENT);
-              void navigate(from, { replace: true });
-            }}
-          >
-            Sign in as Student (Alice)
-          </Button>
-        </div>
+      <div className={style.tempButtonWrapper}>
+        <Button
+          type="button"
+          onClick={() => {
+            login(MOCK_SUPER_ADMIN);
+            void navigate(from, { replace: true });
+          }}
+        >
+          Sign in as Super Admin (Alice)
+        </Button>
+        <Button
+          type="button"
+          onClick={() => {
+            login(MOCK_DEPT_ADMIN);
+            void navigate(from, { replace: true });
+          }}
+        >
+          Sign in as Department Admin (Bob)
+        </Button>
+        <Button
+          type="button"
+          onClick={() => {
+            login(MOCK_STUDENT);
+            void navigate(from, { replace: true });
+          }}
+        >
+          Sign in as Student (Alice)
+        </Button>
       </div>
-    </div>,
-    document.body,
+    </Modal>
   );
 }
+
 export default SignInUserModal;
