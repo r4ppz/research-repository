@@ -13,12 +13,15 @@ import { type ResearchPaper } from "@/types";
 import style from "./LibraryPage.module.css";
 
 function LibraryPage() {
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(12);
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(12);
+
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
+
   const [selectedResearch, setSelectedResearch] = useState<ResearchPaper | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredPapers = useSearchAndFilter(searchQuery, selectedDepartment, selectedYear);
   const pageData = usePagination(filteredPapers, currentPage, itemsPerPage);
@@ -55,6 +58,7 @@ function LibraryPage() {
 
   const handleCloseModal = () => {
     setSelectedResearch(null);
+    setIsModalOpen(false);
   };
 
   const handleNextPage = () => {
@@ -116,11 +120,16 @@ function LibraryPage() {
               researchPaper={research}
               onView={() => {
                 setSelectedResearch(research);
+                setIsModalOpen(true);
               }}
             />
           ))}
           {selectedResearch && (
-            <ResearchModal researchPaper={selectedResearch} onClose={handleCloseModal} />
+            <ResearchModal
+              researchPaper={selectedResearch}
+              isOpen={isModalOpen}
+              onClose={handleCloseModal}
+            />
           )}
         </section>
 

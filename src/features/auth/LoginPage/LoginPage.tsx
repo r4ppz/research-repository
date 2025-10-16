@@ -28,7 +28,7 @@ function LoginPage() {
           {/* TODO: implement google sso button */}
           <div id="gsi-button" />
 
-          {/* NOTE: this is just a temp singin button */}
+          {/* WARN: this is just a temp singin button */}
           <Button
             className={style.signInButton}
             variant="secondary"

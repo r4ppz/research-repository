@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/common/Button/Button";
-import Link from "@/components/common/link/Link";
+import Link from "@/components/common/Link/Link";
 import style from "./Footer.module.css";
 
 interface ComponentProps {
