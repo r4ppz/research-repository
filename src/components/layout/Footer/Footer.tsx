@@ -48,7 +48,7 @@ function Footer({ className, ...props }: ComponentProps) {
             <h3 className={style.linkText}>Links</h3>
             <Link href="https://www.facebook.com/assumptiondavao.edu.ph">Facebook</Link>
             <Link href="https://github.com/r4ppz19/research-repository">Github</Link>
-            <Link href="">About</Link>
+            <Link href="https://github.com/r4ppz/research-repo-docs">About</Link>
           </div>
 
           <div className={style.contactContainer}>
