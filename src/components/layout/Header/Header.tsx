@@ -90,15 +90,16 @@ function Header({ className, ...props }: ComponentProps) {
             </Button>
           </div>
 
-          <button
+          <Button
             className={style.menuButton}
+            variant="secondary"
             type="button"
             onClick={() => {
               setIsMenuOpen((prev) => !prev);
             }}
           >
             <Menu size={18} />
-          </button>
+          </Button>
         </div>
       </div>
 
