@@ -35,7 +35,7 @@ function LoginPage() {
             onClick={() => {
               setIsModalOpen(
                 confirm(
-                  "Google SSO is not configured yet and backend development hasn't started. Continue with temporary login?",
+                  "Google SSO is not set up and there is no backend yet. Using temporary test users for now.",
                 ),
               );
             }}
