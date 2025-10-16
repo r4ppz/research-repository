@@ -28,6 +28,8 @@ hr {
   background-color: var(--color-border);
 }
 
-.modal-open {
+body.modal-open,
+html.modal-open {
   overflow: hidden;
+  height: 100%;
 }
