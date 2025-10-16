@@ -72,7 +72,7 @@ function LibraryPage() {
   };
 
   if (!pageData) {
-    // TODO: make it a modal? or just do it proper loading. i dont fucking know
+    // TODO: this shit sucks. Make it a modal? i dont fucking know. Good fornow
     return <div>Loading...</div>;
   }
 

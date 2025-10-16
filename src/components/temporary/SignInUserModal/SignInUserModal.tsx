@@ -3,7 +3,6 @@ import Button from "@/components/common/Button/Button";
 import Modal from "@/components/common/Modal/Modal";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { MOCK_DEPT_ADMIN, MOCK_STUDENT, MOCK_SUPER_ADMIN } from "@/mocks/mockData";
-import style from "./SignInUserModal.module.css";
 
 interface LocationState {
   from?: { pathname: string };
@@ -29,7 +28,7 @@ function SignInUserModal({ isOpen, onClose }: SignInUserModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       {/* INFO: temp buttons to switch users */}
-      <div className={style.tempButtonWrapper}>
+      <div>
         <Button
           type="button"
           onClick={() => {
@@ -37,7 +36,7 @@ function SignInUserModal({ isOpen, onClose }: SignInUserModalProps) {
             void navigate(from, { replace: true });
           }}
         >
-          Sign in as Super Admin (Alice)
+          Sign in as Super Admin (Charlie)
         </Button>
         <Button
           type="button"

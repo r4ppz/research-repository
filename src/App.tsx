@@ -12,7 +12,6 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
-
       <Route
         path="/"
         element={
@@ -21,7 +20,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/student/requests"
         element={
@@ -30,7 +28,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/department-admin/requests"
         element={
@@ -39,7 +36,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/department-admin/research"
         element={
@@ -48,7 +44,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/super-admin/requests"
         element={
@@ -57,7 +52,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/super-admin/research"
         element={
@@ -66,6 +60,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="*" element={<LibraryPage />} />
     </Routes>
   );
 }

@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
+import schoolLogo from "@/assets/school-logo.svg";
 import Button from "@/components/common/Button/Button";
 import Link from "@/components/common/Link/Link";
 import style from "./Footer.module.css";
@@ -23,7 +24,7 @@ function Footer({ className, ...props }: ComponentProps) {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           >
-            <img className={style.schoolLogo} src="/assets/school-logo.svg" alt="school-logo" />
+            <img className={style.schoolLogo} src={schoolLogo} alt="school-logo" />
           </Button>
 
           <div className={style.titleContainer}>

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import schoolLogo from "@/assets/school-logo.svg";
 import Button from "@/components/common/Button/Button";
+import SignInUserModal from "@/components/temporary/SignInUserModal/SignInUserModal";
 import style from "./LoginPage.module.css";
-import SignInUserModal from "../../../components/temporary/SignInUserModal/SignInUserModal";
 
 function LoginPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,7 +14,7 @@ function LoginPage() {
   return (
     <div className={style.page}>
       <div className={style.loginCard}>
-        <img alt="school-logo" className={style.schoolLogo} src="/assets/school-logo.svg" />
+        <img alt="school-logo" className={style.schoolLogo} src={schoolLogo} />
 
         <div className={style.headerContainer}>
           <h1 className={style.headerSchool}>Assumption College of Davao</h1>

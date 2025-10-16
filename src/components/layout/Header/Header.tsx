@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { LogOut, Menu, User as UserIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import schoolLogo from "@/assets/school-logo.svg";
 import Button from "@/components/common/Button/Button";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { type Role } from "@/types";
@@ -56,7 +57,7 @@ function Header({ className, ...props }: ComponentProps) {
             className={style.logoContainerButton}
             onClick={() => void navigate("/")}
           >
-            <img className={style.schoolLogo} src="/assets/school-logo.svg" alt="school-logo" />
+            <img className={style.schoolLogo} src={schoolLogo} alt="school-logo" />
           </Button>
           <div className={style.titleContainer}>
             <h1 className={style.title}>ACD Research Repository</h1>
