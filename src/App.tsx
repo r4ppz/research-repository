@@ -1,12 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "@/components/common/ProtectedRoute/ProtectedRoute";
+import DepartmentAdminRequestsPage from "@/features/admins/department/RequestPage/RequestPage";
+import DepartmentAdminResearchPage from "@/features/admins/department/ResearchPage/ResearchPage";
+import SuperAdminRequestsPage from "@/features/admins/super/RequestPage/RequestPage";
+import SuperAdminResearchPage from "@/features/admins/super/ResearchPage/ResearchPage";
 import LoginPage from "@/features/auth/LoginPage/LoginPage";
-import DepartmentAdminRequestsPage from "@/features/departmentAdmin/RequestPage/RequestPage";
-import DepartmentAdminResearchPage from "@/features/departmentAdmin/ResearchPage/ResearchPage";
 import LibraryPage from "@/features/library/LibraryPage/LibraryPage";
 import StudentRequestsPage from "@/features/student/RequestPage/RequestPage";
-import SuperAdminRequestsPage from "@/features/superAdmin/RequestPage/RequestPage";
-import SuperAdminResearchPage from "@/features/superAdmin/ResearchPage/ResearchPage";
 
 function App() {
   return (
