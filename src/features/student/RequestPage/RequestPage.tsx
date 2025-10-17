@@ -1,13 +1,12 @@
 import clsx from "clsx";
-import { Download } from "lucide-react";
 import { useState } from "react";
-import Button from "@/components/common/Button/Button";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
+import RequestTable from "@/features/student/RequestTable/RequestTable";
 import { useRequestFilter } from "@/hooks/useRequestFilter";
 import { MOCK_REQUESTS } from "@/mocks/mockData";
-import { formatDateShort } from "@/util/formatDate";
+import { DocumentRequest } from "@/types/";
 import style from "./RequestPage.module.css";
 
 function RequestPage() {
@@ -21,6 +20,11 @@ function RequestPage() {
     selectedYear,
     MOCK_REQUESTS,
   );
+
+  const handleDownload = (request: DocumentRequest) => {
+    // TODO: Implement download logic
+    console.log("Downloading:", request.paper.title);
+  };
 
   return (
     <div className={clsx(style.page)}>
@@ -37,57 +41,7 @@ function RequestPage() {
           searchPlaceholder="Search paper title"
         />
 
-        <section className={style.tableSection}>
-          <table className={style.table}>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Status</th>
-                <th>Request Date</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {filteredRequests.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className={style.emptyState}>
-                    No requests found matching your filters.
-                  </td>
-                </tr>
-              ) : (
-                filteredRequests.map((request) => (
-                  <tr key={request.requestId}>
-                    <td className={style.paperTitle}>{request.paper.title}</td>
-                    <td>{request.paper.authorName}</td>
-                    <td>
-                      <div className={style.statusWrapper}>
-                        <span className={style.statusCell} data-status={request.status}>
-                          {request.status}
-                        </span>
-                        {request.paper.archived && (
-                          <span className={style.archivedBadge}>ARCHIVE</span>
-                        )}
-                      </div>
-                    </td>
-                    <td>{formatDateShort(request.requestDate)}</td>
-                    <td className={style.actionCell}>
-                      <Button
-                        variant="primary"
-                        className={style.downloadButton}
-                        disabled={request.status !== "ACCEPTED"}
-                      >
-                        <Download size={18} />
-                        Download
-                      </Button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </section>
+        <RequestTable requests={filteredRequests} onDownload={handleDownload} />
       </main>
 
       <Footer className={style.footer} />

@@ -1,0 +1,42 @@
+.paperTitle {
+  cursor: pointer;
+  font-weight: var(--font-weight-semibold);
+}
+
+.statusWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.statusCell {
+  font-weight: var(--font-weight-semibold);
+}
+
+.statusCell[data-status="ACCEPTED"] {
+  color: var(--color-success);
+}
+
+.statusCell[data-status="REJECTED"] {
+  color: var(--color-error);
+}
+
+.statusCell[data-status="PENDING"] {
+  color: var(--color-warning);
+}
+
+.archivedBadge {
+  padding: var(--space-2xs) var(--space-xs);
+  background-color: var(--color-warning-bg);
+  color: var(--color-error);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.downloadButton {
+  font-size: var(--font-size-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+}

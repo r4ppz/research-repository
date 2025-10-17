@@ -1,0 +1,115 @@
+.tableSection {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: auto;
+  width: 100%;
+  flex-direction: column;
+  border: 1px solid var(--color-border-default);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+}
+
+@media (min-width: 768px) {
+  .tableSection {
+    border-radius: var(--radius-lg);
+    transition: var(--transition-elevation);
+    box-shadow: var(--shadow-resting);
+  }
+
+  .tableSection:hover {
+    transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+    box-shadow: var(--shadow-hover);
+  }
+}
+
+.table {
+  width: 100%;
+  min-width: 600px;
+  border-spacing: 0;
+  overflow: visible;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-resting);
+  transition: var(--transition-elevation);
+  border-collapse: separate;
+}
+
+@media (min-width: 768px) {
+  .table {
+    min-width: unset;
+    border-radius: var(--radius-lg);
+  }
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background-color: var(--color-surface);
+}
+
+thead {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+@media (min-width: 768px) {
+  thead {
+    font-size: var(--font-size-md);
+  }
+}
+
+tbody {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+}
+
+@media (min-width: 768px) {
+  tbody {
+    font-size: var(--font-size-md);
+  }
+}
+
+.table thead th,
+.table tbody td {
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table th,
+.table td {
+  text-align: center;
+  border: none;
+  padding: var(--space-sm) var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .table th,
+  .table td {
+    padding: var(--space-md) var(--space-xl);
+  }
+}
+
+.table th[data-align="left"],
+.table td[data-align="left"] {
+  text-align: left;
+}
+
+.table th[data-align="center"],
+.table td[data-align="center"] {
+  text-align: center;
+}
+
+.table th[data-align="right"],
+.table td[data-align="right"] {
+  text-align: right;
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--color-text-secondary);
+}
