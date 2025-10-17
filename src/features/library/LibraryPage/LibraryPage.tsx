@@ -1,14 +1,13 @@
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import Button from "@/components/common/Button/Button";
-import Input from "@/components/common/Input/Input";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
-import FilterButtons from "@/features/library/components/FilterButtons/FilterButtons";
+import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
 import ResearchCard from "@/features/library/components/ResearchCard/ResearchCard";
 import ResearchModal from "@/features/library/components/ResearchModal/ResearchModal";
 import { usePagination } from "@/features/library/hooks/usePagination";
-import { useSearchAndFilter } from "@/features/library/hooks/useSearchAndFilter";
+import { useResearchFilter } from "@/hooks/useResearchFilter";
 import { MOCK_PAPERS } from "@/mocks/mockData";
 import { type ResearchPaper } from "@/types";
 import style from "./LibraryPage.module.css";
@@ -25,7 +24,7 @@ function LibraryPage() {
   const [selectedResearch, setSelectedResearch] = useState<ResearchPaper | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const filteredPapers = useSearchAndFilter(
+  const filteredPapers = useResearchFilter(
     searchQuery,
     selectedDepartment,
     selectedYear,
@@ -72,7 +71,8 @@ function LibraryPage() {
   };
 
   if (!pageData) {
-    // TODO: this shit sucks. Make it a modal? i dont fucking know. Good fornow
+    // WARN: this shit sucks
+    // TODO: improve this shi
     return <div>Loading...</div>;
   }
 
@@ -96,19 +96,12 @@ function LibraryPage() {
         </section>
 
         <section className={style.searchSection}>
-          <Input
-            type="search"
-            icon={Search}
-            placeholder="Search paper title"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-            }}
-          />
-
-          <FilterButtons
+          <SearchAndFilter
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
             onDepartmentChange={setSelectedDepartment}
             onYearChange={setSelectedYear}
+            searchPlaceholder="Search paper title"
           />
         </section>
 

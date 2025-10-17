@@ -1,8 +1,8 @@
 import Button from "@/components/common/Button/Button";
 import Modal from "@/components/common/Modal/Modal";
 import { type ResearchPaper } from "@/types";
+import { formatDateLong } from "@/util/formatDate";
 import style from "./ResearchModal.module.css";
-import { formatDate } from "../../../../util/formatDate";
 
 interface ResearchModalProps {
   isOpen: boolean;
@@ -11,7 +11,7 @@ interface ResearchModalProps {
 }
 
 function ResearchModal({ isOpen, researchPaper, onClose }: ResearchModalProps) {
-  const formattedDate = formatDate(researchPaper.submissionDate);
+  const formattedDate = formatDateLong(researchPaper.submissionDate);
   const department = researchPaper.department.departmentName;
 
   return (

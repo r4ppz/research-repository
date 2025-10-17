@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { type ResearchPaper } from "@/types";
 
-export function useSearchAndFilter(
+export function useResearchFilter(
   searchQuery: string,
   selectedDepartment: string | null,
   selectedYear: string | null,
