@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { Download } from "lucide-react";
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Footer from "@/components/layout/Footer/Footer";
@@ -10,7 +11,6 @@ import { formatDateShort } from "@/util/formatDate";
 import style from "./RequestPage.module.css";
 
 function RequestPage() {
-  const [tableActive, setTableActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
@@ -23,12 +23,13 @@ function RequestPage() {
   );
 
   return (
-    <div className={clsx(style.page, tableActive && style.tableActive)}>
-      <Header />
+    <div className={clsx(style.page)}>
+      <Header className={style.header} />
       <main className={style.main}>
         <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
 
         <SearchAndFilter
+          className={style.searchAndFilter}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onDepartmentChange={setSelectedDepartment}
@@ -36,21 +37,7 @@ function RequestPage() {
           searchPlaceholder="Search paper title"
         />
 
-        <section
-          className={style.tableSection}
-          onMouseEnter={() => {
-            setTableActive(true);
-          }}
-          onMouseLeave={() => {
-            setTableActive(false);
-          }}
-          onFocus={() => {
-            setTableActive(true);
-          }}
-          onBlur={() => {
-            setTableActive(false);
-          }}
-        >
+        <section className={style.tableSection}>
           <table className={style.table}>
             <thead>
               <tr>
@@ -72,9 +59,7 @@ function RequestPage() {
               ) : (
                 filteredRequests.map((request) => (
                   <tr key={request.requestId}>
-                    <td>
-                      <h3 className={style.paperTitle}>{request.paper.title}</h3>
-                    </td>
+                    <td className={style.paperTitle}>{request.paper.title}</td>
                     <td>{request.paper.authorName}</td>
                     <td>
                       <div className={style.statusWrapper}>
@@ -82,7 +67,7 @@ function RequestPage() {
                           {request.status}
                         </span>
                         {request.paper.archived && (
-                          <span className={style.archivedBadge}>Archived</span>
+                          <span className={style.archivedBadge}>ARCHIVE</span>
                         )}
                       </div>
                     </td>
@@ -93,6 +78,7 @@ function RequestPage() {
                         className={style.downloadButton}
                         disabled={request.status !== "ACCEPTED"}
                       >
+                        <Download size={18} />
                         Download
                       </Button>
                     </td>
@@ -104,7 +90,7 @@ function RequestPage() {
         </section>
       </main>
 
-      <Footer />
+      <Footer className={style.footer} />
     </div>
   );
 }
