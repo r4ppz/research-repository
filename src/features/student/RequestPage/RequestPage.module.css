@@ -18,7 +18,7 @@
   .main {
     padding: var(--space-xl) var(--space-7xl) var(--space-5xl) var(--space-7xl);
     gap: var(--space-xl);
-    height: 90vh;
+    min-height: 90vh;
   }
 }
 
