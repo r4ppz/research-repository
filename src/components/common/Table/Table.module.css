@@ -37,6 +37,7 @@
 @media (min-width: 768px) {
   .table {
     min-width: unset;
+    min-height: 60vh;
     border-radius: var(--radius-lg);
   }
 }
