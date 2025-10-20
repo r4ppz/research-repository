@@ -28,7 +28,7 @@ function RequestPage() {
 
   return (
     <div className={clsx(style.page)}>
-      <Header className={style.header} />
+      <Header />
       <main className={style.main}>
         <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
 
@@ -44,7 +44,7 @@ function RequestPage() {
         <RequestTable requests={filteredRequests} onDownload={handleDownload} />
       </main>
 
-      <Footer className={style.footer} />
+      <Footer />
     </div>
   );
 }
