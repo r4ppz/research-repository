@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 // NOTE: Custom hook to manage body class for modal states
-//
+
 export function useModalScrollLock(isOpen: boolean): void {
   useEffect(() => {
     const html = document.documentElement;

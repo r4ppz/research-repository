@@ -8,12 +8,12 @@
   background-color: var(--color-surface);
   border-radius: var(--radius-md);
 }
-
 @media (min-width: 768px) {
   .tableSection {
     border-radius: var(--radius-lg);
     transition: var(--transition-elevation);
     box-shadow: var(--shadow-resting);
+    min-height: 70%;
   }
 
   .tableSection:hover {
@@ -37,7 +37,6 @@
 @media (min-width: 768px) {
   .table {
     min-width: unset;
-    min-height: 60vh;
     border-radius: var(--radius-lg);
   }
 }
