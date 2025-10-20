@@ -1,6 +1,6 @@
 html {
-  /* scrollbar-gutter: stable; */
   overflow-y: scroll;
+  scrollbar-gutter: stable;
 }
 
 button {
