@@ -57,7 +57,7 @@ export default [
       "no-debugger": "warn",
 
       // React Hooks + Fast Refresh
-      ...reactHooks.configs.recommended.rules,
+      ...reactHooks.configs["recommended-latest"].rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
 
       "import/order": [
