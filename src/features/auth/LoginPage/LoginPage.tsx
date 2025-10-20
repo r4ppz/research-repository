@@ -27,7 +27,7 @@ function LoginPage() {
 
         <div className={style.googleButtonContainer}>
           {/* TODO: implement google sso button */}
-          <div id="gsi-button" />
+          <div id="gsi-button"> </div>
 
           {/* WARN: this is just a temp singin button */}
           <Button
@@ -45,6 +45,7 @@ function LoginPage() {
             Sign In with Google
           </Button>
         </div>
+
         <SignInUserModal onClose={onClose} isOpen={isModalOpen} />
         <p className={style.textNotice}>Single Sign-On via Google Workspace for Education</p>
       </div>

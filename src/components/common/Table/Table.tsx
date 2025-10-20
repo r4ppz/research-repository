@@ -1,13 +1,6 @@
 import clsx from "clsx";
-import { ReactNode } from "react";
+import { Column } from "./column";
 import style from "./Table.module.css";
-
-export interface Column<T> {
-  key: string;
-  header: string;
-  render: (item: T) => ReactNode;
-  align?: "left" | "center" | "right";
-}
 
 interface TableProps<T> {
   columns: Column<T>[];

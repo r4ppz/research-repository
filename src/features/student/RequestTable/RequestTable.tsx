@@ -1,7 +1,8 @@
 import { Download } from "lucide-react";
 import { useMemo } from "react";
 import Button from "@/components/common/Button/Button";
-import Table, { Column } from "@/components/common/Table/Table";
+import { Column } from "@/components/common/Table/column";
+import Table from "@/components/common/Table/Table";
 import { DocumentRequest } from "@/types";
 import { formatDateShort } from "@/util/formatDate";
 import style from "./RequestTable.module.css";
