@@ -63,7 +63,7 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
             onDownload(request);
           }}
           disabled={request.status !== "ACCEPTED"}
-          variant={request.status === "ACCEPTED" ? "primary" : "disabled"}
+          variant={request.status === "ACCEPTED" ? "primary" : "secondary"}
         >
           Download
         </Button>
@@ -75,7 +75,7 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
     <Table<DocumentRequest>
       data={requests}
       columns={columns}
-      rowKey={(request) => request.requestId}
+      rowKey={(request) => request.requestId.toString()}
       className={clsx(styles.requestTable, className)}
       pagination={{
         pageSize,

@@ -26,7 +26,8 @@ interface TableProps<T> {
   onRowClick?: (item: T, index: number) => void;
 }
 
-function Table<T extends Record<string, unknown>>({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function Table<T extends Record<string, any>>({
   data = [],
   columns,
   rowKey,

@@ -21,6 +21,7 @@ function AdminRequestTable({ requests, className, onAction }: AdminRequestTableP
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 5; // Configurable number of rows
 
+  // Define columns inside the function to avoid unused variable warnings
   const columns = [
     {
       key: "requester.fullName",
@@ -69,7 +70,7 @@ function AdminRequestTable({ requests, className, onAction }: AdminRequestTableP
               onAction(request.requestId, "accept");
             }}
             disabled={request.status !== "PENDING"}
-            variant={request.status === "PENDING" ? "success" : "disabled"}
+            variant={request.status === "PENDING" ? "primary" : "secondary"}
           >
             Accept
           </Button>
@@ -78,7 +79,7 @@ function AdminRequestTable({ requests, className, onAction }: AdminRequestTableP
               onAction(request.requestId, "reject");
             }}
             disabled={request.status !== "PENDING"}
-            variant={request.status === "PENDING" ? "error" : "disabled"}
+            variant={request.status === "PENDING" ? "secondary" : "secondary"}
           >
             Reject
           </Button>
@@ -91,7 +92,7 @@ function AdminRequestTable({ requests, className, onAction }: AdminRequestTableP
     <Table<DocumentRequest>
       data={requests}
       columns={columns}
-      rowKey={(request) => request.requestId}
+      rowKey={(request) => request.requestId.toString()}
       className={clsx(styles.adminRequestTable, className)}
       pagination={{
         pageSize,
