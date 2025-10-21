@@ -84,11 +84,6 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
         onPageChange: setCurrentPage,
         totalElements: requests.length,
       }}
-      rowClassName={(request) => {
-        if (request.status === "ACCEPTED") return style.acceptedRow;
-        if (request.status === "REJECTED") return style.rejectedRow;
-        return style.pendingRow;
-      }}
       emptyText="No requests found"
     />
   );
