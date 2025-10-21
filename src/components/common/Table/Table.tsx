@@ -2,15 +2,16 @@ import clsx from "clsx";
 import { useState, useMemo } from "react";
 import { safeToString } from "@/util/safeToString";
 import styles from "./Table.module.css";
+import Button from "../Button/Button";
 
 export interface TableColumn<T> {
-  key: string;
+  key: keyof T | string;
   title: string;
   render?: (item: T) => React.ReactNode;
   width?: string | number;
 }
 
-interface TableProps<T> {
+interface TableProps<T extends object> {
   data: T[];
   columns: TableColumn<T>[];
   rowKey: (item: T) => string | number;
@@ -26,8 +27,7 @@ interface TableProps<T> {
   onRowClick?: (item: T, index: number) => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function Table<T extends Record<string, any>>({
+function Table<T extends object>({
   data = [],
   columns,
   rowKey,
@@ -101,15 +101,17 @@ function Table<T extends Record<string, any>>({
 
           return (
             <div
-              key={key}
+              key={String(key)}
               className={clsx(styles.mobileCard, itemRowClassName)}
               onClick={() => onRowClick?.(item, index)}
             >
               {columns.map((column) => (
-                <div key={column.key} className={styles.mobileRow}>
+                <div key={String(column.key)} className={styles.mobileRow}>
                   <span className={styles.mobileLabel}>{column.title}:</span>
                   <span className={styles.mobileValue}>
-                    {column.render ? column.render(item) : safeToString(item[column.key])}
+                    {column.render
+                      ? column.render(item)
+                      : safeToString(item[column.key as keyof T])}
                   </span>
                 </div>
               ))}
@@ -124,7 +126,11 @@ function Table<T extends Record<string, any>>({
           <thead>
             <tr>
               {columns.map((column) => (
-                <th key={column.key} className={styles.headerCell} style={{ width: column.width }}>
+                <th
+                  key={String(column.key)}
+                  className={styles.headerCell}
+                  style={{ width: column.width }}
+                >
                   {column.title}
                 </th>
               ))}
@@ -137,13 +143,15 @@ function Table<T extends Record<string, any>>({
 
               return (
                 <tr
-                  key={key}
+                  key={String(key)}
                   className={clsx(styles.row, itemRowClassName)}
                   onClick={() => onRowClick?.(item, index)}
                 >
                   {columns.map((column) => (
-                    <td key={`${String(key)}-${column.key}`} className={styles.cell}>
-                      {column.render ? column.render(item) : safeToString(item[column.key])}
+                    <td key={`${String(key)}-${String(column.key)}`} className={styles.cell}>
+                      {column.render
+                        ? column.render(item)
+                        : safeToString(item[column.key as keyof T])}
                     </td>
                   ))}
                 </tr>
@@ -156,25 +164,27 @@ function Table<T extends Record<string, any>>({
       {/* Pagination Controls */}
       {pagination && totalPages > 1 && (
         <div className={styles.pagination}>
-          <button
+          <Button
+            variant="secondary"
             className={styles.paginationButton}
             onClick={handlePrevPage}
             disabled={currentPage === 0}
           >
             Previous
-          </button>
+          </Button>
 
           <span className={styles.pageInfo}>
             Page {currentPage + 1} of {totalPages}
           </span>
 
-          <button
+          <Button
+            variant="secondary"
             className={styles.paginationButton}
             onClick={handleNextPage}
             disabled={currentPage === totalPages - 1}
           >
             Next
-          </button>
+          </Button>
         </div>
       )}
     </div>
