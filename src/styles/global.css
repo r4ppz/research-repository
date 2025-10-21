@@ -1,7 +1,12 @@
-html {
-  /* overflow-y: scroll; */
+:root {
+  /* scrollbar-gutter: stable both-edges; */
   scrollbar-gutter: stable;
 }
+
+/* html { */
+/*   /* overflow-y: scroll; */
+/*   scrollbar-gutter: stable; */
+/* } */
 
 button {
   cursor: pointer;
