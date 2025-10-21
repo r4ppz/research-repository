@@ -67,15 +67,7 @@ function AdminRequestTable({
       render: (request: DocumentRequest) => (
         <div className={styles.actionButtons}>
           <Button
-            onClick={() => {
-              onAction(request.requestId, "accept");
-            }}
-            disabled={request.status !== "PENDING"}
-            variant={request.status === "PENDING" ? "primary" : "secondary"}
-          >
-            Accept
-          </Button>
-          <Button
+            className={styles.actionButton}
             onClick={() => {
               onAction(request.requestId, "reject");
             }}
@@ -84,12 +76,23 @@ function AdminRequestTable({
           >
             Reject
           </Button>
+
+          <Button
+            className={styles.actionButton}
+            onClick={() => {
+              onAction(request.requestId, "accept");
+            }}
+            disabled={request.status !== "PENDING"}
+            variant={request.status === "PENDING" ? "primary" : "secondary"}
+          >
+            Accept
+          </Button>
         </div>
       ),
     },
   ];
 
-  // Conditionally add the department column if showDepartmentColumn is true
+  // NOTE: Could be improve, but okay for now :)
   const columns = showDepartmentColumn
     ? [
         ...baseColumns.slice(0, 3),

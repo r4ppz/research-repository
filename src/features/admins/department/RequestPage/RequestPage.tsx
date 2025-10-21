@@ -22,7 +22,7 @@ function RequestPage() {
           <AdminRequestTable
             requests={filteredRequests}
             onAction={handleAction}
-            showDepartmentColumn={false} // Department column not needed for department admins
+            showDepartmentColumn={false} // WARN: use auth? idk
           />
         </div>
       </main>
