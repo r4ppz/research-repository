@@ -1,4 +1,4 @@
-.requestTable {
+.adminRequestTable {
   width: 100%;
 }
 
@@ -8,6 +8,11 @@
   color: var(--color-text-inverted);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--space-sm);
 }
 
 .acceptedRow {

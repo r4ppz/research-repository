@@ -5,10 +5,10 @@ import Table from "@/components/common/Table/Table";
 import { DocumentRequest, RequestStatus } from "@/types";
 import styles from "./RequestTable.module.css";
 
-interface RequestTableProps {
+interface AdminRequestTableProps {
   requests: DocumentRequest[];
   className?: string;
-  onDownload: (request: DocumentRequest) => void;
+  onAction: (requestId: number, action: "accept" | "reject") => void;
 }
 
 const statusColors: Record<RequestStatus, string> = {
@@ -17,11 +17,16 @@ const statusColors: Record<RequestStatus, string> = {
   REJECTED: "var(--color-error)",
 };
 
-function RequestTable({ requests, className, onDownload }: RequestTableProps) {
+function AdminRequestTable({ requests, className, onAction }: AdminRequestTableProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 5; // Configurable number of rows
 
   const columns = [
+    {
+      key: "requester.fullName",
+      title: "Requester",
+      render: (request: DocumentRequest) => request.requester.fullName,
+    },
     {
       key: "paper.title",
       title: "Paper Title",
@@ -58,15 +63,26 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
       key: "actions",
       title: "Actions",
       render: (request: DocumentRequest) => (
-        <Button
-          onClick={() => {
-            onDownload(request);
-          }}
-          disabled={request.status !== "ACCEPTED"}
-          variant={request.status === "ACCEPTED" ? "primary" : "disabled"}
-        >
-          Download
-        </Button>
+        <div className={styles.actionButtons}>
+          <Button
+            onClick={() => {
+              onAction(request.requestId, "accept");
+            }}
+            disabled={request.status !== "PENDING"}
+            variant={request.status === "PENDING" ? "success" : "disabled"}
+          >
+            Accept
+          </Button>
+          <Button
+            onClick={() => {
+              onAction(request.requestId, "reject");
+            }}
+            disabled={request.status !== "PENDING"}
+            variant={request.status === "PENDING" ? "error" : "disabled"}
+          >
+            Reject
+          </Button>
+        </div>
       ),
     },
   ];
@@ -76,7 +92,7 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
       data={requests}
       columns={columns}
       rowKey={(request) => request.requestId}
-      className={clsx(styles.requestTable, className)}
+      className={clsx(styles.adminRequestTable, className)}
       pagination={{
         pageSize,
         currentPage,
@@ -93,4 +109,4 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
   );
 }
 
-export default RequestTable;
+export default AdminRequestTable;

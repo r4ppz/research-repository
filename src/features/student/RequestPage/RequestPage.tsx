@@ -41,7 +41,9 @@ function RequestPage() {
           searchPlaceholder="Search paper title"
         />
 
-        <RequestTable requests={filteredRequests} onDownload={handleDownload} />
+        <div className={style.tableSection}>
+          <RequestTable requests={filteredRequests} onDownload={handleDownload} />
+        </div>
       </main>
 
       <Footer />
