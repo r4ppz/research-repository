@@ -10,6 +10,11 @@
   font-weight: var(--font-weight-semibold);
 }
 
+.downloadButton {
+  display: inline-flex;
+  width: auto;
+}
+
 .acceptedRow {
   border-left: 3px solid var(--color-success);
 }

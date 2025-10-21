@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useState, useMemo } from "react";
 import { safeToString } from "@/util/safeToString";
-import styles from "./Table.module.css";
+import style from "./Table.module.css";
 import Button from "../Button/Button";
 
 export interface TableColumn<T> {
@@ -85,16 +85,16 @@ function Table<T extends object>({
 
   if (data.length === 0) {
     return (
-      <div className={clsx(styles.tableContainer, className)}>
-        <div className={styles.emptyState}>{emptyText}</div>
+      <div className={clsx(style.tableContainer, className)}>
+        <div className={style.emptyState}>{emptyText}</div>
       </div>
     );
   }
 
   return (
-    <div className={clsx(styles.tableContainer, className)}>
+    <div className={clsx(style.tableContainer, className)}>
       {/* Mobile Card View */}
-      <div className={styles.mobileView}>
+      <div className={style.mobileView}>
         {paginatedData.map((item, index) => {
           const key = rowKey(item);
           const itemRowClassName = rowClassName ? rowClassName(item, index) : "";
@@ -102,13 +102,13 @@ function Table<T extends object>({
           return (
             <div
               key={String(key)}
-              className={clsx(styles.mobileCard, itemRowClassName)}
+              className={clsx(style.mobileCard, itemRowClassName)}
               onClick={() => onRowClick?.(item, index)}
             >
               {columns.map((column) => (
-                <div key={String(column.key)} className={styles.mobileRow}>
-                  <span className={styles.mobileLabel}>{column.title}:</span>
-                  <span className={styles.mobileValue}>
+                <div key={String(column.key)} className={style.mobileRow}>
+                  <span className={style.mobileLabel}>{column.title}:</span>
+                  <span className={style.mobileValue}>
                     {column.render
                       ? column.render(item)
                       : safeToString(item[column.key as keyof T])}
@@ -121,14 +121,14 @@ function Table<T extends object>({
       </div>
 
       {/* Desktop Table View */}
-      <div className={styles.desktopView}>
-        <table className={styles.table}>
+      <div className={style.desktopView}>
+        <table className={style.table}>
           <thead>
             <tr>
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
-                  className={styles.headerCell}
+                  className={style.headerCell}
                   style={{ width: column.width }}
                 >
                   {column.title}
@@ -144,11 +144,11 @@ function Table<T extends object>({
               return (
                 <tr
                   key={String(key)}
-                  className={clsx(styles.row, itemRowClassName)}
+                  className={clsx(style.row, itemRowClassName)}
                   onClick={() => onRowClick?.(item, index)}
                 >
                   {columns.map((column) => (
-                    <td key={`${String(key)}-${String(column.key)}`} className={styles.cell}>
+                    <td key={`${String(key)}-${String(column.key)}`} className={style.cell}>
                       {column.render
                         ? column.render(item)
                         : safeToString(item[column.key as keyof T])}
@@ -163,23 +163,23 @@ function Table<T extends object>({
 
       {/* Pagination Controls */}
       {pagination && totalPages > 1 && (
-        <div className={styles.pagination}>
+        <div className={style.pagination}>
           <Button
             variant="secondary"
-            className={styles.paginationButton}
+            className={style.paginationButton}
             onClick={handlePrevPage}
             disabled={currentPage === 0}
           >
             Previous
           </Button>
 
-          <span className={styles.pageInfo}>
+          <span className={style.pageInfo}>
             Page {currentPage + 1} of {totalPages}
           </span>
 
           <Button
             variant="secondary"
-            className={styles.paginationButton}
+            className={style.paginationButton}
             onClick={handleNextPage}
             disabled={currentPage === totalPages - 1}
           >

@@ -3,7 +3,7 @@ import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Table from "@/components/common/Table/Table";
 import { DocumentRequest, RequestStatus } from "@/types";
-import styles from "./RequestTable.module.css";
+import style from "./RequestTable.module.css";
 
 interface RequestTableProps {
   requests: DocumentRequest[];
@@ -47,7 +47,7 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
       title: "Status",
       render: (request: DocumentRequest) => (
         <span
-          className={styles.statusBadge}
+          className={style.statusBadge}
           style={{ backgroundColor: statusColors[request.status] }}
         >
           {request.status}
@@ -59,6 +59,7 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
       title: "Actions",
       render: (request: DocumentRequest) => (
         <Button
+          className={style.downloadButton}
           onClick={() => {
             onDownload(request);
           }}
@@ -76,7 +77,7 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
       data={requests}
       columns={columns}
       rowKey={(request) => request.requestId.toString()}
-      className={clsx(styles.requestTable, className)}
+      className={clsx(style.requestTable, className)}
       pagination={{
         pageSize,
         currentPage,
@@ -84,9 +85,9 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
         totalElements: requests.length,
       }}
       rowClassName={(request) => {
-        if (request.status === "ACCEPTED") return styles.acceptedRow;
-        if (request.status === "REJECTED") return styles.rejectedRow;
-        return styles.pendingRow;
+        if (request.status === "ACCEPTED") return style.acceptedRow;
+        if (request.status === "REJECTED") return style.rejectedRow;
+        return style.pendingRow;
       }}
       emptyText="No requests found"
     />
