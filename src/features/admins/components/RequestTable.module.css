@@ -1,4 +1,4 @@
-.requestTable {
+.adminRequestTable {
   width: 100%;
 }
 
@@ -10,12 +10,9 @@
   font-weight: var(--font-weight-semibold);
 }
 
-.downloadButton {
-  display: inline-flex;
-  width: auto;
-  font-size: var(--font-size-sm);
-  border-radius: var(--radius-md);
-  padding: var(--space-sm) var(--space-md);
+.actionButtons {
+  display: flex;
+  gap: var(--space-sm);
 }
 
 .acceptedRow {

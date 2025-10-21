@@ -12,12 +12,12 @@ import style from "./RequestPage.module.css";
 function RequestPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
-  const [selectedYear, setSelectedYear] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null); // Changed from selectedYear to selectedDate
 
   const filteredRequests = useRequestFilter(
     searchQuery,
     selectedDepartment,
-    selectedYear,
+    selectedDate, // Changed from selectedYear to selectedDate
     MOCK_REQUESTS,
   );
 
@@ -37,11 +37,14 @@ function RequestPage() {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onDepartmentChange={setSelectedDepartment}
-          onYearChange={setSelectedYear}
+          onDateChange={setSelectedDate} // Changed from onYearChange to onDateChange
+          filterType="date"
           searchPlaceholder="Search paper title"
         />
 
-        <RequestTable requests={filteredRequests} onDownload={handleDownload} />
+        <div className={style.tableSection}>
+          <RequestTable requests={filteredRequests} onDownload={handleDownload} />
+        </div>
       </main>
 
       <Footer />

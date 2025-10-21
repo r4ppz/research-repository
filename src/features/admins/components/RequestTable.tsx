@@ -3,12 +3,12 @@ import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Table from "@/components/common/Table/Table";
 import { DocumentRequest, RequestStatus } from "@/types";
-import style from "./RequestTable.module.css";
+import styles from "./RequestTable.module.css";
 
-interface RequestTableProps {
+interface AdminRequestTableProps {
   requests: DocumentRequest[];
   className?: string;
-  onDownload: (request: DocumentRequest) => void;
+  onAction: (requestId: number, action: "accept" | "reject") => void;
 }
 
 const statusColors: Record<RequestStatus, string> = {
@@ -17,11 +17,17 @@ const statusColors: Record<RequestStatus, string> = {
   REJECTED: "var(--color-error)",
 };
 
-function RequestTable({ requests, className, onDownload }: RequestTableProps) {
+function AdminRequestTable({ requests, className, onAction }: AdminRequestTableProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 5; // Configurable number of rows
 
+  // Define columns inside the function to avoid unused variable warnings
   const columns = [
+    {
+      key: "requester.fullName",
+      title: "Requester",
+      render: (request: DocumentRequest) => request.requester.fullName,
+    },
     {
       key: "paper.title",
       title: "Paper Title",
@@ -47,7 +53,7 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
       title: "Status",
       render: (request: DocumentRequest) => (
         <span
-          className={style.statusBadge}
+          className={styles.statusBadge}
           style={{ backgroundColor: statusColors[request.status] }}
         >
           {request.status}
@@ -58,16 +64,26 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
       key: "actions",
       title: "Actions",
       render: (request: DocumentRequest) => (
-        <Button
-          className={style.downloadButton}
-          onClick={() => {
-            onDownload(request);
-          }}
-          disabled={request.status !== "ACCEPTED"}
-          variant={request.status === "ACCEPTED" ? "primary" : "secondary"}
-        >
-          Download
-        </Button>
+        <div className={styles.actionButtons}>
+          <Button
+            onClick={() => {
+              onAction(request.requestId, "accept");
+            }}
+            disabled={request.status !== "PENDING"}
+            variant={request.status === "PENDING" ? "primary" : "secondary"}
+          >
+            Accept
+          </Button>
+          <Button
+            onClick={() => {
+              onAction(request.requestId, "reject");
+            }}
+            disabled={request.status !== "PENDING"}
+            variant={request.status === "PENDING" ? "secondary" : "secondary"}
+          >
+            Reject
+          </Button>
+        </div>
       ),
     },
   ];
@@ -77,16 +93,21 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
       data={requests}
       columns={columns}
       rowKey={(request) => request.requestId.toString()}
-      className={clsx(style.requestTable, className)}
+      className={clsx(styles.adminRequestTable, className)}
       pagination={{
         pageSize,
         currentPage,
         onPageChange: setCurrentPage,
         totalElements: requests.length,
       }}
+      rowClassName={(request) => {
+        if (request.status === "ACCEPTED") return styles.acceptedRow;
+        if (request.status === "REJECTED") return styles.rejectedRow;
+        return styles.pendingRow;
+      }}
       emptyText="No requests found"
     />
   );
 }
 
-export default RequestTable;
+export default AdminRequestTable;

@@ -8,7 +8,9 @@ interface SearchAndFilterProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onDepartmentChange: (department: string | null) => void;
-  onYearChange: (year: string | null) => void;
+  onYearChange?: (year: string | null) => void;
+  onDateChange?: (date: string | null) => void;
+  filterType?: "year" | "date"; // To determine which filter to show
   searchPlaceholder?: string;
   className?: string;
 }
@@ -18,6 +20,8 @@ function SearchAndFilter({
   onSearchChange,
   onDepartmentChange,
   onYearChange,
+  onDateChange,
+  filterType = "year",
   searchPlaceholder = "Search paper title",
   className,
 }: SearchAndFilterProps) {
@@ -33,7 +37,12 @@ function SearchAndFilter({
         }}
       />
 
-      <FilterButtons onDepartmentChange={onDepartmentChange} onYearChange={onYearChange} />
+      <FilterButtons
+        onDepartmentChange={onDepartmentChange}
+        onYearChange={onYearChange}
+        onDateChange={onDateChange}
+        filterType={filterType}
+      />
     </section>
   );
 }

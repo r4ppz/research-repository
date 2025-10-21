@@ -4,7 +4,7 @@ import { type DocumentRequest } from "@/types";
 export function useRequestFilter(
   searchQuery: string,
   selectedDepartment: string | null,
-  selectedYear: string | null,
+  selectedDate: string | null, // Changed from selectedYear to selectedDate
   requests: DocumentRequest[],
 ): DocumentRequest[] {
   return useMemo(() => {
@@ -12,8 +12,8 @@ export function useRequestFilter(
       const matchesTitle = request.paper.title.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesDepartment =
         !selectedDepartment || request.paper.department.departmentName === selectedDepartment;
-      const matchesYear = !selectedYear || request.requestDate.startsWith(selectedYear);
-      return matchesTitle && matchesDepartment && matchesYear;
+      const matchesDate = !selectedDate || request.requestDate.startsWith(selectedDate);
+      return matchesTitle && matchesDepartment && matchesDate;
     });
-  }, [requests, searchQuery, selectedDepartment, selectedYear]);
+  }, [requests, searchQuery, selectedDepartment, selectedDate]);
 }
