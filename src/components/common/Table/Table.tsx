@@ -164,27 +164,29 @@ function Table<T extends object>({
       {/* Pagination Controls */}
       {pagination && totalPages > 1 && (
         <div className={style.pagination}>
-          <Button
-            variant="secondary"
-            className={style.paginationButton}
-            onClick={handlePrevPage}
-            disabled={currentPage === 0}
-          >
-            Previous
-          </Button>
-
           <span className={style.pageInfo}>
             Page {currentPage + 1} of {totalPages}
           </span>
 
-          <Button
-            variant="secondary"
-            className={style.paginationButton}
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages - 1}
-          >
-            Next
-          </Button>
+          <div className={style.paginationButtonsWrapper}>
+            <Button
+              variant="secondary"
+              className={style.paginationButton}
+              onClick={handlePrevPage}
+              disabled={currentPage === 0}
+            >
+              Previous
+            </Button>
+
+            <Button
+              variant="secondary"
+              className={style.paginationButton}
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages - 1}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       )}
     </div>
