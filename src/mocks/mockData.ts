@@ -174,61 +174,75 @@ export const MOCK_SUPER_ADMIN: User = {
   department: null,
 };
 
+// Extract unique years from MOCK_PAPERS submission dates
+export const MOCK_YEARS = Array.from(
+  new Set(MOCK_PAPERS.map((paper) => paper.submissionDate.substring(0, 4))),
+)
+  .sort()
+  .reverse();
+
 export const MOCK_REQUESTS: DocumentRequest[] = [
   {
     requestId: 1,
     status: "ACCEPTED",
-    requestDate: "2025-10-01",
+    requestDate: "2025-10-01T10:30:00Z", // ISO format datetime
     paper: MOCK_PAPERS[0],
     requester: MOCK_STUDENT,
   },
   {
     requestId: 2,
     status: "PENDING",
-    requestDate: "2025-10-05",
+    requestDate: "2025-10-05T14:22:15Z", // ISO format datetime
     paper: MOCK_PAPERS[1],
     requester: MOCK_STUDENT,
   },
   {
     requestId: 3,
     status: "REJECTED",
-    requestDate: "2025-09-28",
+    requestDate: "2025-09-28T09:15:30Z", // ISO format datetime
     paper: MOCK_PAPERS[3],
     requester: MOCK_STUDENT,
   },
   {
     requestId: 4,
     status: "ACCEPTED",
-    requestDate: "2025-10-28",
+    requestDate: "2025-10-28T16:45:20Z", // ISO format datetime
     paper: MOCK_PAPERS[4],
     requester: MOCK_STUDENT,
   },
   {
     requestId: 5,
     status: "ACCEPTED",
-    requestDate: "2025-10-01",
+    requestDate: "2025-10-01T11:05:40Z", // ISO format datetime
     paper: MOCK_PAPERS[5],
     requester: MOCK_STUDENT,
   },
   {
     requestId: 6,
     status: "PENDING",
-    requestDate: "2025-10-05",
+    requestDate: "2025-10-05T17:30:10Z", // ISO format datetime
     paper: MOCK_PAPERS[7],
     requester: MOCK_STUDENT,
   },
   {
     requestId: 7,
     status: "REJECTED",
-    requestDate: "2025-09-28",
+    requestDate: "2025-09-28T08:50:55Z", // ISO format datetime
     paper: MOCK_PAPERS[8],
     requester: MOCK_STUDENT,
   },
   {
     requestId: 8,
     status: "ACCEPTED",
-    requestDate: "2025-10-28",
+    requestDate: "2025-10-28T19:12:35Z", // ISO format datetime
     paper: MOCK_PAPERS[9],
     requester: MOCK_STUDENT,
   },
 ];
+
+// Extract unique request dates from MOCK_REQUESTS
+export const MOCK_REQUEST_DATES = Array.from(
+  new Set(MOCK_REQUESTS.map((request) => request.requestDate.substring(0, 10))), // Extract date part (YYYY-MM-DD)
+)
+  .sort()
+  .reverse();

@@ -101,6 +101,7 @@ function LibraryPage() {
             onSearchChange={setSearchQuery}
             onDepartmentChange={setSelectedDepartment}
             onYearChange={setSelectedYear}
+            filterType="year"
             searchPlaceholder="Search paper title"
           />
         </section>
