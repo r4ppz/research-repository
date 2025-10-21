@@ -9,6 +9,7 @@ interface AdminRequestTableProps {
   requests: DocumentRequest[];
   className?: string;
   onAction: (requestId: number, action: "accept" | "reject") => void;
+  showDepartmentColumn?: boolean;
 }
 
 const statusColors: Record<RequestStatus, string> = {
@@ -17,12 +18,17 @@ const statusColors: Record<RequestStatus, string> = {
   REJECTED: "var(--color-error)",
 };
 
-function AdminRequestTable({ requests, className, onAction }: AdminRequestTableProps) {
+function AdminRequestTable({
+  requests,
+  className,
+  onAction,
+  showDepartmentColumn = true,
+}: AdminRequestTableProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 5; // Configurable number of rows
 
-  // Define columns inside the function to avoid unused variable warnings
-  const columns = [
+  // Define columns inside the function, conditionally including the department column
+  const baseColumns = [
     {
       key: "requester.fullName",
       title: "Requester",
@@ -37,11 +43,6 @@ function AdminRequestTable({ requests, className, onAction }: AdminRequestTableP
       key: "paper.authorName",
       title: "Author",
       render: (request: DocumentRequest) => request.paper.authorName,
-    },
-    {
-      key: "paper.department.departmentName",
-      title: "Department",
-      render: (request: DocumentRequest) => request.paper.department.departmentName,
     },
     {
       key: "requestDate",
@@ -88,6 +89,19 @@ function AdminRequestTable({ requests, className, onAction }: AdminRequestTableP
     },
   ];
 
+  // Conditionally add the department column if showDepartmentColumn is true
+  const columns = showDepartmentColumn
+    ? [
+        ...baseColumns.slice(0, 3),
+        {
+          key: "paper.department.departmentName",
+          title: "Department",
+          render: (request: DocumentRequest) => request.paper.department.departmentName,
+        },
+        ...baseColumns.slice(3),
+      ]
+    : baseColumns;
+
   return (
     <Table<DocumentRequest>
       data={requests}
@@ -99,11 +113,6 @@ function AdminRequestTable({ requests, className, onAction }: AdminRequestTableP
         currentPage,
         onPageChange: setCurrentPage,
         totalElements: requests.length,
-      }}
-      rowClassName={(request) => {
-        if (request.status === "ACCEPTED") return styles.acceptedRow;
-        if (request.status === "REJECTED") return styles.rejectedRow;
-        return styles.pendingRow;
       }}
       emptyText="No requests found"
     />

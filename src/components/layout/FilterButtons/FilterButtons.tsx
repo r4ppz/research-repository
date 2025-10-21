@@ -8,7 +8,7 @@ interface FilterButtonsProps {
   onDepartmentChange: (department: string | null) => void;
   onYearChange?: (year: string | null) => void;
   onDateChange?: (date: string | null) => void;
-  filterType?: "year" | "date"; // To determine which filter to show
+  filterType?: "year" | "date";
 }
 
 function FilterButtons({
