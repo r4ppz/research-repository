@@ -85,7 +85,7 @@ svg {
 .mobileDescription {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-normal);
-  padding-top: var(--space-md); /* Add padding for better spacing */
+  padding-top: var(--space-md);
 }
 @media (min-width: 768px) {
   .mobileDescription {
@@ -106,9 +106,10 @@ svg {
 
 .linkcontactContainer {
   display: flex;
-  flex-direction: column; /* Stack links and contact vertically on mobile */
+  flex-direction: row;
   gap: var(--space-xl);
-  padding: var(--space-lg) 0; /* Add vertical padding */
+  justify-content: space-evenly;
+  padding: var(--space-lg);
 }
 @media (min-width: 768px) {
   .linkcontactContainer {
@@ -122,7 +123,7 @@ svg {
 .linksContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm); /* Space between items in links container */
+  gap: var(--space-xs);
 }
 
 .linkText {
@@ -132,13 +133,13 @@ svg {
 
 .linksContainer h3,
 .contactContainer h3 {
-  margin-bottom: var(--space-md); /* Space below headings */
+  margin-bottom: var(--space-sm);
 }
 
 .contactContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm); /* Space between items in contact container */
+  gap: var(--space-xs);
 }
 
 .contactText {

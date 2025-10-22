@@ -7,18 +7,23 @@
   box-shadow: var(--shadow-resting);
   overflow: hidden;
   border: 1px solid var(--color-border-default);
-  transition: var(--transition-elevation);
-  box-shadow: var(--shadow-resting);
 }
-.tableContainer:hover {
-  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
-  box-shadow: var(--shadow-hover);
+@media (min-width: 768px) {
+  .tableContainer {
+    transition: var(--transition-elevation);
+    box-shadow: var(--shadow-resting);
+  }
+
+  .tableContainer:hover {
+    transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+    box-shadow: var(--shadow-hover);
+  }
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px; /* Prevent table from getting too narrow */
+  min-width: 600px;
 }
 
 .headerCell {
@@ -124,12 +129,10 @@
   color: var(--color-text-muted);
 }
 
-/* Desktop view is default */
 .desktopView {
   display: table;
 }
 
-/* Mobile responsive styles - show cards below 768px */
 @media (max-width: 767px) {
   .desktopView {
     display: none;
@@ -146,7 +149,6 @@
   }
 }
 
-/* Medium screens */
 @media (min-width: 768px) and (max-width: 1023px) {
   .headerCell,
   .cell {
