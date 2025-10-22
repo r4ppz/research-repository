@@ -15,11 +15,6 @@
   gap: var(--space-sm);
   transition: var(--transition-elevation);
   box-shadow: var(--shadow-resting);
-
-  /* WARN: not workign for some reason */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .button:hover {

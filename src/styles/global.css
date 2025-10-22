@@ -28,10 +28,6 @@ a {
   transition: color var(--transition-fast);
 }
 
-a:hover {
-  color: var(--color-primary-hover);
-}
-
 table {
   border-collapse: collapse;
   border-spacing: 0;
