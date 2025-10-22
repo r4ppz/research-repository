@@ -107,16 +107,24 @@ function LibraryPage() {
         </section>
 
         <section className={style.researchSection}>
-          {pageData.content.map((research) => (
-            <ResearchCard
-              key={research.paperId}
-              researchPaper={research}
-              onView={() => {
-                setSelectedResearch(research);
-                setIsModalOpen(true);
-              }}
-            />
-          ))}
+          {pageData.content.length === 0 ? (
+            <div>
+              <p>No research paper found :(</p>
+              <p>CHATGIPITY center this text...</p>
+            </div>
+          ) : (
+            pageData.content.map((research) => (
+              <ResearchCard
+                key={research.paperId}
+                researchPaper={research}
+                onView={() => {
+                  setSelectedResearch(research);
+                  setIsModalOpen(true);
+                }}
+              />
+            ))
+          )}
+
           {selectedResearch && (
             <ResearchModal
               researchPaper={selectedResearch}

@@ -17,7 +17,7 @@ function RequestPage() {
     <div className={style.page}>
       <Header />
       <main className={style.main}>
-        <h1 className={style.titleHeader}>Manage Document Requests</h1>
+        <h1 className={style.titleHeader}>Manage Document Requests (Department Admin) </h1>
         <div className={style.tableSection}>
           <AdminRequestTable
             requests={filteredRequests}
