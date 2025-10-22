@@ -7,7 +7,7 @@ import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter
 import ResearchCard from "@/features/library/components/ResearchCard/ResearchCard";
 import ResearchModal from "@/features/library/components/ResearchModal/ResearchModal";
 import { usePagination } from "@/features/library/hooks/usePagination";
-import { useResearchFilter } from "@/hooks/useResearchFilter";
+import { useResearchFilter } from "@/features/library/hooks/useResearchFilter";
 import { MOCK_PAPERS } from "@/mocks/mockData";
 import { type ResearchPaper } from "@/types";
 import style from "./LibraryPage.module.css";

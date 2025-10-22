@@ -1,7 +1,7 @@
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
-import AdminRequestTable from "@/features/admins/components/RequestTable";
-import { useDepartmentRequestFilter } from "@/hooks/useDepartmentRequestFilter";
+import AdminRequestTable from "@/features/admin/components/RequestTable";
+import { useDepartmentRequestFilter } from "@/features/admin/hooks/useDepartmentRequestFilter";
 import { MOCK_REQUESTS } from "@/mocks/mockData";
 import style from "./RequestPage.module.css";
 
@@ -17,12 +17,12 @@ function RequestPage() {
     <div className={style.page}>
       <Header />
       <main className={style.main}>
-        <h1 className={style.titleHeader}>Manage Document Requests (Super Admin)</h1>
+        <h1 className={style.titleHeader}>Manage Document Requests</h1>
         <div className={style.tableSection}>
           <AdminRequestTable
             requests={filteredRequests}
             onAction={handleAction}
-            showDepartmentColumn={true} // Super admin can see department column
+            showDepartmentColumn={false} // WARN: use auth? idk
           />
         </div>
       </main>
