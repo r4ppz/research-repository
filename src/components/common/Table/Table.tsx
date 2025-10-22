@@ -1,8 +1,9 @@
 import clsx from "clsx";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useMemo } from "react";
+import Button from "@/components/common/Button/Button";
 import { safeToString } from "@/util/safeToString";
 import style from "./Table.module.css";
-import Button from "../Button/Button";
 
 export interface TableColumn<T> {
   key: keyof T | string;
@@ -175,6 +176,7 @@ function Table<T extends object>({
               onClick={handlePrevPage}
               disabled={currentPage === 0}
             >
+              <ChevronLeft size={18} />
               Previous
             </Button>
 
@@ -185,6 +187,7 @@ function Table<T extends object>({
               disabled={currentPage === totalPages - 1}
             >
               Next
+              <ChevronRight size={18} />
             </Button>
           </div>
         </div>

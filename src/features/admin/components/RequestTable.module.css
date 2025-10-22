@@ -2,14 +2,6 @@
   width: 100%;
 }
 
-.statusBadge {
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-full);
-  color: var(--color-text-inverted);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-}
-
 .actionButtons {
   display: flex;
   gap: var(--space-sm);
@@ -20,7 +12,6 @@
   display: inline-flex;
   width: auto;
   font-size: var(--font-size-sm);
-  border-radius: var(--radius-md);
   padding: var(--space-sm) var(--space-md);
 }
 @media (min-width: 768px) {
@@ -28,7 +19,6 @@
     display: inline-flex;
     width: auto;
     font-size: var(--font-size-sm);
-    border-radius: var(--radius-md);
     padding: var(--space-sm) var(--space-md);
   }
 }

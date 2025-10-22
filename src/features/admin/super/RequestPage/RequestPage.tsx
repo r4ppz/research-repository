@@ -22,7 +22,7 @@ function RequestPage() {
           <AdminRequestTable
             requests={filteredRequests}
             onAction={handleAction}
-            showDepartmentColumn={true} // Super admin can see department column
+            showDepartmentColumn={true}
           />
         </div>
       </main>

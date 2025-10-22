@@ -109,6 +109,7 @@
   display: inline-flex;
   width: 100px;
   font-size: var(--font-size-sm);
+  gap: var(--space-xs);
 }
 
 .pageInfo {

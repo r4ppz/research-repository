@@ -1,8 +1,9 @@
 import clsx from "clsx";
+import { Check, X } from "lucide-react";
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Table from "@/components/common/Table/Table";
-import { DocumentRequest, RequestStatus } from "@/types";
+import { DocumentRequest } from "@/types";
 import styles from "./RequestTable.module.css";
 
 interface AdminRequestTableProps {
@@ -11,12 +12,6 @@ interface AdminRequestTableProps {
   onAction: (requestId: number, action: "accept" | "reject") => void;
   showDepartmentColumn?: boolean;
 }
-
-const statusColors: Record<RequestStatus, string> = {
-  PENDING: "var(--color-warning)",
-  ACCEPTED: "var(--color-success)",
-  REJECTED: "var(--color-error)",
-};
 
 function AdminRequestTable({
   requests,
@@ -50,18 +45,6 @@ function AdminRequestTable({
       render: (request: DocumentRequest) => new Date(request.requestDate).toLocaleDateString(),
     },
     {
-      key: "status",
-      title: "Status",
-      render: (request: DocumentRequest) => (
-        <span
-          className={styles.statusBadge}
-          style={{ backgroundColor: statusColors[request.status] }}
-        >
-          {request.status}
-        </span>
-      ),
-    },
-    {
       key: "actions",
       title: "Actions",
       render: (request: DocumentRequest) => (
@@ -75,6 +58,7 @@ function AdminRequestTable({
             variant={request.status === "PENDING" ? "secondary" : "secondary"}
           >
             Reject
+            <X size={18} />
           </Button>
 
           <Button
@@ -86,6 +70,7 @@ function AdminRequestTable({
             variant={request.status === "PENDING" ? "primary" : "secondary"}
           >
             Accept
+            <Check size={18} />
           </Button>
         </div>
       ),

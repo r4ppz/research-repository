@@ -10,15 +10,17 @@ export function useDepartmentRequestFilter(requests: DocumentRequest[]): Documen
       return [];
     }
 
-    // Super admins can see all requests
+    // Super admins can see all PENDING requests
     if (user.role === "SUPER_ADMIN") {
-      return requests;
+      return requests.filter((request) => request.status === "PENDING");
     }
 
-    // Department admins can only see requests related to their department
+    // Department admins can only see PENDING requests related to their department
     if (user.role === "DEPARTMENT_ADMIN" && user.department) {
       return requests.filter(
-        (request) => request.paper.department.departmentId === user.department?.departmentId,
+        (request) =>
+          request.paper.department.departmentId === user.department?.departmentId &&
+          request.status === "PENDING",
       );
     }
 
