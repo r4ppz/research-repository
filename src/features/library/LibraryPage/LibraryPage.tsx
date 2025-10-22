@@ -71,9 +71,7 @@ function LibraryPage() {
   };
 
   if (!pageData) {
-    // WARN: this shit sucks
-    // TODO: improve this shi
-    return <div>Loading...</div>;
+    return <div>ill fix this later :0</div>;
   }
 
   return (

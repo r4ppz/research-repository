@@ -1,8 +1,18 @@
 :root {
   /* scrollbar-gutter: stable both-edges; */
+  /* FIX: this leaves gap in the right when the page is not scrollable. */
+  /* TODO: maybe fix the page where its not scrollable like the modal to not use render or sum idk */
+  /* HACK: good for now i think */
   scrollbar-gutter: stable;
 }
 
+/* FIX: not working idk why, but the idea is dont shrink all the svgs in the page */
+/* NOTE: when using svg like icons always include this in its container. */
+svg {
+  flex-shrink: 0;
+}
+
+/* FIX: remove later */
 /* html { */
 /*   /* overflow-y: scroll; */
 /*   scrollbar-gutter: stable; */
@@ -19,7 +29,7 @@ a {
 }
 
 a:hover {
-  color: var(--color-secondary-dark);
+  color: var(--color-primary-hover);
 }
 
 table {
@@ -30,9 +40,10 @@ table {
 hr {
   border: none;
   height: 1px;
-  background-color: var(--color-border);
+  background-color: var(--color-border-default);
 }
 
+/* NOTE: this prevents scrolling when a modal is open, see useModalScrollLock*/
 body.modal-open,
 html.modal-open {
   overflow: hidden;
