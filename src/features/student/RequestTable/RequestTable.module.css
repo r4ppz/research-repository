@@ -14,8 +14,6 @@
   display: inline-flex;
   width: auto;
   font-size: var(--font-size-sm);
-  border-radius: var(--radius-md);
-  padding: var(--space-sm) var(--space-md);
 }
 
 .acceptedRow {

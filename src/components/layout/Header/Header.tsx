@@ -110,12 +110,10 @@ function Header({ className, ...props }: ComponentProps) {
             <CustomNavLink to="/">Library</CustomNavLink>
             <CustomNavLink to={requestPath}>Request</CustomNavLink>
             {researchPath && <CustomNavLink to={researchPath}>Research</CustomNavLink>}
-            <Button variant="secondary" onClick={handleLogout}>
-              Logout
-            </Button>
+            <CustomNavLink to="/login">Logout</CustomNavLink>
           </nav>
 
-          <Button variant="secondary">
+          <Button className={style.mobileProfileButton} variant="secondary">
             <UserIcon size={18} />
             <h3 className={style.userName}>{firstName}</h3>
             <p className={style.userRole}>{roleLabel}</p>

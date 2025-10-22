@@ -6,7 +6,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary";
 }
 
-function Button({ variant = "primary", children, className = "", ...props }: ButtonProps) {
+function Button({ variant = "primary", children, className, ...props }: ButtonProps) {
   const buttonClass = clsx(style.button, style[variant], className);
 
   return (

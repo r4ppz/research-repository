@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { Download } from "lucide-react";
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Table from "@/components/common/Table/Table";
@@ -66,6 +67,7 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
           disabled={request.status !== "ACCEPTED"}
           variant={request.status === "ACCEPTED" ? "primary" : "secondary"}
         >
+          <Download size={18} />
           Download
         </Button>
       ),

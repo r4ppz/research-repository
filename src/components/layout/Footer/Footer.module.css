@@ -6,9 +6,9 @@ svg {
   display: flex;
   flex-direction: column;
   background-color: var(--color-primary);
-  padding: var(--space-lg);
+  padding: var(--space-md) var(--space-md); /* Reduced padding for mobile */
   color: var(--color-text-inverted);
-  gap: var(--space-sm);
+  gap: var(--space-md); /* Increased gap for better separation */
   width: 100%;
 }
 @media (min-width: 768px) {
@@ -20,13 +20,15 @@ svg {
 .mainContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2xl);
+  gap: var(--space-xl);
   border-bottom: 1px solid var(--color-border-default);
-  padding-bottom: var(--space-3xl);
+  padding-bottom: var(--space-xl);
 }
 @media (min-width: 768px) {
   .mainContainer {
     flex-direction: row;
+    gap: var(--space-2xl);
+    padding-bottom: var(--space-3xl);
   }
 }
 
@@ -34,7 +36,12 @@ svg {
   display: flex;
   flex-direction: row;
   flex: 1;
-  gap: var(--space-lg);
+  gap: var(--space-md);
+}
+@media (min-width: 768px) {
+  .titlelogoContainer {
+    gap: var(--space-lg);
+  }
 }
 
 .logoContainerButton {
@@ -78,6 +85,7 @@ svg {
 .mobileDescription {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-normal);
+  padding-top: var(--space-md); /* Add padding for better spacing */
 }
 @media (min-width: 768px) {
   .mobileDescription {
@@ -98,20 +106,23 @@ svg {
 
 .linkcontactContainer {
   display: flex;
-  flex: 1;
-  justify-content: space-around;
-  gap: var(--space-lg);
+  flex-direction: column; /* Stack links and contact vertically on mobile */
+  gap: var(--space-xl);
+  padding: var(--space-lg) 0; /* Add vertical padding */
 }
 @media (min-width: 768px) {
   .linkcontactContainer {
+    flex-direction: row;
     justify-content: center;
     gap: var(--space-6xl);
+    padding: 0;
   }
 }
 
 .linksContainer {
   display: flex;
   flex-direction: column;
+  gap: var(--space-sm); /* Space between items in links container */
 }
 
 .linkText {
@@ -119,9 +130,15 @@ svg {
   font-weight: var(--font-weight-semibold);
 }
 
+.linksContainer h3,
+.contactContainer h3 {
+  margin-bottom: var(--space-md); /* Space below headings */
+}
+
 .contactContainer {
   display: flex;
   flex-direction: column;
+  gap: var(--space-sm); /* Space between items in contact container */
 }
 
 .contactText {
