@@ -1,5 +1,6 @@
 {
   "name": "research-repository",
+  "description": "Just a school project",
   "homepage": "https://r4ppz.github.io/research-repository/",
   "private": true,
   "version": "0.0.0",
@@ -12,7 +13,6 @@
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "format": "prettier --write src",
     "type-check": "tsc --noEmit",
-    "predeploy": "npm run build && cp dist/index.html dist/404.html",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {

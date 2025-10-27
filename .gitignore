@@ -30,3 +30,6 @@ tsconfig.tsbuildinfo
 .github/
 .qwen/
 QWEN.md
+
+.gemini/
+gha-creds-*.json
