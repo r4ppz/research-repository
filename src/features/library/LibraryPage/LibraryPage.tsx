@@ -1,8 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import Button from "@/components/common/Button/Button";
-import ErrorBoundary from "@/components/common/ErrorBoundary/ErrorBoundary";
-import ErrorFallback from "@/components/common/ErrorBoundary/ErrorFallback";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
@@ -86,12 +84,8 @@ function LibraryPage() {
 
   if (loading) {
     return (
-      <div className={style.page}>
-        <Header />
-        <main className={style.main}>
-          <LoadingSpinner size="lg" message="Loading research papers..." />
-        </main>
-        <Footer />
+      <div className={style.loadingContainer}>
+        <LoadingSpinner size="lg" message="Loading research papers..." />
       </div>
     );
   }
@@ -109,95 +103,92 @@ function LibraryPage() {
   }
 
   return (
-    <ErrorBoundary fallback={ErrorFallback}>
-      <div className={style.page}>
-        <Header />
-        <main className={style.main}>
-          <section>
-            <h1 className={style.heroHeader}>Discover Academic Research</h1>
+    <div className={style.page}>
+      <Header />
+      <main className={style.main}>
+        <section>
+          <h1 className={style.heroHeader}>Discover Academic Research</h1>
 
-            <p className={style.mobileHeroText}>
-              Explore a growing collection of academic research papers and publications. Our library
-              highlights the innovative work of students and faculty across departments.
-            </p>
+          <p className={style.mobileHeroText}>
+            Explore a growing collection of academic research papers and publications. Our library
+            highlights the innovative work of students and faculty across departments.
+          </p>
 
-            <p className={style.desktopHeroText}>
-              Explore a growing collection of academic research papers and publications. Our library
-              highlights the innovative work of students and faculty across departments — advancing
-              knowledge and inspiring new ideas
-            </p>
-          </section>
+          <p className={style.desktopHeroText}>
+            Explore a growing collection of academic research papers and publications. Our library
+            highlights the innovative work of students and faculty across departments — advancing
+            knowledge and inspiring new ideas
+          </p>
+        </section>
 
-          <section className={style.searchSection}>
-            <SearchAndFilter
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              onDepartmentChange={setSelectedDepartment}
-              onYearChange={setSelectedYear}
-              filterType="year"
-              searchPlaceholder="Search paper title"
-            />
-          </section>
+        <section className={style.searchSection}>
+          <SearchAndFilter
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onDepartmentChange={setSelectedDepartment}
+            onYearChange={setSelectedYear}
+            filterType="year"
+            searchPlaceholder="Search paper title"
+          />
+        </section>
 
-          <section className={style.researchSection}>
-            {pageData.content.length === 0 ? (
-              <div>
-                <p>No research paper found :(</p>
-                <p>CHATGIPITY center this text...</p>
-              </div>
-            ) : (
-              pageData.content.map((research) => (
-                <ErrorBoundary key={research.paperId} fallback={ErrorFallback}>
-                  <ResearchCard
-                    researchPaper={research}
-                    onView={() => {
-                      setSelectedResearch(research);
-                      setIsModalOpen(true);
-                    }}
-                  />
-                </ErrorBoundary>
-              ))
-            )}
-
-            {selectedResearch && (
-              <ResearchModal
-                researchPaper={selectedResearch}
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
+        <section className={style.researchSection}>
+          {pageData.content.length === 0 ? (
+            <div>
+              <p>No research paper found :(</p>
+              <p>Try changing your search or filter criteria</p>
+            </div>
+          ) : (
+            pageData.content.map((research) => (
+              <ResearchCard
+                key={research.paperId}
+                researchPaper={research}
+                onView={() => {
+                  setSelectedResearch(research);
+                  setIsModalOpen(true);
+                }}
               />
-            )}
-          </section>
-
-          {pageData.totalPages > 1 && (
-            <section className={style.paginationSection}>
-              <Button
-                className={style.pagingButton}
-                onClick={handlePrevPage}
-                disabled={currentPage === 0}
-              >
-                <ChevronLeft size={16} />
-                Previous
-              </Button>
-
-              <p className={style.pagingIndicator}>
-                Page {currentPage + 1} of {pageData.totalPages}
-              </p>
-
-              <Button
-                className={style.pagingButton}
-                onClick={handleNextPage}
-                disabled={currentPage >= pageData.totalPages - 1}
-              >
-                Next
-                <ChevronRight size={16} />
-              </Button>
-            </section>
+            ))
           )}
-        </main>
 
-        <Footer />
-      </div>
-    </ErrorBoundary>
+          {selectedResearch && (
+            <ResearchModal
+              researchPaper={selectedResearch}
+              isOpen={isModalOpen}
+              onClose={handleCloseModal}
+            />
+          )}
+        </section>
+
+        {pageData.totalPages > 1 && (
+          <section className={style.paginationSection}>
+            <Button
+              className={style.pagingButton}
+              onClick={handlePrevPage}
+              disabled={currentPage === 0}
+            >
+              <ChevronLeft size={16} />
+              Previous
+            </Button>
+
+            <p className={style.pagingIndicator}>
+              Page {currentPage + 1} of {pageData.totalPages}
+            </p>
+
+            <Button
+              className={style.pagingButton}
+              onClick={handleNextPage}
+              disabled={currentPage >= pageData.totalPages - 1}
+            >
+              Next
+              <ChevronRight size={16} />
+            </Button>
+          </section>
+        )}
+      </main>
+
+      <Footer />
+    </div>
   );
 }
 

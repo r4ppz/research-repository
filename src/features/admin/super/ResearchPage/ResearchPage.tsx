@@ -1,8 +1,6 @@
-import { Archive, CircleCheck, FilePlus2 } from "lucide-react";
+import { Archive, FilePlus2, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import Button from "@/components/common/Button/Button";
-import ErrorBoundary from "@/components/common/ErrorBoundary/ErrorBoundary";
-import ErrorFallback from "@/components/common/ErrorBoundary/ErrorFallback";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
@@ -74,78 +72,70 @@ function ResearchPage() {
 
   if (loading) {
     return (
-      <div className={style.page}>
-        <Header />
-        <main className={style.main}>
-          <LoadingSpinner size="lg" message="Loading research papers..." />
-        </main>
-        <Footer />
+      <div className={style.loadingContainer}>
+        <LoadingSpinner size="lg" message="Loading research papers..." />
       </div>
     );
   }
 
   return (
-    <ErrorBoundary fallback={ErrorFallback}>
-      <div className={style.page}>
-        <Header />
-        <main className={style.main}>
-          <div className={style.headerSection}>
-            <h1 className={style.titleHeader}>Manage All Research Papers</h1>
-            <Button onClick={handleCreate} className={style.createButton}>
-              <FilePlus2 size={18} />
-              Add Paper
-            </Button>
-          </div>
+    <div className={style.page}>
+      <Header />
+      <main className={style.main}>
+        <div className={style.headerSection}>
+          <h1 className={style.titleHeader}>Manage All Research Papers</h1>
+          <Button onClick={handleCreate} className={style.createButton}>
+            <FilePlus2 size={18} />
+            Add Paper
+          </Button>
+        </div>
 
-          <div className={style.tabsContainer}>
-            <Button
-              variant={activeTab === "active" ? "primary" : "secondary"}
-              className={style.tabButton}
-              onClick={() => {
-                setActiveTab("active");
-              }}
-            >
-              <CircleCheck size={16} />
-              Active Papers ({activePapers.length})
-            </Button>
-            <Button
-              variant={activeTab === "archived" ? "primary" : "secondary"}
-              className={style.tabButton}
-              onClick={() => {
-                setActiveTab("archived");
-              }}
-            >
-              <Archive size={16} />
-              Archived Papers ({archivedPapers.length})
-            </Button>
-          </div>
+        <div className={style.tabsContainer}>
+          <Button
+            variant={activeTab === "active" ? "primary" : "secondary"}
+            className={style.tabButton}
+            onClick={() => {
+              setActiveTab("active");
+            }}
+          >
+            <Archive size={16} />
+            Active Papers ({activePapers.length})
+          </Button>
+          <Button
+            variant={activeTab === "archived" ? "primary" : "secondary"}
+            className={style.tabButton}
+            onClick={() => {
+              setActiveTab("archived");
+            }}
+          >
+            <RotateCcw size={16} />
+            Archived Papers ({archivedPapers.length})
+          </Button>
+        </div>
 
-          <SearchAndFilter
-            className={style.searchAndFilter}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            onDepartmentChange={setSelectedDepartment}
-            onYearChange={setSelectedYear}
-            filterType="year"
-            searchPlaceholder="Search paper title"
+        <SearchAndFilter
+          className={style.searchAndFilter}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onDepartmentChange={setSelectedDepartment}
+          onYearChange={setSelectedYear}
+          filterType="year"
+          searchPlaceholder="Search paper title"
+        />
+
+        <div className={style.tableSection}>
+          <ResearchPaperTable
+            papers={activeTab === "active" ? activePapers : archivedPapers}
+            onEdit={handleEdit}
+            onArchive={handleArchive}
+            onDelete={handleDelete}
+            onPreview={handlePreview}
+            showDepartmentColumn={true} // Super admin always sees department column
           />
-
-          <div className={style.tableSection}>
-            <ErrorBoundary fallback={ErrorFallback}>
-              <ResearchPaperTable
-                papers={activeTab === "active" ? activePapers : archivedPapers}
-                onEdit={handleEdit}
-                onArchive={handleArchive}
-                onDelete={handleDelete}
-                onPreview={handlePreview}
-                showDepartmentColumn={true} // Super admin always sees department column
-              />
-            </ErrorBoundary>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    </ErrorBoundary>
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 }
 

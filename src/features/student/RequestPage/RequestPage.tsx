@@ -1,7 +1,5 @@
 import clsx from "clsx";
 import { useState, useEffect } from "react";
-import ErrorBoundary from "@/components/common/ErrorBoundary/ErrorBoundary";
-import ErrorFallback from "@/components/common/ErrorBoundary/ErrorFallback";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
@@ -42,43 +40,35 @@ function RequestPage() {
 
   if (loading) {
     return (
-      <div className={style.page}>
-        <Header />
-        <main className={style.main}>
-          <LoadingSpinner size="lg" message="Loading your requests..." />
-        </main>
-        <Footer />
+      <div className={style.loadingContainer}>
+        <LoadingSpinner size="lg" message="Loading your requests..." />
       </div>
     );
   }
 
   return (
-    <ErrorBoundary fallback={ErrorFallback}>
-      <div className={clsx(style.page)}>
-        <Header />
-        <main className={style.main}>
-          <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
+    <div className={clsx(style.page)}>
+      <Header />
+      <main className={style.main}>
+        <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
 
-          <SearchAndFilter
-            className={style.searchAndFilter}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            onDepartmentChange={setSelectedDepartment}
-            onDateChange={setSelectedDate} // Changed from onYearChange to onDateChange
-            filterType="date"
-            searchPlaceholder="Search paper title"
-          />
+        <SearchAndFilter
+          className={style.searchAndFilter}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onDepartmentChange={setSelectedDepartment}
+          onDateChange={setSelectedDate} // Changed from onYearChange to onDateChange
+          filterType="date"
+          searchPlaceholder="Search paper title"
+        />
 
-          <div className={style.tableSection}>
-            <ErrorBoundary fallback={ErrorFallback}>
-              <RequestTable requests={filteredRequests} onDownload={handleDownload} />
-            </ErrorBoundary>
-          </div>
-        </main>
+        <div className={style.tableSection}>
+          <RequestTable requests={filteredRequests} onDownload={handleDownload} />
+        </div>
+      </main>
 
-        <Footer />
-      </div>
-    </ErrorBoundary>
+      <Footer />
+    </div>
   );
 }
 

@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import ErrorBoundary from "@/components/common/ErrorBoundary/ErrorBoundary";
-import ErrorFallback from "@/components/common/ErrorBoundary/ErrorFallback";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
@@ -30,35 +28,27 @@ function RequestPage() {
 
   if (loading) {
     return (
-      <div className={style.page}>
-        <Header />
-        <main className={style.main}>
-          <LoadingSpinner size="lg" message="Loading document requests..." />
-        </main>
-        <Footer />
+      <div className={style.loadingContainer}>
+        <LoadingSpinner size="lg" message="Loading document requests..." />
       </div>
     );
   }
 
   return (
-    <ErrorBoundary fallback={ErrorFallback}>
-      <div className={style.page}>
-        <Header />
-        <main className={style.main}>
-          <h1 className={style.titleHeader}>Manage Document Requests (Super Admin)</h1>
-          <div className={style.tableSection}>
-            <ErrorBoundary fallback={ErrorFallback}>
-              <AdminRequestTable
-                requests={filteredRequests}
-                onAction={handleAction}
-                showDepartmentColumn={true}
-              />
-            </ErrorBoundary>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    </ErrorBoundary>
+    <div className={style.page}>
+      <Header />
+      <main className={style.main}>
+        <h1 className={style.titleHeader}>Manage Document Requests (Super Admin)</h1>
+        <div className={style.tableSection}>
+          <AdminRequestTable
+            requests={filteredRequests}
+            onAction={handleAction}
+            showDepartmentColumn={true}
+          />
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 }
 
