@@ -1,5 +1,8 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import ErrorBoundary from "@/components/common/ErrorBoundary/ErrorBoundary";
+import ErrorFallback from "@/components/common/ErrorBoundary/ErrorFallback";
+import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
@@ -13,6 +16,7 @@ function RequestPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null); // Changed from selectedYear to selectedDate
+  const [loading, setLoading] = useState(true);
 
   const filteredRequests = useRequestFilter(
     searchQuery,
@@ -26,29 +30,55 @@ function RequestPage() {
     console.log("Downloading:", request.paper.title);
   };
 
+  // Simulate loading delay for demo purposes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className={style.page}>
+        <Header />
+        <main className={style.main}>
+          <LoadingSpinner size="lg" message="Loading your requests..." />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
-    <div className={clsx(style.page)}>
-      <Header />
-      <main className={style.main}>
-        <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
+    <ErrorBoundary fallback={ErrorFallback}>
+      <div className={clsx(style.page)}>
+        <Header />
+        <main className={style.main}>
+          <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
 
-        <SearchAndFilter
-          className={style.searchAndFilter}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onDepartmentChange={setSelectedDepartment}
-          onDateChange={setSelectedDate} // Changed from onYearChange to onDateChange
-          filterType="date"
-          searchPlaceholder="Search paper title"
-        />
+          <SearchAndFilter
+            className={style.searchAndFilter}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onDepartmentChange={setSelectedDepartment}
+            onDateChange={setSelectedDate} // Changed from onYearChange to onDateChange
+            filterType="date"
+            searchPlaceholder="Search paper title"
+          />
 
-        <div className={style.tableSection}>
-          <RequestTable requests={filteredRequests} onDownload={handleDownload} />
-        </div>
-      </main>
+          <div className={style.tableSection}>
+            <ErrorBoundary fallback={ErrorFallback}>
+              <RequestTable requests={filteredRequests} onDownload={handleDownload} />
+            </ErrorBoundary>
+          </div>
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </ErrorBoundary>
   );
 }
 

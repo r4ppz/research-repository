@@ -1,0 +1,34 @@
+.paperTable {
+  width: 100%;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+  min-width: 70px;
+}
+
+.active {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.archived {
+  background-color: var(--color-gray-300);
+  color: var(--color-gray-900);
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--space-xs);
+  justify-content: flex-end;
+}
+
+.actionButton {
+  padding: var(--space-sm);
+  min-width: auto;
+}
