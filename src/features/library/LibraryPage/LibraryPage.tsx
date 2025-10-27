@@ -143,7 +143,7 @@ function LibraryPage() {
             {pageData.content.length === 0 ? (
               <div>
                 <p>No research paper found :(</p>
-                <p>Try changing your search or filter criteria</p>
+                <p>CHATGIPITY center this text...</p>
               </div>
             ) : (
               pageData.content.map((research) => (

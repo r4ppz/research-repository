@@ -1,4 +1,4 @@
-import { Archive, FilePlus2, RotateCcw } from "lucide-react";
+import { Archive, CircleCheck, FilePlus2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Button from "@/components/common/Button/Button";
 import ErrorBoundary from "@/components/common/ErrorBoundary/ErrorBoundary";
@@ -111,7 +111,7 @@ function ResearchPage() {
                 setActiveTab("active");
               }}
             >
-              <Archive size={16} />
+              <CircleCheck size={16} />
               Active Papers ({activePapers.length})
             </Button>
             <Button
@@ -121,7 +121,7 @@ function ResearchPage() {
                 setActiveTab("archived");
               }}
             >
-              <RotateCcw size={16} />
+              <Archive size={16} />
               Archived Papers ({archivedPapers.length})
             </Button>
           </div>

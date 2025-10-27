@@ -41,7 +41,7 @@
 
 .createButton {
   align-self: flex-start;
-  width: fit-content;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
@@ -54,7 +54,6 @@
 .tabsContainer {
   display: flex;
   gap: var(--space-md);
-  overflow-x: auto;
   padding-bottom: var(--space-xs);
 }
 

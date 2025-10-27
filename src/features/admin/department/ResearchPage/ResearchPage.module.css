@@ -54,7 +54,6 @@
 .tabsContainer {
   display: flex;
   gap: var(--space-md);
-  overflow-x: auto;
   padding-bottom: var(--space-xs);
 }
 
