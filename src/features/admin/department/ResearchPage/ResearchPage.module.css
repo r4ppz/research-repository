@@ -16,14 +16,21 @@
 .main {
   display: flex;
   flex-direction: column;
-  padding: var(--space-lg);
   gap: var(--space-lg);
   flex: 1;
+  width: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  padding: var(--container-padding);
+  margin: 0 auto;
 }
 
 @media (min-width: 768px) {
-  .main {
-    padding: var(--space-2xl) var(--space-7xl);
+  .container {
+    padding: var(--container-padding-md) var(--container-padding-lg);
   }
 }
 

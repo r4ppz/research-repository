@@ -38,13 +38,15 @@ function RequestPage() {
     <div className={style.page}>
       <Header />
       <main className={style.main}>
-        <h1 className={style.titleHeader}>Manage Document Requests (Department Admin) </h1>
-        <div className={style.tableSection}>
-          <AdminRequestTable
-            requests={filteredRequests}
-            onAction={handleAction}
-            showDepartmentColumn={false} // WARN: use auth? idk
-          />
+        <div className={style.container}>
+          <h1 className={style.titleHeader}>Manage Document Requests (Department Admin) </h1>
+          <div className={style.tableSection}>
+            <AdminRequestTable
+              requests={filteredRequests}
+              onAction={handleAction}
+              showDepartmentColumn={false} // WARN: use auth? idk
+            />
+          </div>
         </div>
       </main>
       <Footer />

@@ -6,14 +6,20 @@ svg {
   display: flex;
   flex-direction: column;
   background-color: var(--color-primary);
-  padding: var(--space-md) var(--space-md); /* Reduced padding for mobile */
   color: var(--color-text-inverted);
   gap: var(--space-md); /* Increased gap for better separation */
   width: 100%;
 }
+
+.footerContainer {
+  width: 100%;
+  max-width: var(--container-max-width);
+  padding: var(--container-padding);
+  margin: 0 auto;
+}
 @media (min-width: 768px) {
-  .footer {
-    padding: var(--space-2xl) var(--space-5xl);
+  .footerContainer {
+    padding: var(--container-padding-md) var(--container-padding-lg);
   }
 }
 

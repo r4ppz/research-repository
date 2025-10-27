@@ -51,56 +51,58 @@ function Header({ className, ...props }: ComponentProps) {
   return (
     <header className={clsx(style.header, className)} {...props}>
       <div className={style.headerWrapper}>
-        <div className={style.leftWrapper}>
-          <Button
-            variant="secondary"
-            className={style.logoContainerButton}
-            onClick={() => void navigate("/")}
-          >
-            <img className={style.schoolLogo} src={schoolLogo} alt="school-logo" />
-          </Button>
-          <div className={style.titleContainer}>
-            <h1 className={style.title}>ACD Research Repository</h1>
-            <p className={style.roleIndicator}>{roleLabel} portal</p>
-          </div>
-        </div>
-
-        <div className={style.rightWrapper}>
-          <nav className={style.desktopNavigation}>
-            <CustomNavLink to="/">Library</CustomNavLink>
-            <CustomNavLink to={requestPath}>Request</CustomNavLink>
-            {researchPath && <CustomNavLink to={researchPath}>Research</CustomNavLink>}
-          </nav>
-
-          <div className={style.desktopButtonsWrapper}>
-            <Button variant="secondary" className={style.desktopProfileButton} type="button">
-              <UserIcon size={16} />
-              <div className={style.desktopProfileContainer}>
-                <h3 className={style.userName}>{firstName}</h3>
-                <p className={style.userRole}>{roleLabel}</p>
-              </div>
+        <div className={style.headerContainer}>
+          <div className={style.leftWrapper}>
+            <Button
+              variant="secondary"
+              className={style.logoContainerButton}
+              onClick={() => void navigate("/")}
+            >
+              <img className={style.schoolLogo} src={schoolLogo} alt="school-logo" />
             </Button>
+            <div className={style.titleContainer}>
+              <h1 className={style.title}>ACD Research Repository</h1>
+              <p className={style.roleIndicator}>{roleLabel} portal</p>
+            </div>
+          </div>
+
+          <div className={style.rightWrapper}>
+            <nav className={style.desktopNavigation}>
+              <CustomNavLink to="/">Library</CustomNavLink>
+              <CustomNavLink to={requestPath}>Request</CustomNavLink>
+              {researchPath && <CustomNavLink to={researchPath}>Research</CustomNavLink>}
+            </nav>
+
+            <div className={style.desktopButtonsWrapper}>
+              <Button variant="secondary" className={style.desktopProfileButton} type="button">
+                <UserIcon size={16} />
+                <div className={style.desktopProfileContainer}>
+                  <h3 className={style.userName}>{firstName}</h3>
+                  <p className={style.userRole}>{roleLabel}</p>
+                </div>
+              </Button>
+
+              <Button
+                type="button"
+                variant="secondary"
+                className={style.dekstoplogoutButton}
+                onClick={handleLogout}
+              >
+                <LogOut size={16} />
+              </Button>
+            </div>
 
             <Button
-              type="button"
+              className={style.menuButton}
               variant="secondary"
-              className={style.dekstoplogoutButton}
-              onClick={handleLogout}
+              type="button"
+              onClick={() => {
+                setIsMenuOpen((prev) => !prev);
+              }}
             >
-              <LogOut size={16} />
+              <Menu size={18} />
             </Button>
           </div>
-
-          <Button
-            className={style.menuButton}
-            variant="secondary"
-            type="button"
-            onClick={() => {
-              setIsMenuOpen((prev) => !prev);
-            }}
-          >
-            <Menu size={18} />
-          </Button>
         </div>
       </div>
 

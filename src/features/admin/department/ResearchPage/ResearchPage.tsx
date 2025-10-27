@@ -88,56 +88,58 @@ function ResearchPage() {
     <div className={style.page}>
       <Header />
       <main className={style.main}>
-        <div className={style.headerSection}>
-          <h1 className={style.titleHeader}>Manage Research Papers</h1>
-          <Button onClick={handleCreate} className={style.createButton}>
-            <FilePlus2 size={18} />
-            Add Paper
-          </Button>
-        </div>
+        <div className={style.container}>
+          <div className={style.headerSection}>
+            <h1 className={style.titleHeader}>Manage Research Papers</h1>
+            <Button onClick={handleCreate} className={style.createButton}>
+              <FilePlus2 size={18} />
+              Add Paper
+            </Button>
+          </div>
 
-        <div className={style.tabsContainer}>
-          <Button
-            variant={activeTab === "active" ? "primary" : "secondary"}
-            className={style.tabButton}
-            onClick={() => {
-              setActiveTab("active");
-            }}
-          >
-            <Archive size={16} />
-            Active Papers ({activePapers.length})
-          </Button>
-          <Button
-            variant={activeTab === "archived" ? "primary" : "secondary"}
-            className={style.tabButton}
-            onClick={() => {
-              setActiveTab("archived");
-            }}
-          >
-            <RotateCcw size={16} />
-            Archived Papers ({archivedPapers.length})
-          </Button>
-        </div>
+          <div className={style.tabsContainer}>
+            <Button
+              variant={activeTab === "active" ? "primary" : "secondary"}
+              className={style.tabButton}
+              onClick={() => {
+                setActiveTab("active");
+              }}
+            >
+              <Archive size={16} />
+              Active Papers ({activePapers.length})
+            </Button>
+            <Button
+              variant={activeTab === "archived" ? "primary" : "secondary"}
+              className={style.tabButton}
+              onClick={() => {
+                setActiveTab("archived");
+              }}
+            >
+              <RotateCcw size={16} />
+              Archived Papers ({archivedPapers.length})
+            </Button>
+          </div>
 
-        <SearchAndFilter
-          className={style.searchAndFilter}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onDepartmentChange={setSelectedDepartment}
-          onYearChange={setSelectedYear}
-          filterType="year"
-          searchPlaceholder="Search paper title"
-        />
-
-        <div className={style.tableSection}>
-          <ResearchPaperTable
-            papers={activeTab === "active" ? activePapers : archivedPapers}
-            onEdit={handleEdit}
-            onArchive={handleArchive}
-            onDelete={handleDelete}
-            onPreview={handlePreview}
-            showDepartmentColumn={user?.role === "SUPER_ADMIN"} // Only show department column for super admins
+          <SearchAndFilter
+            className={style.searchAndFilter}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onDepartmentChange={setSelectedDepartment}
+            onYearChange={setSelectedYear}
+            filterType="year"
+            searchPlaceholder="Search paper title"
           />
+
+          <div className={style.tableSection}>
+            <ResearchPaperTable
+              papers={activeTab === "active" ? activePapers : archivedPapers}
+              onEdit={handleEdit}
+              onArchive={handleArchive}
+              onDelete={handleDelete}
+              onPreview={handlePreview}
+              showDepartmentColumn={user?.role === "SUPER_ADMIN"} // Only show department column for super admins
+            />
+          </div>
         </div>
       </main>
       <Footer />

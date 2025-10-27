@@ -11,11 +11,23 @@
   align-items: center;
   background-color: var(--color-header-bg);
   color: var(--color-text-inverted);
-  padding: var(--space-md) var(--space-md);
+  width: 100%;
 }
+
+.headerContainer {
+  width: 100%;
+  max-width: var(--container-max-width);
+  padding: var(--container-padding);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 @media (min-width: 768px) {
-  .headerWrapper {
-    padding: var(--space-md) var(--space-lg);
+  .headerContainer {
+    padding: var(--container-padding-md) var(--container-padding-lg);
   }
 }
 

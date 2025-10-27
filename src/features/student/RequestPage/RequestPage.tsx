@@ -50,20 +50,22 @@ function RequestPage() {
     <div className={clsx(style.page)}>
       <Header />
       <main className={style.main}>
-        <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
+        <div className={style.container}>
+          <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
 
-        <SearchAndFilter
-          className={style.searchAndFilter}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onDepartmentChange={setSelectedDepartment}
-          onDateChange={setSelectedDate} // Changed from onYearChange to onDateChange
-          filterType="date"
-          searchPlaceholder="Search paper title"
-        />
+          <SearchAndFilter
+            className={style.searchAndFilter}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onDepartmentChange={setSelectedDepartment}
+            onDateChange={setSelectedDate} // Changed from onYearChange to onDateChange
+            filterType="date"
+            searchPlaceholder="Search paper title"
+          />
 
-        <div className={style.tableSection}>
-          <RequestTable requests={filteredRequests} onDownload={handleDownload} />
+          <div className={style.tableSection}>
+            <RequestTable requests={filteredRequests} onDownload={handleDownload} />
+          </div>
         </div>
       </main>
 
