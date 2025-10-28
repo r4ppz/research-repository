@@ -1,6 +1,12 @@
 import { type DocumentRequest } from "@/types";
 import { MOCK_PAPERS } from "./paperMocks";
-import { MOCK_STUDENT, MOCK_STUDENT2, MOCK_STUDENT3, MOCK_STUDENT4, MOCK_STUDENT5 } from "./userMocks";
+import {
+  MOCK_STUDENT,
+  MOCK_STUDENT2,
+  MOCK_STUDENT3,
+  MOCK_STUDENT4,
+  MOCK_STUDENT5,
+} from "./userMocks";
 
 export const MOCK_REQUESTS: DocumentRequest[] = [
   {
