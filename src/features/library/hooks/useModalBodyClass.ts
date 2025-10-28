@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export function useModalScrollLock(isOpen: boolean): void {
+export function useModalBodyClass(isOpen: boolean): void {
   useEffect(() => {
     const html = document.documentElement;
     if (isOpen) {

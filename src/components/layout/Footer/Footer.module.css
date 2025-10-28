@@ -7,7 +7,7 @@ svg {
   flex-direction: column;
   background-color: var(--color-primary);
   color: var(--color-text-inverted);
-  gap: var(--space-md); /* Increased gap for better separation */
+  gap: var(--space-md);
   width: 100%;
 }
 
@@ -121,7 +121,7 @@ svg {
   .linkcontactContainer {
     flex-direction: row;
     justify-content: center;
-    gap: var(--space-6xl);
+    gap: var(--space-2xl);
     padding: 0;
   }
 }

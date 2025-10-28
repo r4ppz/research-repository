@@ -2,7 +2,7 @@ import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import Button from "@/components/common/Button/Button";
 import Modal from "@/components/common/Modal/Modal";
 import { useAuth } from "@/features/auth/context/useAuth";
-import { MOCK_DEPT_ADMIN, MOCK_STUDENT, MOCK_SUPER_ADMIN } from "@/mocks/mockData";
+import { MOCK_DEPT_ADMIN, MOCK_STUDENT, MOCK_SUPER_ADMIN } from "@/mocks/userMocks";
 
 interface LocationState {
   from?: { pathname: string };

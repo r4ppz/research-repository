@@ -5,11 +5,11 @@ import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
-import ResearchPaperTable from "@/features/admin/components/ResearchPaperTable";
+import ResearchPaperTable from "@/features/admin/components/ResearchPaperTable/ResearchPaperTable";
 import { useArchivedPaperFilter } from "@/features/admin/hooks/useArchivedPaperFilter";
 import { useDepartmentPaperFilter } from "@/features/admin/hooks/useDepartmentPaperFilter";
 import { useAuth } from "@/features/auth/context/useAuth";
-import { MOCK_PAPERS } from "@/mocks/mockData";
+import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import { type ResearchPaper } from "@/types";
 import style from "./ResearchPage.module.css";
 
@@ -106,7 +106,7 @@ function ResearchPage() {
               }}
             >
               <Archive size={16} />
-              Active Papers ({activePapers.length})
+              Active Papers
             </Button>
             <Button
               variant={activeTab === "archived" ? "primary" : "secondary"}
@@ -116,7 +116,7 @@ function ResearchPage() {
               }}
             >
               <RotateCcw size={16} />
-              Archived Papers ({archivedPapers.length})
+              Archived Papers
             </Button>
           </div>
 

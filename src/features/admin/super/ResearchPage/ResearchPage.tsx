@@ -5,10 +5,10 @@ import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
-import ResearchPaperTable from "@/features/admin/components/ResearchPaperTable";
+import ResearchPaperTable from "@/features/admin/components/ResearchPaperTable/ResearchPaperTable";
 import { useArchivedPaperFilter } from "@/features/admin/hooks/useArchivedPaperFilter";
 import { useDepartmentPaperFilter } from "@/features/admin/hooks/useDepartmentPaperFilter";
-import { MOCK_PAPERS } from "@/mocks/mockData";
+import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import { type ResearchPaper } from "@/types";
 import style from "./ResearchPage.module.css";
 

@@ -6,7 +6,7 @@ import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
 import { useRequestFilter } from "@/features/student/hooks/useRequestFilter";
 import RequestTable from "@/features/student/RequestTable/RequestTable";
-import { MOCK_REQUESTS } from "@/mocks/mockData";
+import { MOCK_REQUESTS } from "@/mocks/requestMocks";
 import { DocumentRequest } from "@/types/";
 import style from "./RequestPage.module.css";
 

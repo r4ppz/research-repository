@@ -4,7 +4,7 @@ import { type DocumentRequest } from "@/types";
 export function useRequestFilter(
   searchQuery: string,
   selectedDepartment: string | null,
-  selectedDate: string | null, // Changed from selectedYear to selectedDate
+  selectedDate: string | null,
   requests: DocumentRequest[],
 ): DocumentRequest[] {
   return useMemo(() => {

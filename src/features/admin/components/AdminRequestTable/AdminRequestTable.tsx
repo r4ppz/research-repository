@@ -4,7 +4,7 @@ import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Table from "@/components/common/Table/Table";
 import { DocumentRequest } from "@/types";
-import styles from "./RequestTable.module.css";
+import styles from "./AdminRequestTable.module.css";
 
 interface AdminRequestTableProps {
   requests: DocumentRequest[];

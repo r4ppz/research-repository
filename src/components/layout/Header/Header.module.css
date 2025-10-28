@@ -7,7 +7,7 @@
   position: relative;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background-color: var(--color-header-bg);
   color: var(--color-text-inverted);
@@ -17,18 +17,11 @@
 .headerContainer {
   width: 100%;
   max-width: var(--container-max-width);
-  padding: var(--container-padding);
-  margin: 0 auto;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-}
-
-@media (min-width: 768px) {
-  .headerContainer {
-    padding: var(--container-padding-md) var(--container-padding-lg);
-  }
+  padding: var(--space-md) var(--space-lg);
 }
 
 .leftWrapper {

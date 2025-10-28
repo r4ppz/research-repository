@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
-import AdminRequestTable from "@/features/admin/components/RequestTable";
+import AdminRequestTable from "@/features/admin/components/AdminRequestTable/AdminRequestTable";
 import { useDepartmentRequestFilter } from "@/features/admin/hooks/useDepartmentRequestFilter";
-import { MOCK_REQUESTS } from "@/mocks/mockData";
+import { MOCK_REQUESTS } from "@/mocks/requestMocks";
 import style from "./RequestPage.module.css";
 
 function RequestPage() {

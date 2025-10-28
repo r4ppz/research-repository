@@ -1,7 +1,8 @@
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Button from "@/components/common/Button/Button";
-import { MOCK_DEPARTMENTS, MOCK_REQUEST_DATES, MOCK_YEARS } from "@/mocks/mockData";
+import { MOCK_DEPARTMENTS } from "@/mocks/paperMocks";
+import { MOCK_REQUEST_DATES, MOCK_YEARS } from "@/mocks/filterMocks";
 import style from "./FilterButtons.module.css";
 
 interface FilterButtonsProps {

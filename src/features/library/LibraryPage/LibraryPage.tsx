@@ -9,14 +9,14 @@ import ResearchCard from "@/features/library/components/ResearchCard/ResearchCar
 import ResearchModal from "@/features/library/components/ResearchModal/ResearchModal";
 import { usePagination } from "@/features/library/hooks/usePagination";
 import { useResearchFilter } from "@/features/library/hooks/useResearchFilter";
-import { MOCK_PAPERS } from "@/mocks/mockData";
+import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import { type ResearchPaper } from "@/types";
 import style from "./LibraryPage.module.css";
-import { useModalScrollLock } from "../hooks/useModalBodyClass";
+import { useModalBodyClass } from "../hooks/useModalBodyClass";
 
 function LibraryPage() {
   const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(12);
+  const [itemsPerPage] = useState(12); // Fixed items per page
   const [loading, setLoading] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,7 +34,7 @@ function LibraryPage() {
   );
   const pageData = usePagination(filteredPapers, currentPage, itemsPerPage);
 
-  useModalScrollLock(isModalOpen);
+  useModalBodyClass(isModalOpen);
 
   // Simulate loading delay for demo purposes
   useEffect(() => {
@@ -49,21 +49,6 @@ function LibraryPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
-
-  useEffect(() => {
-    const updateItemsPerPage = () => {
-      if (window.innerWidth > 1536) {
-        setItemsPerPage(16);
-      } else {
-        setItemsPerPage(12);
-      }
-    };
-    updateItemsPerPage();
-    window.addEventListener("resize", updateItemsPerPage);
-    return () => {
-      window.removeEventListener("resize", updateItemsPerPage);
-    };
-  }, []);
 
   const handleCloseModal = () => {
     setSelectedResearch(null);
@@ -137,7 +122,7 @@ function LibraryPage() {
             {pageData.content.length === 0 ? (
               <div>
                 <p>No research paper found :(</p>
-                <p>Try changing your search or filter criteria</p>
+                <p>CHATGIPITY center this text...</p>
               </div>
             ) : (
               pageData.content.map((research) => (
