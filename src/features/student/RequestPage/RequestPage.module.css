@@ -7,16 +7,14 @@
 }
 
 .page {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   width: 100%;
   min-height: 100dvh;
 }
 
 .main {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+  display: block;
 }
 
 .container {

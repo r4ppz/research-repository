@@ -7,8 +7,8 @@
 }
 
 .page {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   min-height: 100dvh;
 }
 
@@ -17,7 +17,6 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  flex: 1;
 }
 
 .container {

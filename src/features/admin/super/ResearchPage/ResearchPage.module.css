@@ -7,16 +7,14 @@
 }
 
 .page {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   min-height: 100dvh;
   width: 100%;
 }
 
 .main {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+  display: block;
 }
 
 .container {
@@ -25,6 +23,7 @@
   max-width: var(--container-max-width);
   padding: var(--space-lg);
   gap: var(--space-md);
+  flex: 1;
   margin: 0 auto;
 }
 

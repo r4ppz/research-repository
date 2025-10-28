@@ -7,8 +7,8 @@
 }
 
 .page {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   width: 100%;
   min-height: 100dvh;
   background-color: var(--color-bg);
@@ -19,7 +19,6 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-lg);
-  flex: 1;
 }
 
 .container {
