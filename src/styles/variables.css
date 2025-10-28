@@ -167,7 +167,4 @@
      Container Widths
   ---------------------------------- */
   --container-max-width: 1400px;
-  --container-padding: var(--space-lg);
-  --container-padding-md: var(--space-2xl);
-  --container-padding-lg: var(--space-7xl);
 }

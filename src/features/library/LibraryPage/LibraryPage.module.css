@@ -25,10 +25,11 @@
   max-width: var(--container-max-width);
   gap: var(--space-xl);
   margin: 0 auto;
+  padding: var(--space-lg);
 }
 @media (min-width: 768px) {
   .container {
-    padding: var(--container-padding-md) var(--container-padding-lg);
+    padding: var(--space-2xl) var(--space-7xl);
   }
 }
 

@@ -14,12 +14,12 @@ svg {
 .footerContainer {
   width: 100%;
   max-width: var(--container-max-width);
-  padding: var(--container-padding);
+  padding: var(--space-lg);
   margin: 0 auto;
 }
 @media (min-width: 768px) {
   .footerContainer {
-    padding: var(--container-padding-md) var(--container-padding-lg);
+    padding: var(--space-2xl) var(--space-7xl);
   }
 }
 
