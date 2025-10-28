@@ -21,10 +21,3 @@ export function formatDateShort(dateString: string): string {
     day: "numeric",
   });
 }
-
-/**
- * @deprecated Use formatDateLong instead
- */
-export function formatDate(dateString: string): string {
-  return formatDateLong(dateString);
-}
