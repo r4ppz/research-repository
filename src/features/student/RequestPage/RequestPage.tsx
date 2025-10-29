@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
@@ -8,18 +8,20 @@ import { useRequestFilter } from "@/features/student/hooks/useRequestFilter";
 import RequestTable from "@/features/student/RequestTable/RequestTable";
 import { MOCK_REQUESTS } from "@/mocks/requestMocks";
 import { DocumentRequest } from "@/types/";
+import { useLoadingDelay } from "@/util/useLoadingDelay";
 import style from "./RequestPage.module.css";
 
 function RequestPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null); // Changed from selectedYear to selectedDate
-  const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+  const loading = useLoadingDelay();
 
   const filteredRequests = useRequestFilter(
     searchQuery,
     selectedDepartment,
-    selectedDate, // Changed from selectedYear to selectedDate
+    selectedDate,
     MOCK_REQUESTS,
   );
 
@@ -27,16 +29,6 @@ function RequestPage() {
     // TODO: Implement download logic
     console.log("Downloading:", request.paper.title);
   };
-
-  // Simulate loading delay for demo purposes
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
 
   if (loading) {
     return (
@@ -50,7 +42,7 @@ function RequestPage() {
     <div className={clsx(style.page)}>
       <Header />
       <main className={style.main}>
-        <div className={style.container}>
+        <div className={style.mainContainer}>
           <h1 className={style.titleHeader}>Manage Research Paper Requests</h1>
 
           <SearchAndFilter
@@ -58,7 +50,7 @@ function RequestPage() {
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             onDepartmentChange={setSelectedDepartment}
-            onDateChange={setSelectedDate} // Changed from onYearChange to onDateChange
+            onDateChange={setSelectedDate}
             filterType="date"
             searchPlaceholder="Search paper title"
           />

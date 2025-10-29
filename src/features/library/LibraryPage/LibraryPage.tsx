@@ -11,13 +11,13 @@ import { usePagination } from "@/features/library/hooks/usePagination";
 import { useResearchFilter } from "@/features/library/hooks/useResearchFilter";
 import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import { type ResearchPaper } from "@/types";
+import { useLoadingDelay } from "@/util/useLoadingDelay";
 import style from "./LibraryPage.module.css";
 import { useModalBodyClass } from "../hooks/useModalBodyClass";
 
 function LibraryPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(12); // Fixed items per page
-  const [loading, setLoading] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
@@ -25,6 +25,8 @@ function LibraryPage() {
 
   const [selectedResearch, setSelectedResearch] = useState<ResearchPaper | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const loading = useLoadingDelay();
 
   const filteredPapers = useResearchFilter(
     searchQuery,
@@ -35,16 +37,6 @@ function LibraryPage() {
   const pageData = usePagination(filteredPapers, currentPage, itemsPerPage);
 
   useModalBodyClass(isModalOpen);
-
-  // Simulate loading delay for demo purposes
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });

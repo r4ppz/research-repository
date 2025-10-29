@@ -8,17 +8,18 @@
   overflow: hidden;
   border: 1px solid var(--color-border-default);
 }
-@media (min-width: 768px) {
-  .tableContainer {
-    transition: var(--transition-elevation);
-    box-shadow: var(--shadow-resting);
-  }
-
-  .tableContainer:hover {
-    transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
-    box-shadow: var(--shadow-hover);
-  }
-}
+/* NOTE: hover effects */
+/* @media (min-width: 768px) { */
+/*   .tableContainer { */
+/*     transition: var(--transition-elevation); */
+/*     box-shadow: var(--shadow-resting); */
+/*   } */
+/**/
+/*   .tableContainer:hover { */
+/*     transform: translateY(var(--translate-hover)) scale(var(--scale-hover)); */
+/*     box-shadow: var(--shadow-hover); */
+/*   } */
+/* } */
 
 .table {
   width: 100%;

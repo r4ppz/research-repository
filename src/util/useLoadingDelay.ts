@@ -1,0 +1,22 @@
+import { useEffect, useState } from "react";
+
+/**
+ * Custom hook to simulate a loading delay for demo purposes.
+ * @param delayMs - The delay in milliseconds (default: 500)
+ * @returns boolean indicating if loading is still in progress
+ */
+export const useLoadingDelay = (delayMs: number = 500): boolean => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, delayMs);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [delayMs]);
+
+  return loading;
+};

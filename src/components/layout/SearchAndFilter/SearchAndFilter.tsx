@@ -10,7 +10,7 @@ interface SearchAndFilterProps {
   onDepartmentChange: (department: string | null) => void;
   onYearChange?: (year: string | null) => void;
   onDateChange?: (date: string | null) => void;
-  filterType?: "year" | "date"; // To determine which filter to show
+  filterType?: "year" | "date";
   searchPlaceholder?: string;
   className?: string;
 }
@@ -32,7 +32,7 @@ function SearchAndFilter({
         icon={Search}
         placeholder={searchPlaceholder}
         value={searchQuery}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+        onChange={(e) => {
           onSearchChange(e.target.value);
         }}
       />

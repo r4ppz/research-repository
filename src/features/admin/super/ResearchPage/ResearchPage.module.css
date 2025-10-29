@@ -17,7 +17,7 @@
   display: block;
 }
 
-.container {
+.mainContainer {
   display: flex;
   flex-direction: column;
   max-width: var(--container-max-width);
@@ -28,7 +28,7 @@
 }
 
 @media (min-width: 768px) {
-  .container {
+  .mainContainer {
     padding: var(--space-2xl) var(--space-7xl);
   }
 }

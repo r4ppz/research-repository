@@ -1,5 +1,5 @@
 import { Archive, FilePlus2, RotateCcw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
 import Footer from "@/components/layout/Footer/Footer";
@@ -10,6 +10,7 @@ import { useArchivedPaperFilter } from "@/features/admin/hooks/useArchivedPaperF
 import { useDepartmentPaperFilter } from "@/features/admin/hooks/useDepartmentPaperFilter";
 import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import { type ResearchPaper } from "@/types";
+import { useLoadingDelay } from "@/util/useLoadingDelay";
 import style from "./ResearchPage.module.css";
 
 function ResearchPage() {
@@ -17,7 +18,6 @@ function ResearchPage() {
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
-  const [loading, setLoading] = useState(true);
 
   const allPapers = MOCK_PAPERS; // Super admin sees all papers
 
@@ -60,15 +60,7 @@ function ResearchPage() {
     console.log(`Previewing paper: ${paper.title}`);
   };
 
-  // NOTE: Simulate loading delay for demo purposes
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+  const loading = useLoadingDelay();
 
   if (loading) {
     return (
@@ -82,7 +74,7 @@ function ResearchPage() {
     <div className={style.page}>
       <Header />
       <main className={style.main}>
-        <div className={style.container}>
+        <div className={style.mainContainer}>
           <div className={style.headerSection}>
             <h1 className={style.titleHeader}>Manage All Research Papers</h1>
             <Button onClick={handleCreate} className={style.createButton}>
