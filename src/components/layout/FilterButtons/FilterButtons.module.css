@@ -11,6 +11,7 @@
 
 .filterButton {
   width: 100%;
+  min-width: 130px;
   transition: var(--transition-fast);
 }
 
