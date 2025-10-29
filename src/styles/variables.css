@@ -132,6 +132,11 @@
   --radius-full: 9999px;
 
   /* ---------------------------------
+     Container Widths
+  ---------------------------------- */
+  --container-max-width: 1400px;
+
+  /* ---------------------------------
      Elevation & Interaction Effects
   ---------------------------------- */
 
@@ -154,17 +159,11 @@
   --transition-elevation: transform var(--transition-fast), box-shadow var(--transition-fast);
 
   /* ---------------------------------
-    Additional
+    Logo
   ---------------------------------- */
-
   --size-logo-xs: 40px;
   --size-logo-sm: 60px;
   --size-logo-md: 100px;
   --size-logo-lg: 130px;
   --size-logo-xl: 200px;
-
-  /* ---------------------------------
-     Container Widths
-  ---------------------------------- */
-  --container-max-width: 1400px;
 }
