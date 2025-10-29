@@ -124,14 +124,12 @@ function LibraryPage() {
             </p>
           </section>
 
-          <section className={style.searchSection}>
-            <SearchAndFilter
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              filters={filters}
-              searchPlaceholder="Search paper title"
-            />
-          </section>
+          <SearchAndFilter
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            filters={filters}
+            searchPlaceholder="Search paper title"
+          />
 
           <section className={style.researchSection}>
             {pageData.content.length === 0 ? (

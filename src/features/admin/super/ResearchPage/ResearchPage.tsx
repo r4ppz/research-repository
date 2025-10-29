@@ -133,7 +133,6 @@ function ResearchPage() {
           </div>
 
           <SearchAndFilter
-            className={style.searchAndFilter}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             filters={filters}

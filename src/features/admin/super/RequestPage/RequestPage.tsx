@@ -10,6 +10,7 @@ import { useLoadingDelay } from "@/hooks/useLoadingDelay";
 import { useMultiFilterRequest } from "@/hooks/useMultiFilterRequest";
 import { MOCK_DEPARTMENTS, MOCK_REQUEST_DATES } from "@/mocks/filterMocks";
 import { MOCK_REQUESTS } from "@/mocks/requestMocks";
+import { formatDateShort } from "@/util/formatDate";
 import style from "./RequestPage.module.css";
 
 function RequestPage() {
@@ -47,7 +48,7 @@ function RequestPage() {
       label: "Date",
       options: MOCK_REQUEST_DATES.map((date) => ({
         value: date,
-        label: date,
+        label: formatDateShort(date),
       })),
       value: selectedDate,
       onChange: setSelectedDate,
@@ -70,7 +71,6 @@ function RequestPage() {
           <h1 className={style.titleHeader}>Manage Document Requests (Super Admin)</h1>
 
           <SearchAndFilter
-            className={style.searchAndFilter}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             filters={filters}

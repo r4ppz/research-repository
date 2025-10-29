@@ -11,8 +11,8 @@ import CustomNavLink from "../CustomNavLink/CustomNavLink";
 
 const ROLE_LABEL: Record<Role, string> = {
   STUDENT: "Student",
-  DEPARTMENT_ADMIN: "Admin",
-  SUPER_ADMIN: "Admin",
+  DEPARTMENT_ADMIN: "D Admin",
+  SUPER_ADMIN: "S Admin",
 };
 
 const REQUEST_PATH: Record<Role, string> = {

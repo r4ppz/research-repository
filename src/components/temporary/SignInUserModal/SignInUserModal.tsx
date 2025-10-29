@@ -45,7 +45,7 @@ function SignInUserModal({ isOpen, onClose }: SignInUserModalProps) {
             void navigate(from, { replace: true });
           }}
         >
-          Sign in as Department Admin (Bob)
+          Sign in as Department Admin (Bob) [Computer Science]
         </Button>
         <Button
           type="button"

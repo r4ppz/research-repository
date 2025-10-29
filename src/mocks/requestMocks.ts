@@ -359,4 +359,88 @@ export const MOCK_REQUESTS: DocumentRequest[] = [
     paper: MOCK_PAPERS[30],
     requester: MOCK_STUDENT5,
   },
+  {
+    requestId: 51,
+    status: "PENDING",
+    requestDate: "2025-10-15T10:30:00Z",
+    paper: MOCK_PAPERS[32], // Large Language Models paper
+    requester: MOCK_STUDENT,
+  },
+  {
+    requestId: 52,
+    status: "PENDING",
+    requestDate: "2025-10-14T11:30:00Z",
+    paper: MOCK_PAPERS[33], // Quantum Computing paper (archived)
+    requester: MOCK_STUDENT2,
+  },
+  {
+    requestId: 53,
+    status: "ACCEPTED",
+    requestDate: "2025-10-13T12:30:00Z",
+    paper: MOCK_PAPERS[34], // Deep Learning Vision paper
+    requester: MOCK_STUDENT3,
+  },
+  {
+    requestId: 54,
+    status: "PENDING",
+    requestDate: "2025-10-12T13:30:00Z",
+    paper: MOCK_PAPERS[35], // Distributed Systems paper
+    requester: MOCK_STUDENT4,
+  },
+  {
+    requestId: 55,
+    status: "REJECTED",
+    requestDate: "2025-10-11T14:30:00Z",
+    paper: MOCK_PAPERS[36], // Cybersecurity paper
+    requester: MOCK_STUDENT5,
+  },
+  {
+    requestId: 56,
+    status: "PENDING",
+    requestDate: "2025-10-10T15:30:00Z",
+    paper: MOCK_PAPERS[37], // Formal Verification paper (archived)
+    requester: MOCK_STUDENT,
+  },
+  {
+    requestId: 57,
+    status: "ACCEPTED",
+    requestDate: "2025-10-09T16:30:00Z",
+    paper: MOCK_PAPERS[38], // HCI-UX Design paper
+    requester: MOCK_STUDENT2,
+  },
+  {
+    requestId: 58,
+    status: "PENDING",
+    requestDate: "2025-10-08T17:30:00Z",
+    paper: MOCK_PAPERS[39], // Database Systems paper (archived)
+    requester: MOCK_STUDENT3,
+  },
+  {
+    requestId: 59,
+    status: "PENDING",
+    requestDate: "2025-10-07T18:30:00Z",
+    paper: MOCK_PAPERS[40], // Healthcare ML paper
+    requester: MOCK_STUDENT4,
+  },
+  {
+    requestId: 60,
+    status: "ACCEPTED",
+    requestDate: "2025-10-06T19:30:00Z",
+    paper: MOCK_PAPERS[41], // Autonomous Vehicles paper
+    requester: MOCK_STUDENT5,
+  },
+  {
+    requestId: 61,
+    status: "PENDING",
+    requestDate: "2025-10-05T20:30:00Z",
+    paper: MOCK_PAPERS[42], // NLP Low-Resource paper
+    requester: MOCK_STUDENT,
+  },
+  {
+    requestId: 62,
+    status: "PENDING",
+    requestDate: "2025-10-04T21:30:00Z",
+    paper: MOCK_PAPERS[43], // Blockchain paper (archived)
+    requester: MOCK_STUDENT2,
+  },
 ];
