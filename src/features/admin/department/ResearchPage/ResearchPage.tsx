@@ -2,6 +2,7 @@ import { Archive, FilePlus2, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { FilterConfig } from "@/components/layout/FilterButtons/FilterTypes";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
@@ -9,9 +10,10 @@ import ResearchPaperTable from "@/features/admin/components/ResearchPaperTable/R
 import { useArchivedPaperFilter } from "@/features/admin/hooks/useArchivedPaperFilter";
 import { useDepartmentPaperFilter } from "@/features/admin/hooks/useDepartmentPaperFilter";
 import { useAuth } from "@/features/auth/context/useAuth";
+import { useLoadingDelay } from "@/hooks/useLoadingDelay";
+import { MOCK_DEPARTMENTS, MOCK_YEARS } from "@/mocks/filterMocks";
 import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import { type ResearchPaper } from "@/types";
-import { useLoadingDelay } from "@/util/useLoadingDelay";
 import style from "./ResearchPage.module.css";
 
 function ResearchPage() {
@@ -76,13 +78,37 @@ function ResearchPage() {
     );
   }
 
+  // Define filters for the search and filter component
+  const filters: FilterConfig[] = [
+    {
+      type: "department",
+      label: "Department",
+      options: MOCK_DEPARTMENTS.map((dept) => ({
+        value: dept.departmentName,
+        label: dept.departmentName,
+      })),
+      value: selectedDepartment,
+      onChange: setSelectedDepartment,
+    },
+    {
+      type: "year",
+      label: "Year",
+      options: MOCK_YEARS.map((year) => ({
+        value: year,
+        label: year,
+      })),
+      value: selectedYear,
+      onChange: setSelectedYear,
+    },
+  ];
+
   return (
     <div className={style.page}>
       <Header />
       <main className={style.main}>
         <div className={style.mainContainer}>
           <div className={style.headerSection}>
-            <h1 className={style.titleHeader}>Manage Research Papers</h1>
+            <h1 className={style.titleHeader}>Manage Research Papers (Department Admin)</h1>
             <Button onClick={handleCreate} className={style.createButton}>
               <FilePlus2 size={18} />
               Add Paper
@@ -116,9 +142,7 @@ function ResearchPage() {
             className={style.searchAndFilter}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
-            onDepartmentChange={setSelectedDepartment}
-            onYearChange={setSelectedYear}
-            filterType="year"
+            filters={filters}
             searchPlaceholder="Search paper title"
           />
 

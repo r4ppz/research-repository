@@ -49,11 +49,9 @@
 .titleHeader {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
-  margin: 0;
 }
 
 .createButton {
-  align-self: flex-start;
   width: 100%;
 }
 

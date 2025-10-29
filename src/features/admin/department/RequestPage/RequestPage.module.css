@@ -21,6 +21,8 @@
 }
 
 .mainContainer {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: var(--container-max-width);
   padding: var(--space-lg);
@@ -34,14 +36,13 @@
 }
 
 .titleHeader {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text);
   margin-bottom: var(--space-md);
   text-align: center;
   width: 100%;
 }
-
 @media (min-width: 768px) {
   .titleHeader {
     font-size: var(--font-size-2xl);

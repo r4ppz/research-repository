@@ -2,16 +2,18 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import Button from "@/components/common/Button/Button";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { FilterConfig } from "@/components/layout/FilterButtons/FilterTypes";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
 import ResearchCard from "@/features/library/components/ResearchCard/ResearchCard";
 import ResearchModal from "@/features/library/components/ResearchModal/ResearchModal";
 import { usePagination } from "@/features/library/hooks/usePagination";
-import { useResearchFilter } from "@/features/library/hooks/useResearchFilter";
+import { usePaperFilter } from "@/features/library/hooks/usePaperFilter";
+import { useLoadingDelay } from "@/hooks/useLoadingDelay";
+import { MOCK_DEPARTMENTS, MOCK_YEARS } from "@/mocks/filterMocks";
 import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import { type ResearchPaper } from "@/types";
-import { useLoadingDelay } from "@/util/useLoadingDelay";
 import style from "./LibraryPage.module.css";
 import { useModalBodyClass } from "../hooks/useModalBodyClass";
 
@@ -28,12 +30,11 @@ function LibraryPage() {
 
   const loading = useLoadingDelay();
 
-  const filteredPapers = useResearchFilter(
+  const filteredPapers = usePaperFilter(MOCK_PAPERS, {
     searchQuery,
     selectedDepartment,
     selectedYear,
-    MOCK_PAPERS,
-  );
+  });
   const pageData = usePagination(filteredPapers, currentPage, itemsPerPage);
 
   useModalBodyClass(isModalOpen);
@@ -79,6 +80,30 @@ function LibraryPage() {
     );
   }
 
+  // Define filters for the search and filter component
+  const filters: FilterConfig[] = [
+    {
+      type: "department",
+      label: "Department",
+      options: MOCK_DEPARTMENTS.map((dept) => ({
+        value: dept.departmentName,
+        label: dept.departmentName,
+      })),
+      value: selectedDepartment,
+      onChange: setSelectedDepartment,
+    },
+    {
+      type: "year",
+      label: "Year",
+      options: MOCK_YEARS.map((year) => ({
+        value: year,
+        label: year,
+      })),
+      value: selectedYear,
+      onChange: setSelectedYear,
+    },
+  ];
+
   return (
     <div className={style.page}>
       <Header />
@@ -103,9 +128,7 @@ function LibraryPage() {
             <SearchAndFilter
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
-              onDepartmentChange={setSelectedDepartment}
-              onYearChange={setSelectedYear}
-              filterType="year"
+              filters={filters}
               searchPlaceholder="Search paper title"
             />
           </section>

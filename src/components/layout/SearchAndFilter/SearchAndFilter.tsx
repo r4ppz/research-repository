@@ -1,16 +1,14 @@
 import clsx from "clsx";
 import { Search } from "lucide-react";
 import Input from "@/components/common/Input/Input";
-import FilterButtons from "@/components/layout/FilterButtons/FilterButtons";
+import DynamicFilter from "@/components/layout/FilterButtons/DynamicFilter";
+import { FilterConfig } from "@/components/layout/FilterButtons/FilterTypes";
 import style from "./SearchAndFilter.module.css";
 
 interface SearchAndFilterProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  onDepartmentChange: (department: string | null) => void;
-  onYearChange?: (year: string | null) => void;
-  onDateChange?: (date: string | null) => void;
-  filterType?: "year" | "date";
+  filters?: FilterConfig[];
   searchPlaceholder?: string;
   className?: string;
 }
@@ -18,10 +16,7 @@ interface SearchAndFilterProps {
 function SearchAndFilter({
   searchQuery,
   onSearchChange,
-  onDepartmentChange,
-  onYearChange,
-  onDateChange,
-  filterType = "year",
+  filters = [],
   searchPlaceholder = "Search paper title",
   className,
 }: SearchAndFilterProps) {
@@ -37,12 +32,7 @@ function SearchAndFilter({
         }}
       />
 
-      <FilterButtons
-        onDepartmentChange={onDepartmentChange}
-        onYearChange={onYearChange}
-        onDateChange={onDateChange}
-        filterType={filterType}
-      />
+      <DynamicFilter filters={filters} />
     </section>
   );
 }

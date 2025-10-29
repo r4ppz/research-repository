@@ -1,14 +1,16 @@
 import clsx from "clsx";
 import { useState } from "react";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { FilterConfig } from "@/components/layout/FilterButtons/FilterTypes";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
-import { useRequestFilter } from "@/features/student/hooks/useRequestFilter";
 import RequestTable from "@/features/student/RequestTable/RequestTable";
+import { useLoadingDelay } from "@/hooks/useLoadingDelay";
+import { useMultiFilterRequest } from "@/hooks/useMultiFilterRequest";
+import { MOCK_DEPARTMENTS, MOCK_REQUEST_DATES } from "@/mocks/filterMocks";
 import { MOCK_REQUESTS } from "@/mocks/requestMocks";
 import { DocumentRequest } from "@/types/";
-import { useLoadingDelay } from "@/util/useLoadingDelay";
 import style from "./RequestPage.module.css";
 
 function RequestPage() {
@@ -18,12 +20,11 @@ function RequestPage() {
 
   const loading = useLoadingDelay();
 
-  const filteredRequests = useRequestFilter(
+  const filteredRequests = useMultiFilterRequest(MOCK_REQUESTS, {
     searchQuery,
     selectedDepartment,
     selectedDate,
-    MOCK_REQUESTS,
-  );
+  });
 
   const handleDownload = (request: DocumentRequest) => {
     // TODO: Implement download logic
@@ -38,6 +39,30 @@ function RequestPage() {
     );
   }
 
+  // Define filters for the search and filter component
+  const filters: FilterConfig[] = [
+    {
+      type: "department",
+      label: "Department",
+      options: MOCK_DEPARTMENTS.map((dept) => ({
+        value: dept.departmentName,
+        label: dept.departmentName,
+      })),
+      value: selectedDepartment,
+      onChange: setSelectedDepartment,
+    },
+    {
+      type: "date",
+      label: "Date",
+      options: MOCK_REQUEST_DATES.map((date) => ({
+        value: date,
+        label: date,
+      })),
+      value: selectedDate,
+      onChange: setSelectedDate,
+    },
+  ];
+
   return (
     <div className={clsx(style.page)}>
       <Header />
@@ -49,9 +74,7 @@ function RequestPage() {
             className={style.searchAndFilter}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
-            onDepartmentChange={setSelectedDepartment}
-            onDateChange={setSelectedDate}
-            filterType="date"
+            filters={filters}
             searchPlaceholder="Search paper title"
           />
 
