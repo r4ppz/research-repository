@@ -3,13 +3,8 @@
 }
 
 .statusBadge {
-  display: inline-block;
-  padding: var(--space-xs) var(--space-md);
-  border-radius: var(--radius-full);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
-  text-align: center;
-  min-width: 70px;
 }
 
 .active {
@@ -30,4 +25,3 @@
   padding: var(--space-sm);
   min-width: auto;
 }
-

@@ -1,8 +1,8 @@
 import { Archive, FilePlus2, RotateCcw } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@/components/common/Button/Button";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
-import { FilterConfig } from "@/components/layout/FilterButtons/FilterTypes";
+import { FilterConfig } from "@/components/layout/DynamicFilter/FilterTypes";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
@@ -22,6 +22,22 @@ function ResearchPage() {
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isModalOpen) {
+      document.body.classList.add("modal-open");
+      html.classList.add("modal-open");
+    } else {
+      document.body.classList.remove("modal-open");
+      html.classList.remove("modal-open");
+    }
+    return () => {
+      document.body.classList.remove("modal-open");
+      html.classList.remove("modal-open");
+    };
+  }, [isModalOpen]);
 
   const allPapers = MOCK_PAPERS.filter((paper) =>
     user?.role === "DEPARTMENT_ADMIN"
@@ -78,6 +94,8 @@ function ResearchPage() {
             onClose={() => {
               setIsModalOpen(false);
             }}
+            userRole={user?.role}
+            userDepartment={user?.department}
           />
 
           <div className={style.tabsContainer}>

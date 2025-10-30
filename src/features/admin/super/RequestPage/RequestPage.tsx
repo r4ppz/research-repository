@@ -1,6 +1,6 @@
 import { useState } from "react";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
-import { FilterConfig } from "@/components/layout/FilterButtons/FilterTypes";
+import { FilterConfig } from "@/components/layout/DynamicFilter/FilterTypes";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";

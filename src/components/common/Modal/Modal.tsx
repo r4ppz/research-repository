@@ -2,6 +2,7 @@ import { clsx } from "clsx";
 import { X } from "lucide-react";
 import React from "react";
 import ReactDOM from "react-dom";
+import { useModalBodyClass } from "@/hooks/useModalBodyClass";
 import style from "./Modal.module.css";
 
 interface ModalProps {
@@ -12,6 +13,8 @@ interface ModalProps {
 }
 
 function Modal({ isOpen, onClose, children, className }: ModalProps) {
+  useModalBodyClass(isOpen);
+
   if (!isOpen) {
     return null;
   }

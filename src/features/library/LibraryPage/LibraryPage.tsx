@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import Button from "@/components/common/Button/Button";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
-import { FilterConfig } from "@/components/layout/FilterButtons/FilterTypes";
+import { FilterConfig } from "@/components/layout/DynamicFilter/FilterTypes";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
@@ -15,7 +15,6 @@ import { MOCK_DEPARTMENTS, MOCK_YEARS } from "@/mocks/filterMocks";
 import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import { type ResearchPaper } from "@/types";
 import style from "./LibraryPage.module.css";
-import { useModalBodyClass } from "../hooks/useModalBodyClass";
 
 function LibraryPage() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -36,8 +35,6 @@ function LibraryPage() {
     selectedYear,
   });
   const pageData = usePagination(filteredPapers, currentPage, itemsPerPage);
-
-  useModalBodyClass(isModalOpen);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });

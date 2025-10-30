@@ -1,14 +1,16 @@
 import { Archive, FilePlus2, RotateCcw } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@/components/common/Button/Button";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
-import { FilterConfig } from "@/components/layout/FilterButtons/FilterTypes";
+import { FilterConfig } from "@/components/layout/DynamicFilter/FilterTypes";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
+import AddPaperModal from "@/features/admin/components/AddPaperModal/AddPaperModal";
 import ResearchPaperTable from "@/features/admin/components/ResearchPaperTable/ResearchPaperTable";
 import { useActivePaperFilter } from "@/features/admin/hooks/useActivePaperFilter";
 import { useArchivedPaperFilter } from "@/features/admin/hooks/useArchivedPaperFilter";
+import { useAuth } from "@/features/auth/context/useAuth";
 import { useLoadingDelay } from "@/hooks/useLoadingDelay";
 import { MOCK_DEPARTMENTS, MOCK_YEARS } from "@/mocks/filterMocks";
 import { MOCK_PAPERS } from "@/mocks/paperMocks";
@@ -16,10 +18,28 @@ import { type ResearchPaper } from "@/types";
 import style from "./ResearchPage.module.css";
 
 function ResearchPage() {
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isModalOpen) {
+      document.body.classList.add("modal-open");
+      html.classList.add("modal-open");
+    } else {
+      document.body.classList.remove("modal-open");
+      html.classList.remove("modal-open");
+    }
+    return () => {
+      document.body.classList.remove("modal-open");
+      html.classList.remove("modal-open");
+    };
+  }, [isModalOpen]);
 
   const allPapers = MOCK_PAPERS;
 
@@ -38,8 +58,7 @@ function ResearchPage() {
   );
 
   const handleCreate = () => {
-    // TODO: Implement create paper logic
-    console.log("Creating new paper");
+    setIsModalOpen(true);
   };
 
   const handleEdit = (paperId: number) => {
@@ -107,6 +126,15 @@ function ResearchPage() {
               Add Paper
             </Button>
           </div>
+
+          <AddPaperModal
+            isOpen={isModalOpen}
+            onClose={() => {
+              setIsModalOpen(false);
+            }}
+            userRole={user?.role}
+            userDepartment={user?.department}
+          />
 
           <div className={style.tabsContainer}>
             <Button

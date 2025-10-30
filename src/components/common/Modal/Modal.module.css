@@ -22,6 +22,7 @@
   margin: var(--space-lg);
   transition: var(--transition-elevation);
   box-shadow: var(--shadow-resting);
+  overflow: hidden;
 }
 .modal:hover {
   transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
