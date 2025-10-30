@@ -14,7 +14,6 @@ import { useAuth } from "@/features/auth/context/useAuth";
 import { useLoadingDelay } from "@/hooks/useLoadingDelay";
 import { MOCK_YEARS } from "@/mocks/filterMocks";
 import { MOCK_PAPERS } from "@/mocks/paperMocks";
-import { type ResearchPaper } from "@/types";
 import style from "./ResearchPage.module.css";
 
 function ResearchPage() {
@@ -32,26 +31,6 @@ function ResearchPage() {
 
   const activePapers = useActivePaperFilter(searchQuery, null, selectedYear, allPapers);
   const archivedPapers = useArchivedPaperFilter(searchQuery, null, selectedYear, allPapers);
-
-  const handleEdit = (paperId: number) => {
-    // TODO: Implement edit paper logic
-    console.log(`Editing paper with ID: ${String(paperId)}`);
-  };
-
-  const handleArchive = (paperId: number) => {
-    // TODO: Implement archive paper logic
-    console.log(`Toggling archive status for paper with ID: ${String(paperId)}`);
-  };
-
-  const handleDelete = (paperId: number) => {
-    // TODO: Implement delete paper logic
-    console.log(`Deleting paper with ID: ${String(paperId)}`);
-  };
-
-  const handlePreview = (paper: ResearchPaper) => {
-    // TODO: Implement preview paper logic
-    console.log(`Previewing paper: ${paper.title}`);
-  };
 
   const loading = useLoadingDelay();
 
@@ -134,10 +113,10 @@ function ResearchPage() {
           <div className={style.tableSection}>
             <ResearchPaperTable
               papers={activeTab === "active" ? activePapers : archivedPapers}
-              onEdit={handleEdit}
-              onArchive={handleArchive}
-              onDelete={handleDelete}
-              onPreview={handlePreview}
+              onEdit={() => {}}
+              onArchive={() => {}}
+              onDelete={() => {}}
+              onPreview={() => {}}
               showDepartmentColumn={false}
             />
           </div>

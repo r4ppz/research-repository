@@ -101,7 +101,7 @@ function ResearchPage() {
       <main className={style.main}>
         <div className={style.mainContainer}>
           <div className={style.headerSection}>
-            <h1 className={style.titleHeader}>Manage All Research Papers</h1>
+            <h1 className={style.titleHeader}>Manage All Research Papers (Super Admin)</h1>
             <Button onClick={handleCreate} className={style.createButton}>
               <FilePlus2 size={18} />
               Add Paper

@@ -4,7 +4,7 @@ import { FilterConfig } from "@/components/layout/FilterButtons/FilterTypes";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
-import AdminRequestTable from "@/features/admin/components/AdminRequestTable/AdminRequestTable";
+import RequestTable from "@/features/admin/components/RequestTable/RequestTable";
 import { useDepartmentRequestFilter } from "@/features/admin/hooks/useDepartmentRequestFilter";
 import { useLoadingDelay } from "@/hooks/useLoadingDelay";
 import { useMultiFilterRequest } from "@/hooks/useMultiFilterRequest";
@@ -78,7 +78,7 @@ function RequestPage() {
           />
 
           <div className={style.tableSection}>
-            <AdminRequestTable
+            <RequestTable
               requests={filteredRequests}
               onAction={handleAction}
               showDepartmentColumn={true}
