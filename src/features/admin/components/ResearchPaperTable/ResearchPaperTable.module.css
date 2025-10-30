@@ -13,13 +13,11 @@
 }
 
 .active {
-  background-color: var(--color-success-light);
   color: var(--color-success);
 }
 
 .archived {
-  background-color: var(--color-gray-300);
-  color: var(--color-gray-900);
+  color: var(--color-warning);
 }
 
 .actionButtons {
@@ -32,3 +30,4 @@
   padding: var(--space-sm);
   min-width: auto;
 }
+

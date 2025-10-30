@@ -26,7 +26,7 @@ function ResearchPaperTable({
   showDepartmentColumn = true,
 }: ResearchPaperTableProps) {
   const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 5; // Configurable number of rows
+  const pageSize = 5;
 
   const columns = [
     {
