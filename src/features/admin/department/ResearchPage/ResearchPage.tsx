@@ -6,12 +6,13 @@ import { FilterConfig } from "@/components/layout/FilterButtons/FilterTypes";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
+import AddPaperModal from "@/features/admin/components/AddPaperModal/AddPaperModal";
 import ResearchPaperTable from "@/features/admin/components/ResearchPaperTable/ResearchPaperTable";
+import { useActivePaperFilter } from "@/features/admin/hooks/useActivePaperFilter";
 import { useArchivedPaperFilter } from "@/features/admin/hooks/useArchivedPaperFilter";
-import { useDepartmentPaperFilter } from "@/features/admin/hooks/useDepartmentPaperFilter";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { useLoadingDelay } from "@/hooks/useLoadingDelay";
-import { MOCK_DEPARTMENTS, MOCK_YEARS } from "@/mocks/filterMocks";
+import { MOCK_YEARS } from "@/mocks/filterMocks";
 import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import { type ResearchPaper } from "@/types";
 import style from "./ResearchPage.module.css";
@@ -19,9 +20,9 @@ import style from "./ResearchPage.module.css";
 function ResearchPage() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const allPapers = MOCK_PAPERS.filter((paper) =>
     user?.role === "DEPARTMENT_ADMIN"
@@ -29,24 +30,8 @@ function ResearchPage() {
       : true,
   );
 
-  const activePapers = useDepartmentPaperFilter(
-    searchQuery,
-    selectedDepartment,
-    selectedYear,
-    allPapers,
-  );
-
-  const archivedPapers = useArchivedPaperFilter(
-    searchQuery,
-    selectedDepartment,
-    selectedYear,
-    allPapers,
-  );
-
-  const handleCreate = () => {
-    // TODO: Implement create paper logic
-    console.log("Creating new paper");
-  };
+  const activePapers = useActivePaperFilter(searchQuery, null, selectedYear, allPapers);
+  const archivedPapers = useArchivedPaperFilter(searchQuery, null, selectedYear, allPapers);
 
   const handleEdit = (paperId: number) => {
     // TODO: Implement edit paper logic
@@ -78,18 +63,7 @@ function ResearchPage() {
     );
   }
 
-  // Define filters for the search and filter component
   const filters: FilterConfig[] = [
-    {
-      type: "department",
-      label: "Department",
-      options: MOCK_DEPARTMENTS.map((dept) => ({
-        value: dept.departmentName,
-        label: dept.departmentName,
-      })),
-      value: selectedDepartment,
-      onChange: setSelectedDepartment,
-    },
     {
       type: "year",
       label: "Year",
@@ -109,11 +83,23 @@ function ResearchPage() {
         <div className={style.mainContainer}>
           <div className={style.headerSection}>
             <h1 className={style.titleHeader}>Manage Research Papers (Department Admin)</h1>
-            <Button onClick={handleCreate} className={style.createButton}>
+            <Button
+              onClick={() => {
+                setIsModalOpen(true);
+              }}
+              className={style.createButton}
+            >
               <FilePlus2 size={18} />
               Add Paper
             </Button>
           </div>
+
+          <AddPaperModal
+            isOpen={isModalOpen}
+            onClose={() => {
+              setIsModalOpen(false);
+            }}
+          />
 
           <div className={style.tabsContainer}>
             <Button
@@ -152,7 +138,7 @@ function ResearchPage() {
               onArchive={handleArchive}
               onDelete={handleDelete}
               onPreview={handlePreview}
-              showDepartmentColumn={user?.role === "SUPER_ADMIN"} // Only show department column for super admins
+              showDepartmentColumn={false}
             />
           </div>
         </div>

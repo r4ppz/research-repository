@@ -2,7 +2,16 @@ import { useMemo } from "react";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { type ResearchPaper } from "@/types";
 
-export function useDepartmentPaperFilter(
+/**
+ * Custom hook for filtering active (non-archived) research papers based on search query, department, and year
+ * Department admins will only see papers from their department regardless of the selectedDepartment parameter
+ * @param searchQuery The search query to filter papers by title
+ * @param selectedDepartment The department to filter papers by (ignored for department admins)
+ * @param selectedYear The year to filter papers by
+ * @param papers The array of papers to filter
+ * @returns Filtered array of active (non-archived) research papers
+ */
+export function useActivePaperFilter(
   searchQuery: string,
   selectedDepartment: string | null,
   selectedYear: string | null,

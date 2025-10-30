@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
  * @returns boolean indicating if loading is still in progress
  */
 export const useLoadingDelay = (delayMs: number = 500): boolean => {
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -18,5 +18,5 @@ export const useLoadingDelay = (delayMs: number = 500): boolean => {
     };
   }, [delayMs]);
 
-  return loading;
+  return isLoading;
 };

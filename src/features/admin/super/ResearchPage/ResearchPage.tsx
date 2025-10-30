@@ -7,8 +7,8 @@ import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
 import ResearchPaperTable from "@/features/admin/components/ResearchPaperTable/ResearchPaperTable";
+import { useActivePaperFilter } from "@/features/admin/hooks/useActivePaperFilter";
 import { useArchivedPaperFilter } from "@/features/admin/hooks/useArchivedPaperFilter";
-import { useDepartmentPaperFilter } from "@/features/admin/hooks/useDepartmentPaperFilter";
 import { useLoadingDelay } from "@/hooks/useLoadingDelay";
 import { MOCK_DEPARTMENTS, MOCK_YEARS } from "@/mocks/filterMocks";
 import { MOCK_PAPERS } from "@/mocks/paperMocks";
@@ -21,9 +21,9 @@ function ResearchPage() {
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
 
-  const allPapers = MOCK_PAPERS; // Super admin sees all papers
+  const allPapers = MOCK_PAPERS;
 
-  const activePapers = useDepartmentPaperFilter(
+  const activePapers = useActivePaperFilter(
     searchQuery,
     selectedDepartment,
     selectedYear,
@@ -72,7 +72,6 @@ function ResearchPage() {
     );
   }
 
-  // Define filters for the search and filter component
   const filters: FilterConfig[] = [
     {
       type: "department",
@@ -117,8 +116,8 @@ function ResearchPage() {
                 setActiveTab("active");
               }}
             >
-              <Archive size={16} />
-              Active Papers ({activePapers.length})
+              <RotateCcw size={16} />
+              Active Papers
             </Button>
             <Button
               variant={activeTab === "archived" ? "primary" : "secondary"}
@@ -127,8 +126,8 @@ function ResearchPage() {
                 setActiveTab("archived");
               }}
             >
-              <RotateCcw size={16} />
-              Archived Papers ({archivedPapers.length})
+              <Archive size={16} />
+              Archived Papers
             </Button>
           </div>
 
@@ -146,7 +145,7 @@ function ResearchPage() {
               onArchive={handleArchive}
               onDelete={handleDelete}
               onPreview={handlePreview}
-              showDepartmentColumn={true} // Super admin always sees department column
+              showDepartmentColumn={true}
             />
           </div>
         </div>
