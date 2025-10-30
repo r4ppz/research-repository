@@ -1,15 +1,9 @@
 :root {
   /* scrollbar-gutter: stable both-edges; */
   /* FIX: this leaves gap in the right when the page is not scrollable. */
-  /* TODO: maybe fix the page where its not scrollable like the modal to not use render or sum idk */
+  /* TODO: maybe fix the page where its not scrollable idk */
   /* HACK: good for now i think */
   scrollbar-gutter: stable;
-}
-
-/* FIX: not working idk why, but the idea is dont shrink all the svgs in the page */
-/* NOTE: when using svg like icons always include this in its container. */
-svg {
-  flex-shrink: 0;
 }
 
 /* FIX: remove later */
