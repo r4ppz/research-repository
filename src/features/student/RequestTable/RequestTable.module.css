@@ -3,16 +3,24 @@
 }
 
 .statusBadge {
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-full);
-  color: var(--color-text-inverted);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.statusPending {
+  color: var(--color-warning);
+}
+
+.statusAccepted {
+  color: var(--color-success);
+}
+
+.statusRejected {
+  color: var(--color-error);
 }
 
 .downloadButton {
-  display: inline-flex;
-  width: auto;
+  width: fit-content;
   font-size: var(--font-size-sm);
 }
 

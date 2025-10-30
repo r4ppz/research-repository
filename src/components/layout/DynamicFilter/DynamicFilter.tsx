@@ -1,7 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Button from "@/components/common/Button/Button";
-import style from "./FilterButtons.module.css";
+import style from "./DynamicFilter.module.css";
 import { FilterConfig } from "./FilterTypes";
 
 interface DynamicFilterProps {
@@ -25,7 +25,6 @@ function DynamicFilter({ filters }: DynamicFilterProps) {
   }, []);
 
   const toggleFilter = (index: number) => {
-    // Toggle the clicked filter
     setActiveFilterIndex(activeFilterIndex === index ? null : index);
   };
 

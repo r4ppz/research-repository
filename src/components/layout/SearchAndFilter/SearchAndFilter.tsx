@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { Search } from "lucide-react";
 import Input from "@/components/common/Input/Input";
-import DynamicFilter from "@/components/layout/FilterButtons/DynamicFilter";
-import { FilterConfig } from "@/components/layout/FilterButtons/FilterTypes";
+import DynamicFilter from "@/components/layout/DynamicFilter/DynamicFilter";
+import { FilterConfig } from "@/components/layout/DynamicFilter/FilterTypes";
 import style from "./SearchAndFilter.module.css";
 
 interface SearchAndFilterProps {

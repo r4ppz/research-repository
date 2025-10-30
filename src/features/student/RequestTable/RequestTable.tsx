@@ -3,7 +3,7 @@ import { Download } from "lucide-react";
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Table from "@/components/common/Table/Table";
-import { DocumentRequest, RequestStatus } from "@/types";
+import { DocumentRequest } from "@/types";
 import style from "./RequestTable.module.css";
 
 interface RequestTableProps {
@@ -12,15 +12,9 @@ interface RequestTableProps {
   onDownload: (request: DocumentRequest) => void;
 }
 
-const statusColors: Record<RequestStatus, string> = {
-  PENDING: "var(--color-warning)",
-  ACCEPTED: "var(--color-success)",
-  REJECTED: "var(--color-error)",
-};
-
 function RequestTable({ requests, className, onDownload }: RequestTableProps) {
   const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 5; // Configurable number of rows
+  const pageSize = 5;
 
   const columns = [
     {
@@ -48,8 +42,12 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
       title: "Status",
       render: (request: DocumentRequest) => (
         <span
-          className={style.statusBadge}
-          style={{ backgroundColor: statusColors[request.status] }}
+          className={clsx(
+            style.statusBadge,
+            request.status === "PENDING" && style.statusPending,
+            request.status === "ACCEPTED" && style.statusAccepted,
+            request.status === "REJECTED" && style.statusRejected,
+          )}
         >
           {request.status}
         </span>
@@ -67,7 +65,7 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
           disabled={request.status !== "ACCEPTED"}
           variant={request.status === "ACCEPTED" ? "primary" : "secondary"}
         >
-          <Download size={18} />
+          <Download size={16} />
           Download
         </Button>
       ),
