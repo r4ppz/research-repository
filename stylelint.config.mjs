@@ -23,8 +23,18 @@ export default {
         "ignorePseudoClasses": ["global"]
       }
     ],
+    "alpha-value-notation": null,
+    "color-function-notation": null,
+    "comment-empty-line-before": null,
+    "custom-property-empty-line-before": null,
+    "value-keyword-case": null,
     "no-empty-source": null,
-    "no-descending-specificity": null
+    "no-descending-specificity": null,
+    "media-feature-range-notation": null,
+    "comment-whitespace-inside": null,
+    "comment-no-empty": null,
+    "at-rule-empty-line-before": null,
+    "rule-empty-line-before": null
   },
   overrides: [
     {
