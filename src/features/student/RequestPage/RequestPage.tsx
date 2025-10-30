@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import { useState } from "react";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
-import { FilterConfig } from "@/components/layout/FilterButtons/FilterTypes";
+import { FilterConfig } from "@/components/layout/DynamicFilter/FilterTypes";
 import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import SearchAndFilter from "@/components/layout/SearchAndFilter/SearchAndFilter";
-import RequestTable from "@/features/student/RequestTable/RequestTable";
+import RequestTable from "@/features/student/components/RequestTable/RequestTable";
 import { useLoadingDelay } from "@/hooks/useLoadingDelay";
 import { useMultiFilterRequest } from "@/hooks/useMultiFilterRequest";
 import { MOCK_DEPARTMENTS, MOCK_REQUEST_DATES } from "@/mocks/filterMocks";
@@ -40,7 +40,6 @@ function RequestPage() {
     );
   }
 
-  // Define filters for the search and filter component
   const filters: FilterConfig[] = [
     {
       type: "department",
