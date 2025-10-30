@@ -24,15 +24,18 @@
   box-shadow: var(--shadow-resting);
   transition: var(--transition-elevation);
 }
-.modal:hover {
-  box-shadow: var(--elevation-shadow-hover);
-  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
-}
 @media (min-width: 768px) {
   .modal {
+    box-shadow: var(--shadow-resting);
+    transition: var(--transition-elevation);
     max-width: 700px;
     max-height: 90%;
     padding: var(--space-xl) var(--space-2xl);
+  }
+
+  .modal:hover {
+    box-shadow: var(--elevation-shadow-hover);
+    transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
   }
 }
 
