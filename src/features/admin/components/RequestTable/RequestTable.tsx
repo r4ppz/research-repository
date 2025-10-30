@@ -4,25 +4,24 @@ import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Table from "@/components/common/Table/Table";
 import { DocumentRequest } from "@/types";
-import styles from "./AdminRequestTable.module.css";
+import styles from "./RequestTable.module.css";
 
-interface AdminRequestTableProps {
+interface RequestTableProps {
   requests: DocumentRequest[];
   className?: string;
   onAction: (requestId: number, action: "accept" | "reject") => void;
   showDepartmentColumn?: boolean;
 }
 
-function AdminRequestTable({
+function RequestTable({
   requests,
   className,
   onAction,
   showDepartmentColumn = true,
-}: AdminRequestTableProps) {
+}: RequestTableProps) {
   const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 5; // Configurable number of rows
+  const pageSize = 5;
 
-  // Define columns inside the function, conditionally including the department column
   const baseColumns = [
     {
       key: "requester.fullName",
@@ -95,7 +94,7 @@ function AdminRequestTable({
       data={requests}
       columns={columns}
       rowKey={(request) => request.requestId.toString()}
-      className={clsx(styles.adminRequestTable, className)}
+      className={clsx(styles.requestTable, className)}
       pagination={{
         pageSize,
         currentPage,
@@ -107,4 +106,4 @@ function AdminRequestTable({
   );
 }
 
-export default AdminRequestTable;
+export default RequestTable;
