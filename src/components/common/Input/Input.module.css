@@ -2,24 +2,24 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 var(--space-md);
   background: var(--color-input-bg);
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-lg);
-  padding: 0 var(--space-md);
-  width: 100%;
-  min-height: 40px;
-  transition: var(--transition-elevation);
   box-shadow: var(--shadow-resting);
+  transition: var(--transition-elevation);
 }
 
 .inputWrapper:hover {
-  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
   box-shadow: var(--shadow-hover);
+  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
 }
 
 .inputWrapper:active {
-  transform: translateY(var(--translate-active)) scale(var(--scale-active));
   box-shadow: var(--shadow-active);
+  transform: translateY(var(--translate-active)) scale(var(--scale-active));
 }
 
 .inputWrapper:focus-within {
@@ -27,22 +27,22 @@
 }
 
 .icon {
-  flex-shrink: 0;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-md);
   display: flex;
+  flex-shrink: 0;
   align-items: center;
+  font-size: var(--font-size-md);
+  color: var(--color-text-muted);
 }
 
 .input {
   display: flex;
   flex-direction: row;
   width: 100%;
+  min-width: 0;
+  padding: var(--space-0) var(--space-md);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-regular);
   color: var(--color-input-text);
-  padding: var(--space-0) var(--space-md);
-  min-width: 0;
 }
 
 .input::placeholder {

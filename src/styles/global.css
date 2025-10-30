@@ -17,20 +17,20 @@ button {
 }
 
 a {
-  text-decoration: none;
   color: var(--color-secondary);
+  text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 table {
-  border-collapse: collapse;
   border-spacing: 0;
+  border-collapse: collapse;
 }
 
 hr {
-  border: none;
   height: 1px;
   background-color: var(--color-border-default);
+  border: none;
 }
 
 /* NOTE: this prevents scrolling when a modal is open, see useModalScrollLock*/

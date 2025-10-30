@@ -1,32 +1,31 @@
 .button {
   display: flex;
-  flex-direction: row;
+  flex-flow: row nowrap;
+  gap: var(--space-sm);
   align-items: center;
   justify-content: center;
+  width: 100%;
   padding: var(--space-sm) var(--space-lg);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border-default);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium);
   color: var(--color-button-primary-text);
-  width: 100%;
   text-align: center;
-  cursor: pointer;
-  gap: var(--space-sm);
-  transition: var(--transition-elevation);
-  box-shadow: var(--shadow-resting);
   white-space: nowrap;
-  flex-wrap: nowrap;
+  cursor: pointer;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-resting);
+  transition: var(--transition-elevation);
 }
 
 .button:hover {
-  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
   box-shadow: var(--shadow-hover);
+  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
 }
 
 .button:active {
-  transform: translateY(var(--translate-active)) scale(var(--scale-active));
   box-shadow: var(--shadow-active);
+  transform: translateY(var(--translate-active)) scale(var(--scale-active));
 }
 
 .button svg {
@@ -34,9 +33,9 @@
 }
 
 .primary {
+  color: var(--color-button-primary-text);
   background-color: var(--color-button-primary-bg);
   border: 1px solid var(--color-border-default);
-  color: var(--color-button-primary-text);
 }
 
 .primary:hover {
@@ -50,16 +49,16 @@
 }
 
 .primary:disabled {
-  background-color: var(--color-button-disabled-bg);
   color: var(--color-button-disabled-text);
   cursor: not-allowed;
+  background-color: var(--color-button-disabled-bg);
   opacity: 0.8;
 }
 
 .secondary {
+  color: var(--color-button-secondary-text);
   background-color: var(--color-button-secondary-bg);
   border: 1px solid var(--color-border-default);
-  color: var(--color-button-secondary-text);
 }
 
 .secondary:hover {
@@ -73,8 +72,8 @@
 }
 
 .secondary:disabled {
-  background-color: var(--color-button-disabled-bg);
   color: var(--color-button-disabled-text);
   cursor: not-allowed;
+  background-color: var(--color-button-disabled-bg);
   opacity: 0.8;
 }

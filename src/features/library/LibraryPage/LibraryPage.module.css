@@ -1,7 +1,7 @@
 .loadingContainer {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100vh;
 }
@@ -22,10 +22,10 @@
 .container {
   display: flex;
   flex-direction: column;
-  max-width: var(--container-max-width);
   gap: var(--space-xl);
-  margin: 0 auto;
+  max-width: var(--container-max-width);
   padding: var(--space-lg);
+  margin: 0 auto;
 }
 @media (min-width: 768px) {
   .container {
@@ -62,8 +62,8 @@
 .searchSection {
   display: flex;
   flex-direction: column;
-  width: 100%;
   gap: var(--space-md);
+  width: 100%;
 }
 @media (min-width: 768px) {
   .searchSection {
@@ -90,20 +90,20 @@
 .paginationSection {
   display: flex;
   flex-direction: row;
+  gap: var(--space-md);
   align-items: center;
   justify-content: center;
-  gap: var(--space-md);
   margin-bottom: var(--space-xl);
 }
 
 .pagingButton {
-  font-size: var(--font-size-sm);
-  padding: var(--space-sm);
   width: fit-content;
+  padding: var(--space-sm);
+  font-size: var(--font-size-sm);
 }
 
 .pagingIndicator {
-  width: auto;
   flex: none;
+  width: auto;
   font-size: var(--font-size-md);
 }

@@ -1,16 +1,16 @@
 .modal {
+  gap: var(--space-md);
   width: 100%;
   max-width: 100%;
   max-height: 90vh;
-  text-align: left;
-  gap: var(--space-md);
   overflow-y: auto;
+  text-align: left;
 }
 
 @media (min-width: 768px) {
   .modal {
-    max-width: 700px;
     width: 100%;
+    max-width: 700px;
     max-height: 90%;
   }
 }
@@ -39,8 +39,8 @@
 @media (min-width: 768px) {
   .authordateWrapper {
     flex-direction: row;
-    justify-content: space-between;
     gap: 0;
+    justify-content: space-between;
   }
 }
 
@@ -52,10 +52,10 @@
 
 .departmentContainer {
   display: inline-flex;
+  align-self: flex-start;
+  padding: var(--space-xs) var(--space-md);
   background-color: var(--color-gray-300);
   border-radius: var(--radius-lg);
-  padding: var(--space-xs) var(--space-md);
-  align-self: flex-start;
 }
 
 .department {
@@ -69,9 +69,9 @@
 }
 
 .abtractHeader {
+  margin-bottom: var(--space-xs);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-semibold);
-  margin-bottom: var(--space-xs);
 }
 @media (min-width: 768px) {
   .abtractHeader {
@@ -80,10 +80,10 @@
 }
 
 .abstractText {
-  text-align: justify;
-  color: var(--color-text);
   font-size: var(--font-size-sm);
   line-height: var(--line-height-normal);
+  color: var(--color-text);
+  text-align: justify;
 }
 @media (min-width: 600px) {
   .abstractText {

@@ -22,6 +22,6 @@
 }
 
 .actionButton {
-  padding: var(--space-sm);
   min-width: auto;
+  padding: var(--space-sm);
 }

@@ -11,15 +11,15 @@
 .actionButton {
   display: inline-flex;
   width: auto;
-  font-size: var(--font-size-sm);
   padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-sm);
 }
 @media (min-width: 768px) {
   .actionButton {
     display: inline-flex;
     width: auto;
-    font-size: var(--font-size-sm);
     padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-sm);
   }
 }
 
