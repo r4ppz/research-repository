@@ -1,5 +1,5 @@
 import { Upload } from "lucide-react";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Input from "@/components/common/Input/Input";
 import Modal from "@/components/common/Modal/Modal";
 import { MOCK_DEPARTMENTS } from "@/mocks/filterMocks";
@@ -26,7 +26,7 @@ function AddPaperModal({ isOpen, onClose, userRole, userDepartment }: ResearchMo
   const [submissionDate, setSubmissionDate] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     // Create a new paper object

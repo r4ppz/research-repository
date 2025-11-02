@@ -5,7 +5,7 @@
   width: 100%;
   min-height: 40px;
   padding: 0 var(--space-md);
-  background: var(--color-input-bg);
+  background-color: var(--color-bd);
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-resting);
