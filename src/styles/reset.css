@@ -6,12 +6,12 @@
 
 html {
   line-height: 1.15;
-  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
 h1,
@@ -61,14 +61,14 @@ select {
 }
 
 table {
-  border-collapse: collapse;
   border-spacing: 0;
+  border-collapse: collapse;
 }
 
 hr {
   height: 0;
+  padding: 0;
+  margin: 0;
   border: 0;
   border-top: 1px solid;
-  margin: 0;
-  padding: 0;
 }

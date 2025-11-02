@@ -26,11 +26,11 @@
 }
 @media (min-width: 768px) {
   .modal {
-    box-shadow: var(--shadow-resting);
-    transition: var(--transition-elevation);
     max-width: 700px;
     max-height: 90%;
     padding: var(--space-xl) var(--space-2xl);
+    box-shadow: var(--shadow-resting);
+    transition: var(--transition-elevation);
   }
 
   .modal:hover {

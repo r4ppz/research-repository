@@ -1,5 +1,5 @@
 import { Archive, FilePlus2, RotateCcw } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import LoadingSpinner from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { FilterConfig } from "@/components/layout/DynamicFilter/FilterTypes";
@@ -12,6 +12,7 @@ import { useActivePaperFilter } from "@/features/admin/hooks/useActivePaperFilte
 import { useArchivedPaperFilter } from "@/features/admin/hooks/useArchivedPaperFilter";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { useLoadingDelay } from "@/hooks/useLoadingDelay";
+import { useModalBodyClass } from "@/hooks/useModalBodyClass";
 import { MOCK_YEARS } from "@/mocks/filterMocks";
 import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import style from "./ResearchPage.module.css";
@@ -23,21 +24,7 @@ function ResearchPage() {
   const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Prevent background scrolling when modal is open
-  useEffect(() => {
-    const html = document.documentElement;
-    if (isModalOpen) {
-      document.body.classList.add("modal-open");
-      html.classList.add("modal-open");
-    } else {
-      document.body.classList.remove("modal-open");
-      html.classList.remove("modal-open");
-    }
-    return () => {
-      document.body.classList.remove("modal-open");
-      html.classList.remove("modal-open");
-    };
-  }, [isModalOpen]);
+  useModalBodyClass(isModalOpen);
 
   const allPapers = MOCK_PAPERS.filter((paper) =>
     user?.role === "DEPARTMENT_ADMIN"

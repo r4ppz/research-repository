@@ -77,7 +77,7 @@ button:focus-visible,
 select:focus-visible,
 textarea:focus-visible, /* TODO: make a textarea component and handle it there */
 a:focus-visible {
+  border-radius: var(--radius-md);
   outline: 2px solid var(--color-secondary);
   outline-offset: 1px;
-  border-radius: var(--radius-md);
 }
