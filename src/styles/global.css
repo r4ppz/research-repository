@@ -3,6 +3,11 @@
   /* FIX: this leaves gap in the right when the page is not scrollable. */
   /* TODO: maybe fix the page where its not scrollable idk */
   /* HACK: good for now i think */
+  /* scrollbar-gutter: stable; */
+  scrollbar-gutter: auto;
+}
+
+.scrollable {
   scrollbar-gutter: stable;
 }
 

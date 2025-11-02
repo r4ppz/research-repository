@@ -7,8 +7,11 @@ import SuperAdminResearchPage from "@/features/admin/super/ResearchPage/Research
 import LoginPage from "@/features/auth/LoginPage/LoginPage";
 import LibraryPage from "@/features/library/LibraryPage/LibraryPage";
 import StudentRequestsPage from "@/features/student/RequestPage/RequestPage";
+import useScrollbarGutter from "@/hooks/useScrollbarGutter";
 
 function App() {
+  useScrollbarGutter();
+
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
