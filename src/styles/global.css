@@ -1,21 +1,54 @@
 :root {
   /* scrollbar-gutter: stable both-edges; */
-  /* FIX: this leaves gap in the right when the page is not scrollable. */
-  /* TODO: maybe fix the page where its not scrollable idk */
-  /* HACK: good for now i think */
   /* scrollbar-gutter: stable; */
   scrollbar-gutter: auto;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100%;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+p {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+}
+
+ul,
+ol {
+  padding-left: var(--space-lg);
+}
+
+li {
+  line-height: var(--line-height-normal);
 }
 
 .scrollable {
   scrollbar-gutter: stable;
 }
-
-/* FIX: remove later */
-/* html { */
-/*   /* overflow-y: scroll; */
-/*   scrollbar-gutter: stable; */
-/* } */
 
 button {
   cursor: pointer;
@@ -27,19 +60,24 @@ a {
   transition: color var(--transition-fast);
 }
 
-table {
-  border-spacing: 0;
-  border-collapse: collapse;
-}
-
 hr {
   height: 1px;
   background-color: var(--color-border-default);
   border: none;
 }
 
-/* NOTE: this prevents scrolling when a modal is open, see useModalScrollLock*/
 body.modal-open,
 html.modal-open {
   overflow: hidden;
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+/* input:focus-visible, */ /* NOTE: add this later? and fix the input component? idk */
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
 }
