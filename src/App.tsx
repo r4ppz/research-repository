@@ -13,58 +13,61 @@ function App() {
   useScrollbarGutter();
 
   return (
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
+    <>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
 
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute allowedRoles={["STUDENT", "DEPARTMENT_ADMIN", "SUPER_ADMIN"]}>
-            <LibraryPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/student/requests"
-        element={
-          <ProtectedRoute allowedRoles={["STUDENT"]}>
-            <StudentRequestsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/department-admin/requests"
-        element={
-          <ProtectedRoute allowedRoles={["DEPARTMENT_ADMIN"]}>
-            <DepartmentAdminRequestsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/department-admin/research"
-        element={
-          <ProtectedRoute allowedRoles={["DEPARTMENT_ADMIN"]}>
-            <DepartmentAdminResearchPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/super-admin/requests"
-        element={
-          <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
-            <SuperAdminRequestsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/super-admin/research"
-        element={
-          <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
-            <SuperAdminResearchPage />
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute allowedRoles={["STUDENT", "DEPARTMENT_ADMIN", "SUPER_ADMIN"]}>
+              <LibraryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/requests"
+          element={
+            <ProtectedRoute allowedRoles={["STUDENT"]}>
+              <StudentRequestsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/department-admin/requests"
+          element={
+            <ProtectedRoute allowedRoles={["DEPARTMENT_ADMIN"]}>
+              <DepartmentAdminRequestsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/department-admin/research"
+          element={
+            <ProtectedRoute allowedRoles={["DEPARTMENT_ADMIN"]}>
+              <DepartmentAdminResearchPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/super-admin/requests"
+          element={
+            <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
+              <SuperAdminRequestsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/super-admin/research"
+          element={
+            <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
+              <SuperAdminResearchPage />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+      <div id="modal-root" />
+    </>
   );
 }
 

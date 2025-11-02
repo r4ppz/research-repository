@@ -7,7 +7,7 @@ import Button from "@/components/common/Button/Button";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { type Role } from "@/types";
 import style from "./Header.module.css";
-import CustomNavLink from "../CustomNavLink/CustomNavLink";
+import CustomNavLink from "@/components/common/CustomNavLink/CustomNavLink";
 
 const ROLE_LABEL: Record<Role, string> = {
   STUDENT: "Student",
@@ -51,7 +51,7 @@ function Header({ className, ...props }: ComponentProps) {
   return (
     <header className={clsx(style.header, className)} {...props}>
       <div className={style.headerWrapper}>
-        <div className={style.headerContainer}>
+        <div className={style.headerMainContainer}>
           <div className={style.leftWrapper}>
             <Button
               variant="secondary"

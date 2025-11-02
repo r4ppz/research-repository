@@ -14,15 +14,18 @@
   cursor: pointer;
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-resting);
-  transition: var(--transition-elevation);
 }
+@media (min-width: 768px) {
+  .button {
+    box-shadow: var(--shadow-resting);
+    transition: var(--transition-elevation);
+  }
 
-.button:hover {
-  box-shadow: var(--shadow-hover);
-  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+  .button:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+  }
 }
-
 .button:active {
   box-shadow: var(--shadow-active);
   transform: translateY(var(--translate-active)) scale(var(--scale-active));

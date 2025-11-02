@@ -1,25 +1,30 @@
-.link {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-normal);
-  color: var(--color-secondary);
+.navlink {
+  font-family: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-inverted);
 }
+
 @media (min-width: 768px) {
-  .link {
+  .navlink {
     box-shadow: var(--shadow-resting);
     transition: var(--transition-elevation);
   }
 
-  .link:hover {
+  .navlink:hover {
     box-shadow: var(--shadow-hover);
     transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
   }
 
-  .link:active {
+  .active {
     box-shadow: var(--shadow-active);
     transform: translateY(var(--translate-active)) scale(var(--scale-active));
   }
 }
 
-.link:active {
-  color: var(--color-secondary-active);
+.navlink:hover {
+  border-bottom: 1px solid var(--color-surface);
+}
+
+.active {
+  border-bottom: 1px solid var(--color-surface);
 }

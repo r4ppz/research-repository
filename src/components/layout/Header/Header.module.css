@@ -14,14 +14,14 @@
   background-color: var(--color-header-bg);
 }
 
-.headerContainer {
+.headerMainContainer {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   max-width: var(--container-max-width);
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-sm) var(--space-lg);
 }
 
 .leftWrapper {
@@ -190,5 +190,3 @@
   width: 40%;
   font-size: var(--font-size-md);
 }
-
-

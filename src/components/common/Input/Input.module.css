@@ -5,21 +5,25 @@
   width: 100%;
   min-height: 40px;
   padding: 0 var(--space-md);
-  background-color: var(--color-bd);
+  background-color: var(--color-surface);
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-resting);
-  transition: var(--transition-elevation);
 }
+@media (min-width: 768px) {
+  .inputWrapper {
+    box-shadow: var(--shadow-resting);
+    transition: var(--transition-elevation);
+  }
 
-.inputWrapper:hover {
-  box-shadow: var(--shadow-hover);
-  transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
-}
+  .inputWrapper:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+  }
 
-.inputWrapper:active {
-  box-shadow: var(--shadow-active);
-  transform: translateY(var(--translate-active)) scale(var(--scale-active));
+  .inputWrapper:active {
+    box-shadow: var(--shadow-active);
+    transform: translateY(var(--translate-active)) scale(var(--scale-active));
+  }
 }
 
 .inputWrapper:focus-within {

@@ -19,6 +19,11 @@ function Modal({ isOpen, onClose, children, className }: ModalProps) {
     return null;
   }
 
+  const modalRoot = document.getElementById("modal-root");
+  if (!modalRoot) {
+    throw new Error("Modal root element not found");
+  }
+
   return ReactDOM.createPortal(
     <div className={style.overlay} onClick={onClose}>
       <div
@@ -36,7 +41,7 @@ function Modal({ isOpen, onClose, children, className }: ModalProps) {
         {children}
       </div>
     </div>,
-    document.body,
+    modalRoot,
   );
 }
 
