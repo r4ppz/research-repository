@@ -81,8 +81,6 @@ function ResearchPage() {
             onClose={() => {
               setIsModalOpen(false);
             }}
-            userRole={user?.role}
-            userDepartment={user?.department}
           />
 
           <div className={style.tabsContainer}>

@@ -18,11 +18,9 @@
   flex-direction: column;
   gap: var(--space-md);
   height: 100%;
-  overflow: hidden;
 }
 
 .modalTitle {
-  margin: 0 0 var(--space-md) 0;
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
 }
@@ -30,9 +28,8 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: var(--space-sm);
   height: 100%;
-  overflow: hidden;
 }
 
 .formContainer {
@@ -71,7 +68,7 @@
 
 @media (min-width: 768px) {
   .formRightSide {
-    width: 300px;
+    flex: 1;
   }
 }
 
@@ -85,24 +82,6 @@
   margin-bottom: var(--space-xs);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-secondary);
-}
-
-.textarea {
-  width: 100%;
-  min-height: 120px;
-  padding: var(--space-sm) var(--space-md);
-  font-family: inherit;
-  font-size: var(--font-size-md);
-  color: var(--color-input-text);
-  resize: vertical;
-  background-color: var(--color-input-bg);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-lg);
-}
-
-.textarea:focus {
-  border-color: var(--color-primary);
-  outline: none;
 }
 
 .select {
@@ -121,86 +100,9 @@
   outline: none;
 }
 
-.fileInput {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 200px;
-  padding: var(--space-md);
-  font-family: inherit;
-  color: var(--color-text);
-  text-align: center;
-  cursor: pointer;
-  background-color: var(--color-input-bg);
-  border: 2px dashed var(--color-border-default);
-  border-radius: var(--radius-lg);
-  transition: var(--transition-elevation);
-}
-
-.fileInput:hover {
-  background-color: var(--color-surface-tertiary);
-  border-color: var(--color-primary);
-}
-
-.fileInputLabel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  padding: var(--space-md);
-  cursor: pointer;
-}
-
-.fileInputNote {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-.fileName {
-  max-width: 100%;
-  overflow: hidden;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-primary);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .modalActions {
   display: flex;
   gap: var(--space-sm);
   justify-content: flex-end;
   margin-top: var(--space-md);
-}
-
-.cancelButton,
-.submitButton {
-  padding: var(--space-sm) var(--space-md);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  border: none;
-  border-radius: var(--radius-md);
-  transition: var(--transition-elevation);
-}
-
-.cancelButton {
-  color: var(--color-text);
-  background: var(--color-surface-secondary);
-}
-
-.cancelButton:hover {
-  background: var(--color-surface-tertiary);
-}
-
-.submitButton {
-  color: white;
-  background: var(--color-primary);
-}
-
-.submitButton:hover {
-  background: var(--color-primary-hover);
 }

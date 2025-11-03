@@ -1,7 +1,10 @@
-import { Upload } from "lucide-react";
 import { FormEvent, useState } from "react";
+import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Modal from "@/components/common/Modal/Modal";
+import Textarea from "@/components/common/Textarea/Textarea";
+import FileUpload from "@/features/admin/components/FileUpload/FileUpload";
+import { useAuth } from "@/features/auth/context/useAuth";
 import { MOCK_DEPARTMENTS } from "@/mocks/filterMocks";
 import { type ResearchPaper } from "@/types";
 import style from "./AddPaperModal.module.css";
@@ -9,14 +12,16 @@ import style from "./AddPaperModal.module.css";
 interface ResearchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  userRole?: "STUDENT" | "DEPARTMENT_ADMIN" | "SUPER_ADMIN";
-  userDepartment?: { departmentId: number; departmentName: string } | null;
 }
 
-function AddPaperModal({ isOpen, onClose, userRole, userDepartment }: ResearchModalProps) {
+function AddPaperModal({ isOpen, onClose }: ResearchModalProps) {
+  const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [abstract, setAbstract] = useState("");
+
+  const userRole = user?.role;
+  const userDepartment = user?.department;
 
   // For department admins, pre-populate the department field with their own department
   const [department, setDepartment] = useState(
@@ -44,7 +49,6 @@ function AddPaperModal({ isOpen, onClose, userRole, userDepartment }: ResearchMo
 
     console.log("New paper to be added:", newPaper);
 
-    // Reset form
     setTitle("");
     setAuthor("");
     setAbstract("");
@@ -53,17 +57,7 @@ function AddPaperModal({ isOpen, onClose, userRole, userDepartment }: ResearchMo
     );
     setSubmissionDate("");
     setSelectedFile(null);
-
-    // Close modal
     onClose();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setSelectedFile(file);
-      console.log("File selected:", file.name);
-    }
   };
 
   return (
@@ -162,49 +156,47 @@ function AddPaperModal({ isOpen, onClose, userRole, userDepartment }: ResearchMo
                   <label htmlFor="abstract" className={style.label}>
                     Abstract *
                   </label>
-                  <textarea
+                  <Textarea
                     id="abstract"
                     name="abstract"
                     placeholder="Enter paper abstract"
-                    className={style.textarea}
                     value={abstract}
                     onChange={(e) => {
                       setAbstract(e.target.value);
                     }}
                     required
+                    rows={4}
                   />
                 </div>
-
-                <div className={style.fileUploadContainer}>
+                <div className={style.formGroup}>
                   <label htmlFor="file" className={style.label}>
                     Upload File *
                   </label>
-                  <label htmlFor="file" className={style.fileInputLabel}>
-                    <Upload size={24} />
-                    <span>Click to upload or drag and drop</span>
-                    <span className={style.fileInputNote}>PDF, DOC, DOCX (Max 20MB)</span>
-                    {selectedFile && <span className={style.fileName}>{selectedFile.name}</span>}
-                  </label>
-                  <input
+                  <FileUpload
                     id="file"
                     name="file"
-                    type="file"
                     accept=".pdf,.doc,.docx"
-                    onChange={handleFileChange}
-                    className={style.fileInput}
                     required
+                    value={selectedFile}
+                    onChange={setSelectedFile}
+                    placeholder="Click to upload or drag and drop"
                   />
                 </div>
               </div>
             </div>
 
             <div className={style.modalActions}>
-              <button type="button" className={style.cancelButton} onClick={onClose}>
+              <Button
+                type="button"
+                variant="secondary"
+                className={style.cancelButton}
+                onClick={onClose}
+              >
                 Cancel
-              </button>
-              <button type="submit" className={style.submitButton}>
+              </Button>
+              <Button type="submit" variant="primary" className={style.submitButton}>
                 Add Paper
-              </button>
+              </Button>
             </div>
           </div>
         </form>
