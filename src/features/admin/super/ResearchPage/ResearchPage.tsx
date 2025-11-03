@@ -10,7 +10,6 @@ import AddPaperModal from "@/features/admin/components/AddPaperModal/AddPaperMod
 import ResearchPaperTable from "@/features/admin/components/ResearchPaperTable/ResearchPaperTable";
 import { useActivePaperFilter } from "@/features/admin/hooks/useActivePaperFilter";
 import { useArchivedPaperFilter } from "@/features/admin/hooks/useArchivedPaperFilter";
-import { useAuth } from "@/features/auth/context/useAuth";
 import { useLoadingDelay } from "@/hooks/useLoadingDelay";
 import { useModalBodyClass } from "@/hooks/useModalBodyClass";
 import { MOCK_DEPARTMENTS, MOCK_YEARS } from "@/mocks/filterMocks";
@@ -19,7 +18,6 @@ import { type ResearchPaper } from "@/types";
 import style from "./ResearchPage.module.css";
 
 function ResearchPage() {
-  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
@@ -119,8 +117,6 @@ function ResearchPage() {
             onClose={() => {
               setIsModalOpen(false);
             }}
-            userRole={user?.role}
-            userDepartment={user?.department}
           />
 
           <div className={style.tabsContainer}>

@@ -26,6 +26,7 @@
     transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
   }
 }
+
 .button:active {
   box-shadow: var(--shadow-active);
   transform: translateY(var(--translate-active)) scale(var(--scale-active));

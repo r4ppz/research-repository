@@ -72,10 +72,9 @@ html.modal-open {
 }
 
 /* Focus styles for accessibility */
+/* TODO: make this a component style */
 button:focus-visible,
-/* input:focus-visible, */ /* NOTE:  input component handle this */
 select:focus-visible,
-textarea:focus-visible, /* TODO: make a textarea component and handle it there */
 a:focus-visible {
   border-radius: var(--radius-md);
   outline: 2px solid var(--color-secondary);
