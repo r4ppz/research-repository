@@ -1,6 +1,14 @@
 import { useMemo } from "react";
 import { type DocumentRequest } from "@/types";
 
+/**
+ * Custom hook for filtering document requests based on search query, department, and date
+ * @param searchQuery The search query to filter requests by paper title
+ * @param selectedDepartment The department to filter requests by
+ * @param selectedDate The date to filter requests by
+ * @param requests The array of requests to filter
+ * @returns Filtered array of document requests
+ */
 export function useRequestFilter(
   searchQuery: string,
   selectedDepartment: string | null,

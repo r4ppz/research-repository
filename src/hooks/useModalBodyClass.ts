@@ -1,5 +1,10 @@
 import { useEffect } from "react";
 
+/**
+ * Custom hook to add/remove a CSS class on the body element when a modal is open/closed
+ * This is useful for preventing background scrolling when a modal is open
+ * @param isOpen Boolean indicating if the modal is currently open
+ */
 export function useModalBodyClass(isOpen: boolean): void {
   useEffect(() => {
     const html = document.documentElement;
