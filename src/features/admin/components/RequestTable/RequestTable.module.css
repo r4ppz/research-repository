@@ -6,21 +6,15 @@
   display: flex;
   gap: var(--space-sm);
   justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .actionButton {
   display: inline-flex;
-  width: auto;
+  width: fit-content;
   padding: var(--space-sm) var(--space-md);
   font-size: var(--font-size-sm);
-}
-@media (min-width: 768px) {
-  .actionButton {
-    display: inline-flex;
-    width: auto;
-    padding: var(--space-sm) var(--space-md);
-    font-size: var(--font-size-sm);
-  }
+  gap: var(--space-xs);
 }
 
 .acceptedRow {
