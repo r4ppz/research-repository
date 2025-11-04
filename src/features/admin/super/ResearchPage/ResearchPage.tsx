@@ -127,7 +127,7 @@ function ResearchPage() {
                 setActiveTab("active");
               }}
             >
-              <RotateCcw className={style.iconTab} />
+              <Archive className={style.iconTab} />
               Active Papers
             </Button>
             <Button
@@ -137,7 +137,7 @@ function ResearchPage() {
                 setActiveTab("archived");
               }}
             >
-              <Archive className={style.iconTab} />
+              <RotateCcw className={style.iconTab} />
               Archived Papers
             </Button>
           </div>
