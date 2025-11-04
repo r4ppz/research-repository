@@ -144,7 +144,7 @@
   display: none;
 }
 @media (min-width: 768px) {
-  .dekstoplogoutButton {
+  .desktopLogoutButton {
     padding: var(--space-xs) var(--space-md);
   }
 }
@@ -189,4 +189,19 @@
   flex-direction: row;
   width: 40%;
   font-size: var(--font-size-md);
+}
+
+.iconMenu {
+  width: var(--icon-size-xl);
+  height: var(--icon-size-xl);
+}
+
+.iconUser {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+
+.iconLogout {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
 }

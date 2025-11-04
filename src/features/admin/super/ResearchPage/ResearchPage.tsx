@@ -107,7 +107,7 @@ function ResearchPage() {
           <div className={style.headerSection}>
             <h1 className={style.titleHeader}>Manage All Research Papers (Super Admin)</h1>
             <Button onClick={handleCreate} className={style.createButton}>
-              <FilePlus2 size={18} />
+              <FilePlus2 className={style.iconTab} />
               Add Paper
             </Button>
           </div>
@@ -127,7 +127,7 @@ function ResearchPage() {
                 setActiveTab("active");
               }}
             >
-              <RotateCcw size={16} />
+              <RotateCcw className={style.iconTab} />
               Active Papers
             </Button>
             <Button
@@ -137,7 +137,7 @@ function ResearchPage() {
                 setActiveTab("archived");
               }}
             >
-              <Archive size={16} />
+              <Archive className={style.iconTab} />
               Archived Papers
             </Button>
           </div>

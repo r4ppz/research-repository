@@ -76,3 +76,8 @@
   align-items: center;
   justify-content: center;
 }
+
+.iconTab {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}

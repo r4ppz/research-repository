@@ -176,7 +176,7 @@ function Table<T extends object>({
               onClick={handlePrevPage}
               disabled={currentPage === 0}
             >
-              <ChevronLeft size={18} />
+              <ChevronLeft className={style.iconChevron} />
               Previous
             </Button>
 
@@ -187,7 +187,7 @@ function Table<T extends object>({
               disabled={currentPage === totalPages - 1}
             >
               Next
-              <ChevronRight size={18} />
+              <ChevronRight className={style.iconChevron} />
             </Button>
           </div>
         </div>

@@ -45,3 +45,8 @@
 .options button:hover {
   background: var(--color-gray-100);
 }
+
+.iconChevron {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}

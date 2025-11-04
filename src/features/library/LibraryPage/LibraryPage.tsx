@@ -163,7 +163,7 @@ function LibraryPage() {
                 onClick={handlePrevPage}
                 disabled={currentPage === 0}
               >
-                <ChevronLeft size={16} />
+                <ChevronLeft className={style.iconChevron} />
                 Previous
               </Button>
 
@@ -177,7 +177,7 @@ function LibraryPage() {
                 disabled={currentPage >= pageData.totalPages - 1}
               >
                 Next
-                <ChevronRight size={16} />
+                <ChevronRight className={style.iconChevron} />
               </Button>
             </section>
           )}

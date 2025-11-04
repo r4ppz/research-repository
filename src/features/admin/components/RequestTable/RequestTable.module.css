@@ -11,10 +11,20 @@
 
 .actionButton {
   display: inline-flex;
+  gap: var(--space-xs);
   width: fit-content;
   padding: var(--space-sm) var(--space-md);
   font-size: var(--font-size-sm);
-  gap: var(--space-xs);
+}
+
+.iconReject {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.iconAccept {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 
 .acceptedRow {

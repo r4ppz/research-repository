@@ -25,3 +25,28 @@
   min-width: auto;
   padding: var(--space-sm);
 }
+
+.iconEye {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.iconEdit {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.iconArchive {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.iconUnarchive {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.iconDelete {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}

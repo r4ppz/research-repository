@@ -76,7 +76,7 @@ function ResearchPaperTable({
             }}
             variant="secondary"
           >
-            <Eye size={16} />
+            <Eye className={styles.iconEye} />
           </Button>
           <Button
             className={styles.actionButton}
@@ -85,7 +85,7 @@ function ResearchPaperTable({
             }}
             variant="secondary"
           >
-            <Pencil size={16} />
+            <Pencil className={styles.iconEdit} />
           </Button>
           {paper.archived ? (
             <Button
@@ -95,7 +95,7 @@ function ResearchPaperTable({
               }}
               variant="secondary"
             >
-              <RotateCcw size={16} />
+              <RotateCcw className={styles.iconUnarchive} />
             </Button>
           ) : (
             <Button
@@ -105,7 +105,7 @@ function ResearchPaperTable({
               }}
               variant="secondary"
             >
-              <Archive size={16} />
+              <Archive className={styles.iconArchive} />
             </Button>
           )}
           <Button
@@ -115,7 +115,7 @@ function ResearchPaperTable({
             }}
             variant="secondary"
           >
-            <Trash2 size={16} />
+            <Trash2 className={styles.iconDelete} />
           </Button>
         </div>
       ),

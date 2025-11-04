@@ -54,3 +54,8 @@
 .closeButton:active {
   transform: translateY(var(--translate-active)) scale(var(--scale-active));
 }
+
+.iconClose {
+  width: var(--icon-size-xl);
+  height: var(--icon-size-xl);
+}

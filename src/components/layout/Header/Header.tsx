@@ -75,7 +75,7 @@ function Header({ className, ...props }: ComponentProps) {
 
             <div className={style.desktopButtonsWrapper}>
               <Button variant="secondary" className={style.desktopProfileButton} type="button">
-                <UserIcon size={16} />
+                <UserIcon className={style.iconUser} />
                 <div className={style.desktopProfileContainer}>
                   <h3 className={style.userName}>{firstName}</h3>
                   <p className={style.userRole}>{roleLabel}</p>
@@ -85,10 +85,10 @@ function Header({ className, ...props }: ComponentProps) {
               <Button
                 type="button"
                 variant="secondary"
-                className={style.dekstoplogoutButton}
+                className={style.desktopLogoutButton}
                 onClick={handleLogout}
               >
-                <LogOut size={16} />
+                <LogOut className={style.iconLogout} />
               </Button>
             </div>
 
@@ -100,7 +100,7 @@ function Header({ className, ...props }: ComponentProps) {
                 setIsMenuOpen((prev) => !prev);
               }}
             >
-              <Menu size={18} />
+              <Menu className={style.iconMenu} />
             </Button>
           </div>
         </div>
@@ -116,7 +116,7 @@ function Header({ className, ...props }: ComponentProps) {
           </nav>
 
           <Button className={style.mobileProfileButton} variant="secondary">
-            <UserIcon size={18} />
+            <UserIcon className={style.iconUser} />
             <h3 className={style.userName}>{firstName}</h3>
             <p className={style.userRole}>{roleLabel}</p>
           </Button>

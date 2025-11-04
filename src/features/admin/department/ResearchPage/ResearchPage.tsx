@@ -71,7 +71,7 @@ function ResearchPage() {
               }}
               className={style.createButton}
             >
-              <FilePlus2 size={18} />
+              <FilePlus2 className={style.iconTab} />
               Add Paper
             </Button>
           </div>
@@ -91,7 +91,7 @@ function ResearchPage() {
                 setActiveTab("active");
               }}
             >
-              <Archive size={16} />
+              <Archive className={style.iconTab} />
               Active Papers
             </Button>
             <Button
@@ -101,7 +101,7 @@ function ResearchPage() {
                 setActiveTab("archived");
               }}
             >
-              <RotateCcw size={16} />
+              <RotateCcw className={style.iconTab} />
               Archived Papers
             </Button>
           </div>

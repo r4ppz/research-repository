@@ -57,7 +57,7 @@ function RequestTable({
             variant={request.status === "PENDING" ? "secondary" : "secondary"}
           >
             Reject
-            <X size={16} />
+            <X className={styles.iconReject} />
           </Button>
 
           <Button
@@ -69,7 +69,7 @@ function RequestTable({
             variant={request.status === "PENDING" ? "primary" : "secondary"}
           >
             Accept
-            <Check size={16} />
+            <Check className={styles.iconAccept} />
           </Button>
         </div>
       ),

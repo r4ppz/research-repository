@@ -31,7 +31,7 @@ function ResearchCard({ researchPaper, onView }: ResearchCardProps) {
       </div>
       <p className={style.abstract}>{researchPaper.abstractText}</p>
       <Button onClick={onView}>
-        <Eye size={18} />
+        <Eye className={style.iconEye} />
         Read Abstract
       </Button>
     </div>

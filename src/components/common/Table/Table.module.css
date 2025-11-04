@@ -118,6 +118,11 @@
   font-size: var(--font-size-sm);
 }
 
+.iconChevron {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+
 .pageInfo {
   padding: 0 var(--space-sm);
   font-weight: var(--font-weight-medium);

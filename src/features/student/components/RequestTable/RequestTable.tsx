@@ -65,7 +65,7 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
           disabled={request.status !== "ACCEPTED"}
           variant={request.status === "ACCEPTED" ? "primary" : "secondary"}
         >
-          <Download size={16} />
+          <Download className={style.iconDownload} />
           Download
         </Button>
       ),

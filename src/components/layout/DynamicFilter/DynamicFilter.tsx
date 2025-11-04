@@ -38,7 +38,7 @@ function DynamicFilter({ filters }: DynamicFilterProps) {
               toggleFilter(index);
             }}
           >
-            {filter.label} <ChevronDown size={16} />
+            {filter.label} <ChevronDown className={style.iconChevron} />
           </Button>
 
           {activeFilterIndex === index && (

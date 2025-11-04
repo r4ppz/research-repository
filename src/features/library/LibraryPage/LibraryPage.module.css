@@ -107,3 +107,8 @@
   width: auto;
   font-size: var(--font-size-md);
 }
+
+.iconChevron {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+}

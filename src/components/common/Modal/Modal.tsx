@@ -35,7 +35,7 @@ function Modal({ isOpen, onClose, children, className }: ModalProps) {
         aria-modal="true"
       >
         <button className={style.closeButton} onClick={onClose} aria-label="Close modal">
-          <X size={20} />
+          <X className={style.iconClose} />
         </button>
 
         {children}

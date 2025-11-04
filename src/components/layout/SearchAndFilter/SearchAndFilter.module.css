@@ -11,3 +11,8 @@
     align-items: center;
   }
 }
+
+.iconSearch {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}

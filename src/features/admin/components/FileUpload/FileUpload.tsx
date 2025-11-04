@@ -41,7 +41,7 @@ export default function FileUpload({
   return (
     <div className={`${style.fileUploadContainer} ${className}`} style={customStyle}>
       <label htmlFor={id} className={style.fileInputLabel}>
-        <Upload size={24} />
+        <Upload className={style.iconUpload} />
         <span>{placeholder}</span>
         <span className={style.fileInputNote}>
           {accept.replace(/\./g, "").replace(/,/g, ", ").toUpperCase()} (Max 20MB)

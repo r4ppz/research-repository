@@ -24,6 +24,11 @@
   font-size: var(--font-size-sm);
 }
 
+.iconDownload {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
 .acceptedRow {
   border-left: 3px solid var(--color-success);
 }
