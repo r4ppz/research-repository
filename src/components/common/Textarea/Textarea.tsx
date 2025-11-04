@@ -5,14 +5,13 @@ import style from "./Textarea.module.css";
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   className?: string;
   ref?: Ref<HTMLTextAreaElement>;
-  icon?: ComponentType<{ className?: string; size?: number }>;
-  size?: number;
+  icon?: ComponentType<{ className?: string }>;
 }
 
-function Textarea({ className, ref, icon: Icon, size = 18, ...props }: TextareaProps) {
+function Textarea({ className, ref, icon: Icon, ...props }: TextareaProps) {
   return (
     <div className={clsx(style.textareaContainer, className)}>
-      {Icon && <Icon className={style.icon} size={size} />}
+      {Icon && <Icon className={style.icon} />}
       <textarea {...props} ref={ref} className={style.textarea} />
     </div>
   );

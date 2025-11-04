@@ -15,13 +15,12 @@ type InputType =
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: InputType;
-  icon?: ComponentType<{ className?: string; size?: number }>;
+  icon?: ComponentType<{ className?: string }>;
   className?: string;
   ref?: Ref<HTMLInputElement>;
-  size?: number;
 }
 
-function Input({ type = "text", icon: Icon, className, ref, size = 18, ...props }: InputProps) {
+function Input({ type = "text", icon: Icon, className, ref, ...props }: InputProps) {
   return (
     <div className={clsx(style.inputWrapper, className)}>
       {Icon && <Icon className={style.icon} />}

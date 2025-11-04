@@ -41,7 +41,7 @@ function LoginPage() {
               );
             }}
           >
-            <FcGoogle size={20} />
+            <FcGoogle className={style.iconGoogle} />
             Sign In with Google
           </Button>
         </div>
