@@ -9,12 +9,11 @@ import { useAuth } from "@/features/auth/context/useAuth";
 import RequestTable from "@/features/student/components/RequestTable/RequestTable";
 import { useLoadingDelay } from "@/hooks/useLoadingDelay";
 import { useMultiFilterRequest } from "@/hooks/useMultiFilterRequest";
-import { MOCK_DEPARTMENTS, MOCK_REQUEST_DATES } from "@/mocks/filterMocks";
 import { MOCK_REQUESTS } from "@/mocks/requestMocks";
 import { getUserRequests, subscribeToRequests } from "@/temp/requestService";
 import { initializeTempRequests } from "@/temp/tempRequestStorage";
 import { DocumentRequest } from "@/types/";
-import { formatDateShort } from "@/util/formatDate";
+import { getRequestDepartmentOptions, getRequestDateOptions } from "@/util/requestFilterUtils";
 import style from "./RequestPage.module.css";
 
 function RequestPage() {
@@ -72,24 +71,22 @@ function RequestPage() {
     );
   }
 
+  // Generate filter options based on user's requests
+  const departmentOptions = getRequestDepartmentOptions(requests);
+  const dateOptions = getRequestDateOptions(requests);
+
   const filters: FilterConfig[] = [
     {
       type: "department",
       label: "Department",
-      options: MOCK_DEPARTMENTS.map((dept) => ({
-        value: dept.departmentName,
-        label: dept.departmentName,
-      })),
+      options: departmentOptions,
       value: selectedDepartment,
       onChange: setSelectedDepartment,
     },
     {
       type: "date",
       label: "Date",
-      options: MOCK_REQUEST_DATES.map((date) => ({
-        value: date,
-        label: formatDateShort(date),
-      })),
+      options: dateOptions,
       value: selectedDate,
       onChange: setSelectedDate,
     },

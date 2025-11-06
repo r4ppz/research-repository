@@ -39,8 +39,8 @@ function SignInUserModal({ isOpen, onClose }: SignInUserModalProps) {
     <Modal isOpen={isOpen} onClose={onClose}>
       {/* Explanation text about the temporary modal */}
       <p className={styles.tempExplanation}>
-        This modal is used for development and testing purposes during the UI/UX testing phase.
-        Google SSO and backend are not implemented yet.
+        This modal is used for development and testing purposes only. Google SSO and backend are not
+        implemented yet.
       </p>
 
       {/* Container for left and right sections */}
