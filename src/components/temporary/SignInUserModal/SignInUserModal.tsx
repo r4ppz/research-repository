@@ -1,4 +1,5 @@
-import { useNavigate, useLocation, Navigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 import Modal from "@/components/common/Modal/Modal";
@@ -17,39 +18,55 @@ interface SignInUserModalProps {
 }
 
 function SignInUserModal({ isOpen, onClose }: SignInUserModalProps) {
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, login } = useAuth();
+  const { login } = useAuth();
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const state = location.state as LocationState | null;
   const from = state?.from?.pathname ?? "/";
 
-  if (isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
+  // Focus the input field when modal opens
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isOpen]);
 
-  // Function to handle temporary user login using the new service
-  const handleTempUserLogin = (name: string) => {
-    const tempUser = createTempStudentUser(name);
+  const handleTempUserLogin = () => {
+    // Check if the input is empty - this covers the required validation
+    if (username.trim() === "") {
+      // Focus back to input if it's empty
+      inputRef.current?.focus();
+      return;
+    }
+
+    const tempUser = createTempStudentUser(username.trim());
     login(tempUser);
     void navigate(from, { replace: true });
   };
 
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleTempUserLogin();
+    }
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      {/* Explanation text about the temporary modal */}
       <p className={styles.tempExplanation}>
         This modal is used for development and testing purposes only. Google SSO and backend are not
         implemented yet.
       </p>
 
-      {/* Container for left and right sections */}
       <div className={styles.modalContentContainer}>
-        {/* Left section: existing mock users */}
+        {/* Left section */}
         <div className={styles.mockUsersSection}>
           <h3>Predefined Users (dev only)</h3>
           <Button
-            type="button"
             onClick={() => {
               login(MOCK_SUPER_ADMIN);
               void navigate(from, { replace: true });
@@ -58,7 +75,6 @@ function SignInUserModal({ isOpen, onClose }: SignInUserModalProps) {
             Super Admin (Charlie)
           </Button>
           <Button
-            type="button"
             onClick={() => {
               login(MOCK_DEPT_ADMIN);
               void navigate(from, { replace: true });
@@ -67,7 +83,6 @@ function SignInUserModal({ isOpen, onClose }: SignInUserModalProps) {
             Department Admin (Bob) [Computer Science]
           </Button>
           <Button
-            type="button"
             onClick={() => {
               login(MOCK_STUDENT);
               void navigate(from, { replace: true });
@@ -77,32 +92,34 @@ function SignInUserModal({ isOpen, onClose }: SignInUserModalProps) {
           </Button>
         </div>
 
-        {/* Right section: testing feature */}
+        {/* Right section */}
         <div className={styles.testingSection}>
           <h3>Custom Student User (testing)</h3>
-          <div className={styles.inputContainer}>
-            <Input
-              type="text"
-              id="temp-username"
-              placeholder="Enter your name"
-              className={styles.usernameInput}
-            />
-            <Button
-              type="button"
-              onClick={() => {
-                const inputElement = document.getElementById("temp-username");
-                if (
-                  inputElement &&
-                  inputElement instanceof HTMLInputElement &&
-                  inputElement.value.trim() !== ""
-                ) {
-                  handleTempUserLogin(inputElement.value.trim());
-                }
-              }}
-            >
-              Test
-            </Button>
-          </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleTempUserLogin();
+            }}
+          >
+            <div className={styles.inputContainer}>
+              <Input
+                ref={inputRef}
+                type="text"
+                id="temp-username"
+                placeholder="Enter your name"
+                className={styles.usernameInput}
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
+                onKeyDown={handleInputKeyDown}
+                required
+              />
+              <Button ref={buttonRef} type="submit">
+                Test
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
     </Modal>
