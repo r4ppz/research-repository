@@ -1,0 +1,98 @@
+.desktopButtonsWrapper {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .desktopButtonsWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-sm);
+  }
+}
+
+.desktopProfileButton {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .desktopProfileButton {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-lg);
+    max-width: 100px;
+  }
+}
+
+.desktopProfileContainer {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .desktopProfileContainer {
+    display: flex;
+    flex-direction: column;
+    line-height: var(--line-height-tight);
+    text-align: left;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.userName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userRole {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-light);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktopLogoutButton {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .desktopLogoutButton {
+    display: inline-flex;
+    padding: var(--space-xs) var(--space-md);
+  }
+}
+
+.mobileProfileButton {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  max-width: 200px; /* Added max-width constraint */
+  overflow: hidden;
+}
+
+.mobileProfileContainer {
+  display: flex;
+  flex-direction: column;
+  line-height: var(--line-height-tight);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.iconUser {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+
+.iconLogout {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}

@@ -36,9 +36,7 @@ function SignInUserModal({ isOpen, onClose }: SignInUserModalProps) {
   }, [isOpen]);
 
   const handleTempUserLogin = () => {
-    // Check if the input is empty - this covers the required validation
     if (username.trim() === "") {
-      // Focus back to input if it's empty
       inputRef.current?.focus();
       return;
     }

@@ -94,62 +94,6 @@
   text-decoration-color: var(--color-primary);
 }
 
-.desktopButtonsWrapper {
-  display: none;
-}
-@media (min-width: 768px) {
-  .desktopButtonsWrapper {
-    display: flex;
-    flex-direction: row;
-    gap: var(--space-sm);
-  }
-}
-
-.desktopProfileButton {
-  display: none;
-}
-@media (min-width: 768px) {
-  .desktopProfileButton {
-    display: flex;
-    flex-direction: row;
-    gap: var(--space-sm);
-    padding: var(--space-xs) var(--space-md);
-    border-radius: var(--radius-lg);
-  }
-}
-
-.desktopProfileContainer {
-  display: none;
-}
-@media (min-width: 768px) {
-  .desktopProfileContainer {
-    display: flex;
-    flex-direction: column;
-    line-height: var(--line-height-tight);
-    text-align: left;
-  }
-}
-
-.userName {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-}
-
-.userRole {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-light);
-}
-
-.desktopLogoutButton {
-  display: none;
-}
-@media (min-width: 768px) {
-  .desktopLogoutButton {
-    display: inline-flex;
-    padding: var(--space-xs) var(--space-md);
-  }
-}
-
 .menuButton {
   padding: var(--space-sm);
   background-color: var(--color-surface);
@@ -185,24 +129,7 @@
   gap: var(--space-md);
 }
 
-.mobileProfileButton {
-  display: inline-flex;
-  flex-direction: row;
-  width: 40%;
-  font-size: var(--font-size-md);
-}
-
 .iconMenu {
   width: var(--icon-size-xl);
   height: var(--icon-size-xl);
-}
-
-.iconUser {
-  width: var(--icon-size-md);
-  height: var(--icon-size-md);
-}
-
-.iconLogout {
-  width: var(--icon-size-md);
-  height: var(--icon-size-md);
 }

@@ -1,18 +1,19 @@
 import clsx from "clsx";
-import { LogOut, Menu, User as UserIcon } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import schoolLogo from "@/assets/school-logo.svg";
 import Button from "@/components/common/Button/Button";
 import CustomNavLink from "@/components/common/CustomNavLink/CustomNavLink";
+import ProfileButton from "@/components/common/ProfileButton/ProfileButton";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { type Role } from "@/types";
 import style from "./Header.module.css";
 
-const ROLE_LABEL: Record<Role, string> = {
+const GENERAL_ROLE_LABEL: Record<Role, string> = {
   STUDENT: "Student",
-  DEPARTMENT_ADMIN: "D Admin",
-  SUPER_ADMIN: "S Admin",
+  DEPARTMENT_ADMIN: "Admin",
+  SUPER_ADMIN: "Admin",
 };
 
 const REQUEST_PATH: Record<Role, string> = {
@@ -38,8 +39,7 @@ function Header({ className, ...props }: ComponentProps) {
   if (!user) return null;
 
   const role = user.role;
-  const roleLabel = ROLE_LABEL[role];
-  const firstName = user.fullName.split(" ")[0];
+  const generalRoleLabel = GENERAL_ROLE_LABEL[role];
   const requestPath = REQUEST_PATH[role];
   const researchPath = RESEARCH_PATH[role];
 
@@ -62,7 +62,7 @@ function Header({ className, ...props }: ComponentProps) {
             </Button>
             <div className={style.titleContainer}>
               <h1 className={style.title}>ACD Research Repository</h1>
-              <p className={style.roleIndicator}>{roleLabel} portal</p>
+              <p className={style.roleIndicator}>{generalRoleLabel} portal</p>
             </div>
           </div>
 
@@ -73,24 +73,11 @@ function Header({ className, ...props }: ComponentProps) {
               {researchPath && <CustomNavLink to={researchPath}>Research</CustomNavLink>}
             </nav>
 
-            <div className={style.desktopButtonsWrapper}>
-              <Button variant="secondary" className={style.desktopProfileButton} type="button">
-                <UserIcon className={style.iconUser} />
-                <div className={style.desktopProfileContainer}>
-                  <h3 className={style.userName}>{firstName}</h3>
-                  <p className={style.userRole}>{roleLabel}</p>
-                </div>
-              </Button>
-
-              <Button
-                type="button"
-                variant="secondary"
-                className={style.desktopLogoutButton}
-                onClick={handleLogout}
-              >
-                <LogOut className={style.iconLogout} />
-              </Button>
-            </div>
+            <ProfileButton
+              user={user}
+              onLogout={handleLogout}
+              className={style.desktopProfileButton}
+            />
 
             <Button
               className={style.menuButton}
@@ -115,11 +102,12 @@ function Header({ className, ...props }: ComponentProps) {
             <CustomNavLink to="/login">Logout</CustomNavLink>
           </nav>
 
-          <Button className={style.mobileProfileButton} variant="secondary">
-            <UserIcon className={style.iconUser} />
-            <h3 className={style.userName}>{firstName}</h3>
-            <p className={style.userRole}>{roleLabel}</p>
-          </Button>
+          <ProfileButton
+            user={user}
+            onLogout={handleLogout}
+            isMobile={true}
+            className={style.mobileProfileButton}
+          />
         </div>
       )}
     </header>
