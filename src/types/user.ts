@@ -10,5 +10,6 @@ export interface User {
   email: string;
   fullName: string;
   role: Role;
+  profilePicture?: string;
   department: Department | null;
 }

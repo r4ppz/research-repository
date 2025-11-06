@@ -43,7 +43,7 @@ export const MOCK_STUDENT5: User = {
 export const MOCK_DEPT_ADMIN: User = {
   userId: 2,
   email: "bob@acdeducation.com",
-  fullName: "Bob Admin",
+  fullName: "Bob TheBuilder",
   role: "DEPARTMENT_ADMIN",
   department: { departmentId: 1, departmentName: "Computer Science" },
 };
@@ -51,7 +51,7 @@ export const MOCK_DEPT_ADMIN: User = {
 export const MOCK_SUPER_ADMIN: User = {
   userId: 3,
   email: "charlie@acdeducation.com",
-  fullName: "Charlie SuperAdmin",
+  fullName: "Charlie Kirk",
   role: "SUPER_ADMIN",
   department: null,
 };
