@@ -34,11 +34,7 @@ function LoginPage() {
             className={style.signInButton}
             variant="secondary"
             onClick={() => {
-              setIsModalOpen(
-                confirm(
-                  "Google SSO is not set up and there is no backend yet. Using temporary test users for now.",
-                ),
-              );
+              setIsModalOpen(true);
             }}
           >
             <FcGoogle className={style.iconGoogle} />
