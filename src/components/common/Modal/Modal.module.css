@@ -26,7 +26,7 @@
 }
 @media (min-width: 768px) {
   .modal {
-    max-width: 70%;
+    min-width: 20%;
     max-height: 90%;
     padding: var(--space-xl) var(--space-2xl);
     box-shadow: var(--shadow-resting);
