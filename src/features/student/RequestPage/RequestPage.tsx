@@ -26,31 +26,23 @@ function RequestPage() {
   const loading = useLoadingDelay();
 
   useEffect(() => {
-    // Initialize the temporary storage with mock data if it's empty
     initializeTempRequests(MOCK_REQUESTS);
   }, []);
 
   useEffect(() => {
     const updateRequests = () => {
-      // Get user's requests from the service
       const userRequests = user ? getUserRequests(user.userId) : [];
       console.log("Subscription triggered - updating requests");
       console.log("Current user ID:", user?.userId);
       console.log("User requests count:", userRequests.length);
       setRequests(userRequests);
     };
-
-    // Update requests initially
     updateRequests();
-
-    // Subscribe to changes in requests
     const unsubscribe = subscribeToRequests(updateRequests);
-
-    // Cleanup subscription on unmount
     return () => {
       unsubscribe();
     };
-  }, [user]); // Include user as dependency to recreate subscription when user changes
+  }, [user]);
 
   const filteredRequests = useMultiFilterRequest(requests, {
     searchQuery,
