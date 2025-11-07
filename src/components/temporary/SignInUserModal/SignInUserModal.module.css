@@ -56,23 +56,6 @@
   align-items: center;
 }
 
-.usernameInput {
-  flex: 1;
-  width: 100%;
-  padding: var(--space-sm);
-  font-size: var(--font-size-md);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-md);
-  color: var(--color-input-text);
-  background-color: var(--color-input-bg);
-}
-
-.usernameInput:focus {
-  border-color: var(--color-primary);
-  outline: none;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary), transparent 80%);
-}
-
 /* Mobile first responsive adjustments */
 @media (max-width: 768px) {
   .modalContentContainer {
