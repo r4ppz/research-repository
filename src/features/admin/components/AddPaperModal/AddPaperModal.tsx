@@ -14,7 +14,7 @@ interface ResearchModalProps {
   onClose: () => void;
 }
 
-function AddPaperModal({ isOpen, onClose }: ResearchModalProps) {
+const AddPaperModal = ({ isOpen, onClose }: ResearchModalProps) => {
   const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -203,6 +203,6 @@ function AddPaperModal({ isOpen, onClose }: ResearchModalProps) {
       </div>
     </Modal>
   );
-}
+};
 
 export default AddPaperModal;

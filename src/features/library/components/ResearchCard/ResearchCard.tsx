@@ -8,7 +8,7 @@ interface ResearchCardProps {
   onView: () => void;
 }
 
-function ResearchCard({ researchPaper, onView }: ResearchCardProps) {
+const ResearchCard = ({ researchPaper, onView }: ResearchCardProps) => {
   const formattedDate = new Date(researchPaper.submissionDate).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -36,6 +36,6 @@ function ResearchCard({ researchPaper, onView }: ResearchCardProps) {
       </Button>
     </div>
   );
-}
+};
 
 export default ResearchCard;

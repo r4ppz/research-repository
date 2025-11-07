@@ -17,7 +17,7 @@ import { MOCK_YEARS } from "@/mocks/filterMocks";
 import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import style from "./ResearchPage.module.css";
 
-function ResearchPage() {
+const ResearchPage = () => {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
@@ -128,6 +128,6 @@ function ResearchPage() {
       <Footer />
     </div>
   );
-}
+};
 
 export default ResearchPage;

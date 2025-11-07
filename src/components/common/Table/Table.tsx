@@ -28,7 +28,7 @@ interface TableProps<T extends object> {
   onRowClick?: (item: T, index: number) => void;
 }
 
-function Table<T extends object>({
+const Table = <T extends object>({
   data = [],
   columns,
   rowKey,
@@ -37,7 +37,7 @@ function Table<T extends object>({
   emptyText = "No data",
   rowClassName,
   onRowClick,
-}: TableProps<T>) {
+}: TableProps<T>) => {
   const [internalPageSize, setInternalPageSize] = useState(10);
   const currentPageSize = pagination ? pagination.pageSize : internalPageSize;
 
@@ -194,6 +194,6 @@ function Table<T extends object>({
       )}
     </div>
   );
-}
+};
 
 export default Table;

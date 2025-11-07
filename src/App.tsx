@@ -9,7 +9,7 @@ import LibraryPage from "@/features/library/LibraryPage/LibraryPage";
 import StudentRequestsPage from "@/features/student/RequestPage/RequestPage";
 import useScrollbarGutter from "@/hooks/useScrollbarGutter";
 
-function App() {
+const App = () => {
   useScrollbarGutter();
 
   return (
@@ -69,6 +69,6 @@ function App() {
       <div id="modal-root" />
     </>
   );
-}
+};
 
 export default App;

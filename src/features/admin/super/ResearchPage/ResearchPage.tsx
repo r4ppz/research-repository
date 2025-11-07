@@ -17,7 +17,7 @@ import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import { type ResearchPaper } from "@/types";
 import style from "./ResearchPage.module.css";
 
-function ResearchPage() {
+const ResearchPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
@@ -164,6 +164,6 @@ function ResearchPage() {
       <Footer />
     </div>
   );
-}
+};
 
 export default ResearchPage;

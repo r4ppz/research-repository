@@ -6,11 +6,13 @@ interface CustomNavLinkProps extends NavLinkProps {
   className?: string;
 }
 
-export default function CustomNavLink({ className, ...props }: CustomNavLinkProps) {
+const CustomNavLink = ({ className, ...props }: CustomNavLinkProps) => {
   return (
     <NavLink
       className={({ isActive }) => clsx(style.navlink, isActive && style.active, className)}
       {...props}
     />
   );
-}
+};
+
+export default CustomNavLink;

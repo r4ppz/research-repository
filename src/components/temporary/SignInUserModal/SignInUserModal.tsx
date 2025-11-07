@@ -17,7 +17,7 @@ interface SignInUserModalProps {
   onClose: () => void;
 }
 
-function SignInUserModal({ isOpen, onClose }: SignInUserModalProps) {
+const SignInUserModal = ({ isOpen, onClose }: SignInUserModalProps) => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
@@ -122,6 +122,6 @@ function SignInUserModal({ isOpen, onClose }: SignInUserModalProps) {
       </div>
     </Modal>
   );
-}
+};
 
 export default SignInUserModal;

@@ -16,7 +16,7 @@ interface ResearchPaperTableProps {
   showDepartmentColumn?: boolean;
 }
 
-function ResearchPaperTable({
+const ResearchPaperTable = ({
   papers,
   className,
   onEdit,
@@ -24,7 +24,7 @@ function ResearchPaperTable({
   onDelete,
   onPreview,
   showDepartmentColumn = true,
-}: ResearchPaperTableProps) {
+}: ResearchPaperTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 5;
 
@@ -137,6 +137,6 @@ function ResearchPaperTable({
       emptyText="No papers found"
     />
   );
-}
+};
 
 export default ResearchPaperTable;

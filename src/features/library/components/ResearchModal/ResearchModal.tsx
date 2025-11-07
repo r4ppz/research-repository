@@ -12,7 +12,7 @@ interface ResearchModalProps {
   onClose: () => void;
 }
 
-function ResearchModal({ isOpen, researchPaper, onClose }: ResearchModalProps) {
+const ResearchModal = ({ isOpen, researchPaper, onClose }: ResearchModalProps) => {
   const { user } = useAuth();
   const formattedDate = formatDateLong(researchPaper.submissionDate);
   const department = researchPaper.department.departmentName;
@@ -59,6 +59,6 @@ function ResearchModal({ isOpen, researchPaper, onClose }: ResearchModalProps) {
       <Button onClick={handleRequestDocument}>Request Document</Button>
     </Modal>
   );
-}
+};
 
 export default ResearchModal;

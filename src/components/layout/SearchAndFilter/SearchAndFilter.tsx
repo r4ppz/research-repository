@@ -13,13 +13,13 @@ interface SearchAndFilterProps {
   className?: string;
 }
 
-function SearchAndFilter({
+const SearchAndFilter = ({
   searchQuery,
   onSearchChange,
   filters = [],
   searchPlaceholder = "Search paper title",
   className,
-}: SearchAndFilterProps) {
+}: SearchAndFilterProps) => {
   return (
     <section className={clsx(style.searchSection, className)}>
       <Input
@@ -35,6 +35,6 @@ function SearchAndFilter({
       <DynamicFilter filters={filters} />
     </section>
   );
-}
+};
 
 export default SearchAndFilter;

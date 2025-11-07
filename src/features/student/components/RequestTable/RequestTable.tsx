@@ -12,7 +12,7 @@ interface RequestTableProps {
   onDownload: (request: DocumentRequest) => void;
 }
 
-function RequestTable({ requests, className, onDownload }: RequestTableProps) {
+const RequestTable = ({ requests, className, onDownload }: RequestTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 5;
 
@@ -87,6 +87,6 @@ function RequestTable({ requests, className, onDownload }: RequestTableProps) {
       emptyText="No requests found"
     />
   );
-}
+};
 
 export default RequestTable;

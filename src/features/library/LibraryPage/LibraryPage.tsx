@@ -16,7 +16,7 @@ import { MOCK_PAPERS } from "@/mocks/paperMocks";
 import { type ResearchPaper } from "@/types";
 import style from "./LibraryPage.module.css";
 
-function LibraryPage() {
+const LibraryPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(12); // Fixed items per page
 
@@ -187,6 +187,6 @@ function LibraryPage() {
       <Footer />
     </div>
   );
-}
+};
 
 export default LibraryPage;

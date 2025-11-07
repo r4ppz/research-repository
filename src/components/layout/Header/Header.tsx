@@ -31,7 +31,7 @@ interface ComponentProps {
   className?: string;
 }
 
-function Header({ className, ...props }: ComponentProps) {
+const Header = ({ className, ...props }: ComponentProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -112,6 +112,6 @@ function Header({ className, ...props }: ComponentProps) {
       )}
     </header>
   );
-}
+};
 
 export default Header;

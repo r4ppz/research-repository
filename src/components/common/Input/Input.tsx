@@ -22,11 +22,9 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ type = "text", icon: Icon, className, disabled, ...props }, ref) => {
     return (
-      <div className={clsx(
-        style.inputWrapper,
-        { [style.inputWrapperDisabled]: disabled },
-        className
-      )}>
+      <div
+        className={clsx(style.inputWrapper, { [style.inputWrapperDisabled]: disabled }, className)}
+      >
         {Icon && <Icon className={style.icon} />}
         <input ref={ref} type={type} className={style.input} disabled={disabled} {...props} />
       </div>

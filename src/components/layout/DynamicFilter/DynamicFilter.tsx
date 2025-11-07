@@ -8,7 +8,7 @@ interface DynamicFilterProps {
   filters: FilterConfig[];
 }
 
-function DynamicFilter({ filters }: DynamicFilterProps) {
+const DynamicFilter = ({ filters }: DynamicFilterProps) => {
   const [activeFilterIndex, setActiveFilterIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -68,6 +68,6 @@ function DynamicFilter({ filters }: DynamicFilterProps) {
       ))}
     </div>
   );
-}
+};
 
 export default DynamicFilter;

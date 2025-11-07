@@ -13,12 +13,12 @@ interface RequestTableProps {
   showDepartmentColumn?: boolean;
 }
 
-function RequestTable({
+const RequestTable = ({
   requests,
   className,
   onAction,
   showDepartmentColumn = true,
-}: RequestTableProps) {
+}: RequestTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 5;
 
@@ -104,6 +104,6 @@ function RequestTable({
       emptyText="No requests found"
     />
   );
-}
+};
 
 export default RequestTable;

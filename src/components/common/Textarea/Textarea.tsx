@@ -8,13 +8,13 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   icon?: ComponentType<{ className?: string }>;
 }
 
-function Textarea({ className, ref, icon: Icon, ...props }: TextareaProps) {
+const Textarea = ({ className, ref, icon: Icon, ...props }: TextareaProps) => {
   return (
     <div className={clsx(style.textareaContainer, className)}>
       {Icon && <Icon className={style.icon} />}
       <textarea {...props} ref={ref} className={style.textarea} />
     </div>
   );
-}
+};
 
 export default Textarea;

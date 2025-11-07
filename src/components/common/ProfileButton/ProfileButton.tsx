@@ -19,7 +19,7 @@ const ROLE_LABEL: Record<Role, string> = {
   SUPER_ADMIN: "S Admin",
 };
 
-function ProfileButton({ user, onLogout, className, isMobile = false }: ProfileButtonProps) {
+const ProfileButton = ({ user, onLogout, className, isMobile = false }: ProfileButtonProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const roleLabel = ROLE_LABEL[user.role];
   const firstName = user.fullName.split(" ")[0];
@@ -87,6 +87,6 @@ function ProfileButton({ user, onLogout, className, isMobile = false }: ProfileB
       />
     </>
   );
-}
+};
 
 export default ProfileButton;

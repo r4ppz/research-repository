@@ -5,7 +5,7 @@ import Button from "@/components/common/Button/Button";
 import SignInUserModal from "@/components/temporary/SignInUserModal/SignInUserModal";
 import style from "./LoginPage.module.css";
 
-function LoginPage() {
+const LoginPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onClose = () => {
@@ -47,6 +47,6 @@ function LoginPage() {
       </div>
     </div>
   );
-}
+};
 
 export default LoginPage;

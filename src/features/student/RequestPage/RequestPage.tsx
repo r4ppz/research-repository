@@ -16,7 +16,7 @@ import { DocumentRequest } from "@/types/";
 import { getRequestDepartmentOptions, getRequestDateOptions } from "@/util/requestFilterUtils";
 import style from "./RequestPage.module.css";
 
-function RequestPage() {
+const RequestPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -107,6 +107,6 @@ function RequestPage() {
       <Footer />
     </div>
   );
-}
+};
 
 export default RequestPage;

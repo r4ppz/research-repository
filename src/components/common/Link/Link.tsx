@@ -7,19 +7,19 @@ interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   children: React.ReactNode;
 }
 
-function Link({
+const Link = ({
   href,
   children,
   className,
   target = "_blank",
   rel = "noopener noreferrer",
   ...props
-}: LinkProps) {
+}: LinkProps) => {
   return (
     <a href={href} className={clsx(style.link, className)} target={target} rel={rel} {...props}>
       {children}
     </a>
   );
-}
+};
 
 export default Link;

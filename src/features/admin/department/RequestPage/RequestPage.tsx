@@ -13,7 +13,7 @@ import { MOCK_REQUESTS } from "@/mocks/requestMocks";
 import { formatDateShort } from "@/util/formatDate";
 import style from "./RequestPage.module.css";
 
-function RequestPage() {
+const RequestPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const loading = useLoadingDelay();
@@ -77,6 +77,6 @@ function RequestPage() {
       <Footer />
     </div>
   );
-}
+};
 
 export default RequestPage;

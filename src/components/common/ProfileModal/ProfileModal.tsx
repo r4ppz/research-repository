@@ -15,7 +15,7 @@ const FULL_ROLE_LABEL: Record<Role, string> = {
   SUPER_ADMIN: "Super Admin",
 };
 
-function ProfileModal({ isOpen, onClose, user, className }: ProfileModalProps) {
+const ProfileModal = ({ isOpen, onClose, user, className }: ProfileModalProps) => {
   const roleLabel = FULL_ROLE_LABEL[user.role];
 
   return (
@@ -44,6 +44,6 @@ function ProfileModal({ isOpen, onClose, user, className }: ProfileModalProps) {
       </div>
     </Modal>
   );
-}
+};
 
 export default ProfileModal;

@@ -15,7 +15,7 @@ interface FileUploadProps {
   placeholder?: string;
 }
 
-export default function FileUpload({
+const FileUpload = ({
   id,
   name,
   accept = ".pdf,.doc,.docx",
@@ -25,7 +25,7 @@ export default function FileUpload({
   className = "",
   style: customStyle,
   placeholder = "Click to upload or drag and drop",
-}: FileUploadProps) {
+}: FileUploadProps) => {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       onChange(e.target.files[0]);
@@ -74,4 +74,6 @@ export default function FileUpload({
       />
     </div>
   );
-}
+};
+
+export default FileUpload;

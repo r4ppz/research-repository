@@ -9,7 +9,7 @@ interface ComponentProps {
   className?: string;
 }
 
-function Footer({ className, ...props }: ComponentProps) {
+const Footer = ({ className, ...props }: ComponentProps) => {
   const navigate = useNavigate();
 
   return (
@@ -72,6 +72,6 @@ function Footer({ className, ...props }: ComponentProps) {
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;

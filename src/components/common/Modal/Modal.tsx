@@ -12,7 +12,7 @@ interface ModalProps {
   className?: string;
 }
 
-function Modal({ isOpen, onClose, children, className }: ModalProps) {
+const Modal = ({ isOpen, onClose, children, className }: ModalProps) => {
   useModalBodyClass(isOpen);
 
   if (!isOpen) {
@@ -43,6 +43,6 @@ function Modal({ isOpen, onClose, children, className }: ModalProps) {
     </div>,
     modalRoot,
   );
-}
+};
 
 export default Modal;
