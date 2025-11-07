@@ -10,7 +10,7 @@ export interface ResearchPaper {
   department: Department;
   submissionDate: string; // YYYY-MM-DD
   fileUrl: string; // API path (gated), e.g. /api/files/uuid.pdf
-  archived: boolean;
+  isArchived: boolean;
   archivedAt?: string | null; // ISO datetime when archived (optional)
 }
 

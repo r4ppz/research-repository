@@ -10,7 +10,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 3, departmentName: "Physics" },
     submissionDate: "2024-09-15",
     fileUrl: "/api/files/quantum-cats.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 102,
@@ -21,7 +21,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 2, departmentName: "Information Technology" },
     submissionDate: "2024-08-20",
     fileUrl: "/api/files/ml-climate.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 103,
@@ -32,7 +32,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 4, departmentName: "Mathematics" },
     submissionDate: "2025-07-10",
     fileUrl: "/api/files/graph-social.pdf",
-    archived: true,
+    isArchived: true,
     archivedAt: "2025-09-01T10:00:00Z",
   },
   {
@@ -44,7 +44,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 5, departmentName: "Biology" },
     submissionDate: "2025-06-05",
     fileUrl: "/api/files/crispr-ethics.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 105,
@@ -55,7 +55,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 2, departmentName: "Information Technology" },
     submissionDate: "2025-09-10",
     fileUrl: "/api/files/edge-iot.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 106,
@@ -66,7 +66,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 7, departmentName: "Psychology" },
     submissionDate: "2025-07-25",
     fileUrl: "/api/files/digital-addiction.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 107,
@@ -77,7 +77,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 6, departmentName: "Business Administration" },
     submissionDate: "2025-08-30",
     fileUrl: "/api/files/blockchain-scm.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 108,
@@ -88,7 +88,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 9, departmentName: "Environmental Science" },
     submissionDate: "2025-05-11",
     fileUrl: "/api/files/rl-energy.pdf",
-    archived: true,
+    isArchived: true,
     archivedAt: "2025-08-22T14:30:00Z",
   },
   {
@@ -100,7 +100,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-04-21",
     fileUrl: "/api/files/brain-interface.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 110,
@@ -111,7 +111,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 10, departmentName: "Cybersecurity" },
     submissionDate: "2025-09-27",
     fileUrl: "/api/files/postquantum-crypto.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 111,
@@ -122,7 +122,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 6, departmentName: "Business Administration" },
     submissionDate: "2025-09-12",
     fileUrl: "/api/files/data-mining-bi.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 112,
@@ -133,7 +133,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 10, departmentName: "Cybersecurity" },
     submissionDate: "2025-10-01",
     fileUrl: "/api/files/federated-cti.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 113,
@@ -144,7 +144,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2024-03-18",
     fileUrl: "/api/files/neuromorphic.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 114,
@@ -155,7 +155,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 9, departmentName: "Environmental Science" },
     submissionDate: "2024-07-22",
     fileUrl: "/api/files/drone-agriculture.pdf",
-    archived: true,
+    isArchived: true,
     archivedAt: "2025-08-15T09:15:00Z",
   },
   {
@@ -167,7 +167,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 8, departmentName: "Electrical Engineering" },
     submissionDate: "2024-11-05",
     fileUrl: "/api/files/autonomous-ethics.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 116,
@@ -178,7 +178,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 7, departmentName: "Psychology" },
     submissionDate: "2025-01-30",
     fileUrl: "/api/files/cognitive-load.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 117,
@@ -189,7 +189,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2024-05-14",
     fileUrl: "/api/files/quantum-crypto.pdf",
-    archived: true,
+    isArchived: true,
     archivedAt: "2025-07-10T12:00:00Z",
   },
   {
@@ -201,7 +201,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 5, departmentName: "Biology" },
     submissionDate: "2025-03-12",
     fileUrl: "/api/files/medical-ai.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 119,
@@ -212,7 +212,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 6, departmentName: "Business Administration" },
     submissionDate: "2024-12-08",
     fileUrl: "/api/files/agile-large-orgs.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 120,
@@ -223,7 +223,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 7, departmentName: "Psychology" },
     submissionDate: "2025-02-19",
     fileUrl: "/api/files/neuro-decision.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 121,
@@ -234,7 +234,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 8, departmentName: "Electrical Engineering" },
     submissionDate: "2024-09-30",
     fileUrl: "/api/files/renewable-grid.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 122,
@@ -245,7 +245,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 9, departmentName: "Environmental Science" },
     submissionDate: "2025-04-05",
     fileUrl: "/api/files/algae-plastics.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 123,
@@ -256,7 +256,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 2, departmentName: "Information Technology" },
     submissionDate: "2024-10-25",
     fileUrl: "/api/files/quantum-ml.pdf",
-    archived: true,
+    isArchived: true,
     archivedAt: "2025-06-18T14:20:00Z",
   },
   {
@@ -268,7 +268,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 7, departmentName: "Psychology" },
     submissionDate: "2025-05-18",
     fileUrl: "/api/files/social-media-mental.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 125,
@@ -279,7 +279,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 10, departmentName: "Cybersecurity" },
     submissionDate: "2024-08-14",
     fileUrl: "/api/files/blockchain-identity.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 126,
@@ -290,7 +290,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 3, departmentName: "Physics" },
     submissionDate: "2025-01-15",
     fileUrl: "/api/files/space-materials.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 127,
@@ -301,7 +301,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 6, departmentName: "Business Administration" },
     submissionDate: "2025-06-03",
     fileUrl: "/api/files/rpa-finance.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 128,
@@ -312,7 +312,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 5, departmentName: "Biology" },
     submissionDate: "2024-11-12",
     fileUrl: "/api/files/crispr-crops.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 129,
@@ -323,7 +323,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-02-28",
     fileUrl: "/api/files/consensus-algorithms.pdf",
-    archived: true,
+    isArchived: true,
     archivedAt: "2025-07-30T11:45:00Z",
   },
   {
@@ -335,7 +335,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 10, departmentName: "Cybersecurity" },
     submissionDate: "2025-04-22",
     fileUrl: "/api/files/ai-security.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 131,
@@ -346,7 +346,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 3, departmentName: "Physics" },
     submissionDate: "2024-06-09",
     fileUrl: "/api/files/string-theory.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 132,
@@ -357,7 +357,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 5, departmentName: "Biology" },
     submissionDate: "2025-03-17",
     fileUrl: "/api/files/bioprinting-organs.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 133,
@@ -368,7 +368,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-07-15",
     fileUrl: "/api/files/large-language-models.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 134,
@@ -379,7 +379,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-08-20",
     fileUrl: "/api/files/quantum-computing-fundamentals.pdf",
-    archived: true,
+    isArchived: true,
     archivedAt: "2025-09-15T11:30:00Z",
   },
   {
@@ -391,7 +391,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-09-10",
     fileUrl: "/api/files/deep-learning-vision.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 136,
@@ -402,7 +402,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-10-05",
     fileUrl: "/api/files/distributed-systems.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 137,
@@ -413,7 +413,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-10-15",
     fileUrl: "/api/files/cybersecurity-networked.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 138,
@@ -424,7 +424,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-06-20",
     fileUrl: "/api/files/formal-verification.pdf",
-    archived: true,
+    isArchived: true,
     archivedAt: "2025-07-25T14:00:00Z",
   },
   {
@@ -436,7 +436,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-05-10",
     fileUrl: "/api/files/hci-ux-design.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 140,
@@ -447,7 +447,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-08-01",
     fileUrl: "/api/files/database-systems.pdf",
-    archived: true,
+    isArchived: true,
     archivedAt: "2025-09-05T13:45:00Z",
   },
   {
@@ -459,7 +459,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-07-20",
     fileUrl: "/api/files/healthcare-ml.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 142,
@@ -470,7 +470,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-09-20",
     fileUrl: "/api/files/autonomous-vehicles.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 143,
@@ -481,7 +481,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-08-15",
     fileUrl: "/api/files/nlp-low-resource.pdf",
-    archived: false,
+    isArchived: false,
   },
   {
     paperId: 144,
@@ -492,7 +492,7 @@ export const MOCK_PAPERS: ResearchPaper[] = [
     department: { departmentId: 1, departmentName: "Computer Science" },
     submissionDate: "2025-09-30",
     fileUrl: "/api/files/blockchain-decentralized.pdf",
-    archived: true,
+    isArchived: true,
     archivedAt: "2025-10-15T09:30:00Z",
   },
 ];
