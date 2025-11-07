@@ -19,9 +19,9 @@
     display: flex;
     flex-direction: row;
     gap: var(--space-sm);
+    max-width: 100px;
     padding: var(--space-xs) var(--space-md);
     border-radius: var(--radius-lg);
-    max-width: 100px;
   }
 }
 
@@ -33,26 +33,26 @@
   .desktopProfileContainer {
     display: flex;
     flex-direction: column;
-    line-height: var(--line-height-tight);
-    text-align: left;
     max-width: 120px;
     overflow: hidden;
+    line-height: var(--line-height-tight);
+    text-align: left;
     text-overflow: ellipsis;
   }
 }
 
 .userName {
+  overflow: hidden;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .userRole {
+  overflow: hidden;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-light);
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -71,19 +71,19 @@
 .mobileProfileButton {
   display: inline-flex;
   flex-direction: row;
-  align-items: center;
   gap: var(--space-md);
-  padding: var(--space-sm) var(--space-md);
+  align-items: center;
   max-width: 200px; /* Added max-width constraint */
+  padding: var(--space-sm) var(--space-md);
   overflow: hidden;
 }
 
 .mobileProfileContainer {
   display: flex;
   flex-direction: column;
-  line-height: var(--line-height-tight);
   max-width: 120px;
   overflow: hidden;
+  line-height: var(--line-height-tight);
   text-overflow: ellipsis;
 }
 

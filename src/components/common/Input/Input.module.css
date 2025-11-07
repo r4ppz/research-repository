@@ -53,9 +53,9 @@
 }
 
 .inputWrapperDisabled {
+  cursor: not-allowed;
   background-color: var(--color-surface-disabled);
   border-color: var(--color-border-disabled);
-  cursor: not-allowed;
 }
 
 .input:disabled {
