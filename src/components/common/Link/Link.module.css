@@ -20,6 +20,12 @@
   }
 }
 
+.link:focus-visible {
+  border-radius: var(--radius-md);
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 1px;
+}
+
 .link:active {
   color: var(--color-secondary-active);
 }

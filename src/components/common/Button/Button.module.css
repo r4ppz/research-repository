@@ -32,6 +32,12 @@
   transform: translateY(var(--translate-active)) scale(var(--scale-active));
 }
 
+.button:focus-visible {
+  border-radius: var(--radius-md);
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 1px;
+}
+
 .button svg {
   flex-shrink: 0;
 }
@@ -53,9 +59,9 @@
 }
 
 .primary:disabled {
-  color: var(--color-button-disabled-text);
+  color: var(--color-text-disabled);
   cursor: not-allowed;
-  background-color: var(--color-button-disabled-bg);
+  background-color: var(--color-surface-disabled);
   opacity: 0.8;
 }
 
@@ -76,8 +82,8 @@
 }
 
 .secondary:disabled {
-  color: var(--color-button-disabled-text);
+  color: var(--color-text-disabled);
   cursor: not-allowed;
-  background-color: var(--color-button-disabled-bg);
+  background-color: var(--color-surface-disabled);
   opacity: 0.8;
 }

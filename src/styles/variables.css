@@ -46,10 +46,6 @@
   --color-text-muted: var(--color-gray-500);
   --color-text-inverted: var(--color-gray-50);
 
-  --color-error: var(--color-red-500);
-  --color-success: var(--color-green-500);
-  --color-warning: var(--color-yellow-500);
-
   --color-border-default: var(--color-gray-400);
   --color-border-hover: var(--color-gray-500);
   --color-border-active: var(--color-gray-600);
@@ -64,15 +60,21 @@
   --color-button-secondary-bg-active: var(--color-gray-200);
   --color-button-secondary-text: var(--color-text);
 
-  --color-button-disabled-bg: var(--color-gray-300);
-  --color-button-disabled-text: var(--color-gray-500);
-
   --color-input-bg: var(--color-surface);
   --color-input-bg-hover: var(--color-gray-200);
   --color-input-bg-active: var(--color-gray-300);
   --color-input-text: var(--color-text);
 
   --color-header-bg: var(--color-primary);
+
+  --color-text-disabled: var(--color-gray-600);
+  --color-surface-disabled: var(--color-gray-100);
+  --color-border-disabled: var(--color-gray-500);
+
+  --color-error: var(--color-red-500);
+  --color-success: var(--color-green-500);
+  --color-warning: var(--color-yellow-500);
+
   /* ---------------------------------
      Typography
   ---------------------------------- */

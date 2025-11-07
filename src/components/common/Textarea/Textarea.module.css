@@ -27,9 +27,9 @@
 }
 
 .textareaContainer:focus-within {
-  border-radius: var(--radius-lg);
-  outline: 1px solid var(--color-secondary);
-  outline-offset: 0;
+  border-radius: var(--radius-md);
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 1px;
 }
 
 .textarea {

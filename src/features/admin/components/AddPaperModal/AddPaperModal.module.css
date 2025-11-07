@@ -95,9 +95,10 @@
   border-radius: var(--radius-lg);
 }
 
-.select:focus {
-  border-color: var(--color-primary);
-  outline: none;
+.select:focus-visible {
+  border-radius: var(--radius-md);
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 1px;
 }
 
 .modalActions {

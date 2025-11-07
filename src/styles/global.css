@@ -70,13 +70,3 @@ body.modal-open,
 html.modal-open {
   overflow: hidden;
 }
-
-/* Focus styles for accessibility */
-/* TODO: make this a component style */
-button:focus-visible,
-select:focus-visible,
-a:focus-visible {
-  border-radius: var(--radius-md);
-  outline: 2px solid var(--color-secondary);
-  outline-offset: 1px;
-}
