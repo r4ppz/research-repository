@@ -9,7 +9,7 @@ interface LoadingSpinnerProps {
 const LoadingSpinner = ({ className, message }: LoadingSpinnerProps) => {
   return (
     <div className={clsx(style.container, className)}>
-      <div className={clsx(style.spinner, style.size)} />
+      <div className={style.spinner} />
       {message && <p className={style.message}>{message}</p>}
     </div>
   );

@@ -40,7 +40,7 @@ const ResearchPage = () => {
   if (loading) {
     return (
       <div className={style.loadingContainer}>
-        <LoadingSpinner size="lg" message="Loading research papers..." />
+        <LoadingSpinner message="Loading research papers..." />
       </div>
     );
   }

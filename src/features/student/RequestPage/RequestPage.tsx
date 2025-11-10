@@ -58,7 +58,7 @@ const RequestPage = () => {
   if (loading) {
     return (
       <div className={style.loadingContainer}>
-        <LoadingSpinner size="lg" message="Loading your requests..." />
+        <LoadingSpinner message="Loading your requests..." />
       </div>
     );
   }
