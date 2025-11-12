@@ -24,6 +24,7 @@ const Modal = ({ isOpen, onClose, children, className }: ModalProps) => {
     throw new Error("Modal root element not found");
   }
 
+  // TODO: use native modal instead of recreating it
   return ReactDOM.createPortal(
     <div className={style.overlay} onClick={onClose}>
       <div
