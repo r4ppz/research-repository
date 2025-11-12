@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import schoolLogo from "@/assets/school-logo.svg";
 import Button from "@/components/common/Button/Button";
-import CustomNavLink from "@/components/common/CustomNavLink/CustomNavLink";
+import CNavLink from "@/components/common/CNavLink/CNavLink";
 import ProfileButton from "@/components/layout/ProfileButton/ProfileButton";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { type Role } from "@/types";
@@ -68,9 +68,9 @@ const Header = ({ className, ...props }: ComponentProps) => {
 
           <div className={style.rightWrapper}>
             <nav className={style.desktopNavigation}>
-              <CustomNavLink to="/">Library</CustomNavLink>
-              <CustomNavLink to={requestPath}>Request</CustomNavLink>
-              {researchPath && <CustomNavLink to={researchPath}>Research</CustomNavLink>}
+              <CNavLink to="/">Library</CNavLink>
+              <CNavLink to={requestPath}>Request</CNavLink>
+              {researchPath && <CNavLink to={researchPath}>Research</CNavLink>}
             </nav>
 
             <div className={style.profileNLogoutWrapper}>
@@ -102,10 +102,10 @@ const Header = ({ className, ...props }: ComponentProps) => {
       {isMenuOpen && (
         <div className={style.dropDownMenu}>
           <nav className={style.mobileNavigation}>
-            <CustomNavLink to="/">Library</CustomNavLink>
-            <CustomNavLink to={requestPath}>Request</CustomNavLink>
-            {researchPath && <CustomNavLink to={researchPath}>Research</CustomNavLink>}
-            <CustomNavLink to="/login">Logout</CustomNavLink>
+            <CNavLink to="/">Library</CNavLink>
+            <CNavLink to={requestPath}>Request</CNavLink>
+            {researchPath && <CNavLink to={researchPath}>Research</CNavLink>}
+            <CNavLink to="/login">Logout</CNavLink>
           </nav>
 
           {/* NOTE: theres no profile button on mobile since I dont know how to style it lol */}
