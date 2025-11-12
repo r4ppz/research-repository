@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Menu } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import schoolLogo from "@/assets/school-logo.svg";
@@ -73,11 +73,17 @@ const Header = ({ className, ...props }: ComponentProps) => {
               {researchPath && <CustomNavLink to={researchPath}>Research</CustomNavLink>}
             </nav>
 
-            <ProfileButton
-              user={user}
-              onLogout={handleLogout}
-              className={style.desktopProfileButton}
-            />
+            <div className={style.profileNLogoutWrapper}>
+              <ProfileButton user={user} />
+              <Button
+                type="button"
+                variant="secondary"
+                className={style.logoutButton}
+                onClick={handleLogout}
+              >
+                <LogOut className={style.iconLogout} />
+              </Button>
+            </div>
 
             <Button
               className={style.menuButton}
@@ -102,12 +108,8 @@ const Header = ({ className, ...props }: ComponentProps) => {
             <CustomNavLink to="/login">Logout</CustomNavLink>
           </nav>
 
-          <ProfileButton
-            user={user}
-            onLogout={handleLogout}
-            isMobile={true}
-            className={style.mobileProfileButton}
-          />
+          {/* NOTE: theres no profile button on mobile since I dont know how to style it lol */}
+          {/* TODO: add mobile profile button */}
         </div>
       )}
     </header>

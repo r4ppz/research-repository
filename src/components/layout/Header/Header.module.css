@@ -80,18 +80,24 @@
   }
 }
 
-.navlink {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-inverted);
-  text-decoration: none;
-  transition: text-decoration 0.2s ease;
+.profileNLogoutWrapper {
+  display: flex;
+  gap: var(--space-md);
 }
 
-.navlink:hover,
-.navlink.selected {
-  text-decoration: underline;
-  text-decoration-color: var(--color-primary);
+.logoutButton {
+  display: none;
+}
+@media (min-width: 768px) {
+  .logoutButton {
+    display: inline-flex;
+    padding: var(--space-xs) var(--space-md);
+  }
+}
+
+.iconLogout {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
 }
 
 .menuButton {
