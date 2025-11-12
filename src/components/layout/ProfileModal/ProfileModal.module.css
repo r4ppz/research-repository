@@ -9,15 +9,10 @@
 .modalTitle {
   width: 100%;
   margin: 0 0 var(--space-sm) 0;
-  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xl);
   color: var(--color-text);
   text-align: center;
-}
-@media (min-width: 768px) {
-  .modalTitle {
-    font-size: var(--font-size-xl);
-  }
 }
 
 .profilePicture {
@@ -32,12 +27,6 @@
   background-color: var(--color-surface);
   border: 2px solid var(--color-border-default);
   border-radius: var(--radius-full);
-}
-@media (min-width: 768px) {
-  .profilePicture {
-    width: 80px;
-    height: 80px;
-  }
 }
 
 .userInfo {
@@ -54,11 +43,6 @@
   font-weight: var(--font-weight-bold);
   color: var(--color-text);
   text-align: center;
-}
-@media (min-width: 768px) {
-  .name {
-    font-size: var(--font-size-lg);
-  }
 }
 
 .email {
