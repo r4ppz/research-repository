@@ -1,10 +1,10 @@
 import clsx from "clsx";
 import { LogOut, User as UserIcon } from "lucide-react";
 import { useState } from "react";
+import Button from "@/components/common/Button/Button";
+import ProfileModal from "@/components/layout/ProfileModal/ProfileModal";
 import { type Role, type User } from "@/types";
 import style from "./ProfileButton.module.css";
-import Button from "../Button/Button";
-import ProfileModal from "../ProfileModal/ProfileModal";
 
 interface ProfileButtonProps {
   user: User;

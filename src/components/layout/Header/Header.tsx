@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import schoolLogo from "@/assets/school-logo.svg";
 import Button from "@/components/common/Button/Button";
 import CustomNavLink from "@/components/common/CustomNavLink/CustomNavLink";
-import ProfileButton from "@/components/common/ProfileButton/ProfileButton";
+import ProfileButton from "@/components/layout/ProfileButton/ProfileButton";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { type Role } from "@/types";
 import style from "./Header.module.css";

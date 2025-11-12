@@ -1,6 +1,6 @@
+import Modal from "@/components/common/Modal/Modal";
 import { type Role, type User } from "@/types";
 import style from "./ProfileModal.module.css";
-import Modal from "../Modal/Modal";
 
 interface ProfileModalProps {
   isOpen: boolean;
