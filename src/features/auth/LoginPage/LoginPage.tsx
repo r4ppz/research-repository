@@ -1,16 +1,32 @@
-import { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from "react-router-dom";
 import schoolLogo from "@/assets/school-logo.svg";
-import Button from "@/components/common/Button/Button";
-import SignInUserModal from "@/components/temporary/SignInUserModal/SignInUserModal";
+import { useAuth } from "@/features/auth/context/useAuth";
+import { authApi } from "@/features/auth/services/authApi";
 import style from "./LoginPage.module.css";
+import GoogleButton from "../components/GoogleButton/GoogleButton";
 
 const LoginPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const { loginWithToken } = useAuth();
+  const googleClientId = (import.meta.env.VITE_GOOGLE_CLIENT_ID as string) || "";
 
-  const onClose = () => {
-    setIsModalOpen(false);
+  const handleGoogleSuccess = async (credential: string) => {
+    try {
+      const response = await authApi.googleLogin(credential);
+
+      loginWithToken(response.jwt, response.user);
+
+      const from = new URLSearchParams(window.location.search).get("from") || "/";
+      void navigate(from, { replace: true });
+    } catch (error) {
+      console.error("Google authentication failed:", error);
+    }
   };
+
+  const handleGoogleError = () => {
+    console.error("Google authentication error");
+  };
+
   return (
     <div className={style.page}>
       <div className={style.loginCard}>
@@ -26,23 +42,15 @@ const LoginPage = () => {
         </p>
 
         <div className={style.googleButtonContainer}>
-          {/* TODO: implement google sso button */}
-          <div id="gsi-button"> </div>
-
-          {/* WARN: this is just a temp singin button */}
-          <Button
-            className={style.signInButton}
-            variant="secondary"
-            onClick={() => {
-              setIsModalOpen(true);
+          <GoogleButton
+            clientId={googleClientId}
+            onSuccess={(credential) => {
+              void handleGoogleSuccess(credential);
             }}
-          >
-            <FcGoogle className={style.iconGoogle} />
-            Sign In with Google
-          </Button>
+            onError={handleGoogleError}
+          />
         </div>
 
-        <SignInUserModal onClose={onClose} isOpen={isModalOpen} />
         <p className={style.textNotice}>Single Sign-On via Google Workspace for Education</p>
       </div>
     </div>

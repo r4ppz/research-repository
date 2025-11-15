@@ -1,0 +1,10 @@
+/* GoogleButton.module.css */
+.googleButton {
+  width: 100%;
+  font-weight: var(--font-weight-semibold);
+}
+
+.googleIcon {
+  width: var(--icon-size-xl);
+  height: var(--icon-size-xl);
+}

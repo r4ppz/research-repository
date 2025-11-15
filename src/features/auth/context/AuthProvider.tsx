@@ -1,28 +1,72 @@
-import { type ReactNode, useCallback, useState } from "react";
-import { type User } from "@/types";
-import { AuthContext } from "./AuthContext";
+import { ReactNode, useReducer } from "react";
+import { User } from "@/types";
+import { AuthAction, AuthContext, AuthContextValue, AuthState } from "./AuthContext";
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
-
-  const login = useCallback((newUser: User) => {
-    setUser(newUser);
-  }, []);
-  const logout = useCallback(() => {
-    setUser(null);
-  }, []);
-
-  const isAuthenticated = Boolean(user);
-
-  return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+const initialState: AuthState = {
+  user: null,
+  token: null,
+  isAuthenticated: false,
+  isLoading: false,
 };
 
-export default AuthProvider;
+function authReducer(state: AuthState, action: AuthAction): AuthState {
+  switch (action.type) {
+    case "LOGIN_START":
+      return { ...state, isLoading: true };
+
+    case "LOGIN_SUCCESS":
+      return {
+        ...state,
+        token: action.token,
+        user: action.user,
+        isAuthenticated: true,
+        isLoading: false,
+      };
+
+    case "LOGOUT":
+      return initialState;
+
+    case "SET_LOADING":
+      return { ...state, isLoading: action.loading };
+
+    default:
+      return state;
+  }
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [state, dispatch] = useReducer(authReducer, initialState);
+
+  const login = (user: User) => {
+    // Generate a temporary token for the session
+    const token = `temp_token_${String(Date.now())}`;
+    localStorage.setItem("token", token);
+    dispatch({ type: "LOGIN_SUCCESS", token, user });
+  };
+
+  const loginWithToken = (token: string, user: User) => {
+    localStorage.setItem("token", token);
+    dispatch({ type: "LOGIN_SUCCESS", token, user });
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    dispatch({ type: "LOGOUT" });
+  };
+
+  const setLoading = (loading: boolean) => {
+    dispatch({ type: "SET_LOADING", loading });
+  };
+
+  const value: AuthContextValue = {
+    state,
+    user: state.user,
+    isAuthenticated: state.isAuthenticated,
+    login,
+    loginWithToken,
+    logout,
+    setLoading,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}

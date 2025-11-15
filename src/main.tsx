@@ -4,7 +4,7 @@ import "@/styles/reset.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import AuthProvider from "@/features/auth/context/AuthProvider";
+import { AuthProvider } from "@/features/auth/context/AuthProvider";
 import App from "./App";
 
 const container = document.getElementById("root");

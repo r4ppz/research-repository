@@ -72,16 +72,6 @@
   margin: var(--space-md) 0;
 }
 
-.signInButton {
-  width: 100%;
-  font-weight: var(--font-weight-semibold);
-}
-
-.iconGoogle {
-  width: var(--icon-size-xl);
-  height: var(--icon-size-xl);
-}
-
 .textNotice {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-light);
