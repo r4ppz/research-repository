@@ -8,7 +8,7 @@ import GoogleButton from "../components/GoogleButton/GoogleButton";
 const LoginPage = () => {
   const navigate = useNavigate();
   const { loginWithToken } = useAuth();
-  const googleClientId = (import.meta.env.VITE_GOOGLE_CLIENT_ID as string) || "";
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 
   const handleGoogleSuccess = async (credential: string) => {
     try {
