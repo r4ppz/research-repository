@@ -6,44 +6,46 @@ import styles from "./GoogleButton.module.css";
 
 interface GoogleButtonProps {
   clientId: string;
-  onSuccess: (credential: string) => void;
+  onSuccess: (code: string) => void;
   onError?: () => void;
-}
-
-interface GoogleResponse {
-  credential?: string;
-  select_by?: string;
 }
 
 export default function GoogleButton({ clientId, onSuccess, onError }: GoogleButtonProps) {
   const [initialized, setInitialized] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleClient, setGoogleClient] = useState<google.accounts.oauth2.CodeClient | null>(null);
 
   useEffect(() => {
     loadGoogleScript()
       .then(() => {
-        window.google.accounts.id.initialize({
+        const client = google.accounts.oauth2.initCodeClient({
           client_id: clientId,
-          callback: (response: GoogleResponse) => {
-            const credential = response.credential;
-            if (!credential) {
-              if (onError) onError();
-              return;
+          scope: "openid email profile",
+          ux_mode: "popup",
+          callback: (response) => {
+            if (response.code) {
+              onSuccess(response.code);
+            } else {
+              onError?.();
             }
-            onSuccess(credential);
+            setLoading(false);
           },
         });
+
+        setGoogleClient(client);
         setInitialized(true);
       })
-      .catch(() => {
-        if (onError) onError();
-      });
+      .catch(() => onError?.());
   }, [clientId, onSuccess, onError]);
 
   const handleClick = () => {
-    if (!initialized) return;
+    if (!initialized || !googleClient) {
+      console.log("Google OAuth client not initialized");
+      return;
+    }
+
     setLoading(true);
-    window.google.accounts.id.prompt();
+    googleClient.requestCode();
   };
 
   return (
