@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import { safeToString } from "@/util/safeToString";
 import style from "./Table.module.css";
@@ -39,49 +39,69 @@ const Table = <T extends object>({
   onRowClick,
 }: TableProps<T>) => {
   const [internalPageSize, setInternalPageSize] = useState(10);
+
   const currentPageSize = pagination ? pagination.pageSize : internalPageSize;
+  const currentPage = pagination ? pagination.currentPage : 0;
+  const totalPages = pagination ? Math.ceil(pagination.totalElements / currentPageSize) : 1;
 
-  // Calculate pagination details if pagination is enabled
-  const { paginatedData, totalPages, currentPage } = useMemo(() => {
-    if (!pagination) {
-      return {
-        paginatedData: data,
-        totalPages: 1,
-        currentPage: 0,
-      };
-    }
+  const paginatedData = pagination
+    ? data.slice(currentPage * currentPageSize, currentPage * currentPageSize + currentPageSize)
+    : data;
 
-    const totalPages = Math.ceil(pagination.totalElements / currentPageSize);
-    const start = pagination.currentPage * currentPageSize;
-    const end = start + currentPageSize;
-    const paginatedData = data.slice(start, end);
+  // Local helper functions
+  const handleRowClick = (item: T, index: number) => {
+    onRowClick?.(item, index);
+  };
 
-    return {
-      paginatedData,
-      totalPages,
-      currentPage: pagination.currentPage,
-    };
-  }, [data, pagination, currentPageSize]);
+  const renderColumnValue = (column: TableColumn<T>, item: T) => {
+    return column.render ? column.render(item) : safeToString(item[column.key as keyof T]);
+  };
 
   const handlePageChange = (newPage: number) => {
     if (pagination) {
       pagination.onPageChange(newPage);
     } else {
-      // For internal pagination management
       setInternalPageSize(newPage);
     }
   };
 
   const handlePrevPage = () => {
-    if (currentPage > 0) {
-      handlePageChange(currentPage - 1);
-    }
+    if (currentPage > 0) handlePageChange(currentPage - 1);
   };
 
   const handleNextPage = () => {
-    if (currentPage < totalPages - 1) {
-      handlePageChange(currentPage + 1);
-    }
+    if (currentPage < totalPages - 1) handlePageChange(currentPage + 1);
+  };
+
+  // Precompute row handlers
+  const getMobileRowProps = (item: T, index: number) => {
+    return {
+      key: String(rowKey(item)),
+      className: clsx(style.mobileCard, rowClassName?.(item, index) || ""),
+      onClick: () => {
+        handleRowClick(item, index);
+      },
+    };
+  };
+
+  const getDesktopRowProps = (item: T, index: number) => {
+    return {
+      key: String(rowKey(item)),
+      className: clsx(style.row, rowClassName?.(item, index) || ""),
+      onClick: () => {
+        handleRowClick(item, index);
+      },
+    };
+  };
+
+  // Subcomponent for Mobile Row
+  const MobileRow = ({ column, item }: { column: TableColumn<T>; item: T }) => {
+    return (
+      <div key={String(column.key)} className={style.mobileRow}>
+        <span className={style.mobileLabel}>{column.title}:</span>
+        <span className={style.mobileValue}>{renderColumnValue(column, item)}</span>
+      </div>
+    );
   };
 
   if (data.length === 0) {
@@ -97,24 +117,11 @@ const Table = <T extends object>({
       {/* Mobile Card View */}
       <div className={style.mobileView}>
         {paginatedData.map((item, index) => {
-          const key = rowKey(item);
-          const itemRowClassName = rowClassName ? rowClassName(item, index) : "";
-
+          const rowProps = getMobileRowProps(item, index);
           return (
-            <div
-              key={String(key)}
-              className={clsx(style.mobileCard, itemRowClassName)}
-              onClick={() => onRowClick?.(item, index)}
-            >
+            <div {...rowProps}>
               {columns.map((column) => (
-                <div key={String(column.key)} className={style.mobileRow}>
-                  <span className={style.mobileLabel}>{column.title}:</span>
-                  <span className={style.mobileValue}>
-                    {column.render
-                      ? column.render(item)
-                      : safeToString(item[column.key as keyof T])}
-                  </span>
-                </div>
+                <MobileRow key={String(column.key)} column={column} item={item} />
               ))}
             </div>
           );
@@ -139,20 +146,15 @@ const Table = <T extends object>({
           </thead>
           <tbody>
             {paginatedData.map((item, index) => {
-              const key = rowKey(item);
-              const itemRowClassName = rowClassName ? rowClassName(item, index) : "";
-
+              const rowProps = getDesktopRowProps(item, index);
               return (
-                <tr
-                  key={String(key)}
-                  className={clsx(style.row, itemRowClassName)}
-                  onClick={() => onRowClick?.(item, index)}
-                >
+                <tr {...rowProps}>
                   {columns.map((column) => (
-                    <td key={`${String(key)}-${String(column.key)}`} className={style.cell}>
-                      {column.render
-                        ? column.render(item)
-                        : safeToString(item[column.key as keyof T])}
+                    <td
+                      key={`${String(rowKey(item))}-${String(column.key)}`}
+                      className={style.cell}
+                    >
+                      {renderColumnValue(column, item)}
                     </td>
                   ))}
                 </tr>
