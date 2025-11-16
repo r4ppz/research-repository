@@ -1,25 +1,25 @@
+import type { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import schoolLogo from "@/assets/school-logo.svg";
-import { useAuth } from "@/features/auth/context/useAuth";
-import { authApi } from "@/features/auth/services/authApi";
+import { AuthResponse } from "@/types";
 import style from "./LoginPage.module.css";
+import { loginWithGoogle } from "../api/google";
 import GoogleButton from "../components/GoogleButton/GoogleButton";
+import { useAuth } from "../context/useAuth";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { loginWithToken } = useAuth();
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 
-  const handleGoogleSuccess = async (credential: string) => {
+  const handleGoogleSuccess = async (code: string) => {
     try {
-      const response = await authApi.googleLogin(credential);
-
-      loginWithToken(response.jwt, response.user);
-
-      const from = new URLSearchParams(window.location.search).get("from") || "/";
-      void navigate(from, { replace: true });
-    } catch (error) {
-      console.error("Google authentication failed:", error);
+      const data: AuthResponse = await loginWithGoogle(code);
+      loginWithToken(data.jwt, data.user);
+      void navigate("/", { replace: true });
+    } catch (err) {
+      const axiosErr = err as AxiosError<{ error: string }>;
+      console.error("Login failed:", axiosErr.response?.data.error ?? axiosErr.message);
     }
   };
 
@@ -44,9 +44,7 @@ const LoginPage = () => {
         <div className={style.googleButtonContainer}>
           <GoogleButton
             clientId={googleClientId}
-            onSuccess={(credential) => {
-              void handleGoogleSuccess(credential);
-            }}
+            onSuccess={(credential) => void handleGoogleSuccess(credential)}
             onError={handleGoogleError}
           />
         </div>
