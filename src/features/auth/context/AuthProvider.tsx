@@ -37,16 +37,16 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const login = (user: User) => {
-    // Generate a temporary token for the session
-    const token = `temp_token_${String(Date.now())}`;
+  const loginWithToken = (token: string, user: User) => {
     localStorage.setItem("token", token);
     dispatch({ type: "LOGIN_SUCCESS", token, user });
   };
 
-  const loginWithToken = (token: string, user: User) => {
-    localStorage.setItem("token", token);
-    dispatch({ type: "LOGIN_SUCCESS", token, user });
+  // For development/testing purposes - generates a temporary token
+  const login = (user: User) => {
+    const tempToken = `temp_token_${Date.now().toString()}_${Math.random().toString()}`;
+    localStorage.setItem("token", tempToken);
+    dispatch({ type: "LOGIN_SUCCESS", token: tempToken, user });
   };
 
   const logout = () => {
@@ -62,8 +62,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     state,
     user: state.user,
     isAuthenticated: state.isAuthenticated,
-    login,
     loginWithToken,
+    login,
     logout,
     setLoading,
   };

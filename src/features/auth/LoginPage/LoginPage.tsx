@@ -1,59 +1,40 @@
-import { useNavigate } from "react-router-dom";
-import schoolLogo from "@/assets/school-logo.svg";
-import { useAuth } from "@/features/auth/context/useAuth";
-import { authApi } from "@/features/auth/services/authApi";
-import style from "./LoginPage.module.css";
-import GoogleButton from "../components/GoogleButton/GoogleButton";
+import { useState, useEffect } from "react";
+import { LoginPresenter } from "./LoginPresenter";
+import { useLoginLogic } from "../hooks/useLoginLogic";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
-  const { loginWithToken } = useAuth();
-  const googleClientId = (import.meta.env.VITE_GOOGLE_CLIENT_ID as string) || "";
+  const { handleGoogleLogin, error, loading } = useLoginLogic();
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 
-  const handleGoogleSuccess = async (credential: string) => {
-    try {
-      const response = await authApi.googleLogin(credential);
-
-      loginWithToken(response.jwt, response.user);
-
-      const from = new URLSearchParams(window.location.search).get("from") || "/";
-      void navigate(from, { replace: true });
-    } catch (error) {
-      console.error("Google authentication failed:", error);
+  useEffect(() => {
+    if (error) {
+      setShowErrorModal(true);
     }
+  }, [error]);
+
+  const handleGoogleSuccess = (code: string) => {
+    void handleGoogleLogin(code);
   };
 
   const handleGoogleError = () => {
     console.error("Google authentication error");
   };
 
+  const handleCloseModal = () => {
+    setShowErrorModal(false);
+  };
+
   return (
-    <div className={style.page}>
-      <div className={style.loginCard}>
-        <img alt="school-logo" className={style.schoolLogo} src={schoolLogo} />
-
-        <div className={style.headerContainer}>
-          <h1 className={style.headerSchool}>Assumption College of Davao</h1>
-          <h2 className={style.subHeaderTitle}>Research Repository Portal</h2>
-        </div>
-
-        <p className={style.textInstruction}>
-          Please sign in using your official Assumption College of Davao email address.
-        </p>
-
-        <div className={style.googleButtonContainer}>
-          <GoogleButton
-            clientId={googleClientId}
-            onSuccess={(credential) => {
-              void handleGoogleSuccess(credential);
-            }}
-            onError={handleGoogleError}
-          />
-        </div>
-
-        <p className={style.textNotice}>Single Sign-On via Google Workspace for Education</p>
-      </div>
-    </div>
+    <LoginPresenter
+      googleClientId={googleClientId}
+      onGoogleSuccess={handleGoogleSuccess}
+      onGoogleError={handleGoogleError}
+      error={error}
+      loading={loading}
+      showErrorModal={showErrorModal}
+      handleCloseModal={handleCloseModal}
+    />
   );
 };
 
