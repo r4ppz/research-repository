@@ -42,6 +42,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     dispatch({ type: "LOGIN_SUCCESS", token, user });
   };
 
+  // For development/testing purposes - generates a temporary token
+  const login = (user: User) => {
+    const tempToken = `temp_token_${Date.now().toString()}_${Math.random().toString()}`;
+    localStorage.setItem("token", tempToken);
+    dispatch({ type: "LOGIN_SUCCESS", token: tempToken, user });
+  };
+
   const logout = () => {
     localStorage.removeItem("token");
     dispatch({ type: "LOGOUT" });
@@ -56,6 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user: state.user,
     isAuthenticated: state.isAuthenticated,
     loginWithToken,
+    login,
     logout,
     setLoading,
   };

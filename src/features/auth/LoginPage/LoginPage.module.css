@@ -77,3 +77,25 @@
   font-weight: var(--font-weight-light);
   color: var(--color-text-muted);
 }
+
+.errorModal {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.descriptionContainer {
+  margin-top: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+}
+
+.modalDescription {
+  margin: 0 0 var(--space-xl) 0;
+  font-size: var(--font-size-md);
+}

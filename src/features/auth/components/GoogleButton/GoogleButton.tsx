@@ -7,7 +7,7 @@ import styles from "./GoogleButton.module.css";
 interface GoogleButtonProps {
   clientId: string;
   onSuccess: (code: string) => void;
-  onError?: () => void;
+  onError: () => void;
 }
 
 export default function GoogleButton({ clientId, onSuccess, onError }: GoogleButtonProps) {
@@ -26,7 +26,7 @@ export default function GoogleButton({ clientId, onSuccess, onError }: GoogleBut
             if (response.code) {
               onSuccess(response.code);
             } else {
-              onError?.();
+              onError();
             }
             setLoading(false);
           },
@@ -35,7 +35,9 @@ export default function GoogleButton({ clientId, onSuccess, onError }: GoogleBut
         setGoogleClient(client);
         setInitialized(true);
       })
-      .catch(() => onError?.());
+      .catch(() => {
+        onError();
+      });
   }, [clientId, onSuccess, onError]);
 
   const handleClick = () => {
@@ -43,7 +45,6 @@ export default function GoogleButton({ clientId, onSuccess, onError }: GoogleBut
       console.log("Google OAuth client not initialized");
       return;
     }
-
     setLoading(true);
     googleClient.requestCode();
   };
