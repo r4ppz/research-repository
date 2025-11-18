@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { Upload } from "lucide-react";
 import { type ChangeEvent } from "react";
 import type { CSSProperties } from "react";
@@ -39,7 +40,7 @@ const FileUpload = ({
   };
 
   return (
-    <div className={`${style.fileUploadContainer} ${className}`} style={customStyle}>
+    <div className={clsx(style.fileUploadContainer, className)} style={customStyle}>
       <label htmlFor={id} className={style.fileInputLabel}>
         <Upload className={style.iconUpload} />
         <span>{placeholder}</span>
