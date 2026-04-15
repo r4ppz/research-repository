@@ -1,0 +1,87 @@
+# =========================
+# Global / OS
+.DS_Store
+Thumbs.db
+
+# =========================
+# Environment / Secrets
+.env
+.env.*
+
+# =========================
+# Logs
+*.log
+logs/
+
+# =========================
+# Frontend (React / Node)
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.storybook-static/
+frontend/.venv/
+
+# optional misc
+frontend/guide/
+frontend/side/
+frontend/site/
+frontend/notes*
+
+# =========================
+# Backend (Spring Boot / Java)
+backend/target/
+backend/build/
+backend/out/
+
+# Maven / Gradle
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/.gradle/
+backend/gradletasknamecache
+
+# JAR artifacts
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# =========================
+# IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+
+.vscode/
+
+.classpath
+.project
+.settings/
+.apt_generated/
+.factorypath
+.springBeans
+.sts4-cache/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# =========================
+# Application Data
+backend/uploads/
+backend/data/
+backend/privileged-users.yaml
+
+# =========================
+# Docs
+docs/build/
+docs/node_modules/
+docs/guide/
+docs/side/
+docs/site/
+docs/.venv/
+docs/notes*
