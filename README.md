@@ -14,14 +14,20 @@ cd research-repository
 
 cd frontend
 pnpm install
-pnpm dev
+pnpm dev &
 
 cd ../backend
-docker compose up -d
+docker compose up -d &
 
 cd ../docs
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-mkdocs serve
+mkdocs serve &
 ```
+
+Then navigate to:
+
+Frontend: [http://localhost:5173](http://localhost:5173)
+Backend (Spring Boot): [http://localhost:8080](http://localhost:8080)
+Documentation (MDDocs): [http://localhost:8000](http://localhost:3000)
