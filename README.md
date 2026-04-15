@@ -4,6 +4,18 @@ This is a monorepo migrated from independent repos: [front](https://github.com/r
 [back](https://github.com/r4ppz/research-repository-backend), and [docs](https://github.com/r4ppz/research-repo-docs).
 It became difficult to manage three separate repositories at the same time, so this setup is used instead.
 
+## Requirements
+
+Before running this project, make sure the following tools are installed on your system:
+
+- Git
+- Node
+- Pnpm
+- Make
+- Java
+- Python
+- Docker
+
 ## Run the project:
 
 > Before running Copy `.env.example` to `.env` in each component (`backend/`, `frontend/`) and fill in the required values.
