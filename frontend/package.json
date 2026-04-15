@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview",
+    "preview": "pnpm run build && wrangler dev",
     "format": "prettier --write .",
     "lint": "eslint src --cache --cache-strategy content",
     "lint:fix": "eslint src --fix --cache --cache-strategy content",
@@ -19,7 +19,7 @@
     "type-check": "tsc --noEmit",
     "fix": "pnpm lint:fix && pnpm format && pnpm lint:css:fix",
     "check": "pnpm lint:css && pnpm type-check && pnpm lint",
-    "deploy": "gh-pages -d dist",
+    "deploy": "pnpm run build && wrangler deploy",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -57,6 +57,7 @@
     "react-router-dom": "^7.13.1"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.32.2",
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^12.0.6",
@@ -98,6 +99,7 @@
     "typescript-eslint": "^8.56.1",
     "vite": "^7.3.1",
     "vitest": "^4.0.18",
+    "wrangler": "^4.82.2",
     "zod-validation-error": "^4.0.2"
   }
 }
