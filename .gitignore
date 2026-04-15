@@ -24,6 +24,7 @@ frontend/.vite/
 frontend/.storybook-static/
 frontend/.venv/
 frontend/tsconfig.tsbuildinfo
+frontend/.wrangler
 
 # optional misc
 frontend/guide/
