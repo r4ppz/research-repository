@@ -88,3 +88,7 @@ docs/side/
 docs/site/
 docs/.venv/
 docs/notes*
+
+
+# Application
+uploads

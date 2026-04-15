@@ -16,7 +16,7 @@ Before running this project, make sure the following tools are installed on your
 - Python
 - Docker
 
-## Run the project:
+## Run the project locally:
 
 > Before running Copy `.env.example` to `.env` in each component (`backend/`, `frontend/`) and fill in the required values.
 
