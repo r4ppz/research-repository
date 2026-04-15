@@ -12,22 +12,16 @@ It became difficult to manage three separate repositories at the same time, so t
 git clone https://github.com/r4ppz/research-repository.git
 cd research-repository
 
-cd frontend
-pnpm install
-pnpm dev &
+# Install local deps
+make install-frontend
+make install-docs
 
-cd ../backend
-docker compose up -d &
-
-cd ../docs
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-mkdocs serve &
+# Run the application
+make dev
 ```
 
 Then navigate to:
 
-Frontend: [http://localhost:5173](http://localhost:5173)
-Backend (Spring Boot): [http://localhost:8080](http://localhost:8080)
-Documentation (MDDocs): [http://localhost:8000](http://localhost:3000)
+- Frontend (React): [http://localhost:5173](http://localhost:5173)
+- Documentation (MDDocs): [http://localhost:8000](http://localhost:8000)
+- Backend (Spring Boot): [http://localhost:8080](http://localhost:8080)
