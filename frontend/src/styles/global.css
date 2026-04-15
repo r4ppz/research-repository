@@ -1,0 +1,68 @@
+:root {
+  /* scrollbar-gutter: stable both-edges; */
+
+  /* scrollbar-gutter: stable; */
+  scrollbar-gutter: auto;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100%;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  text-rendering: optimizelegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+p {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+}
+
+ul,
+ol {
+  padding-left: var(--space-lg);
+}
+
+li {
+  line-height: var(--line-height-normal);
+}
+
+.scrollable {
+  scrollbar-gutter: stable;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--color-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+hr {
+  height: 1px;
+  background-color: var(--color-border-default);
+  border: none;
+}

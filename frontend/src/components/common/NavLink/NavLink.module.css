@@ -1,0 +1,39 @@
+.navlink {
+  display: inline-block;
+  width: fit-content;
+  padding: 2px;
+  font-family: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-inverted);
+}
+
+@media (width >= 768px) {
+  .navlink {
+    box-shadow: var(--shadow-resting);
+    transition: var(--transition-elevation);
+  }
+
+  .navlink:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+  }
+
+  .active {
+    box-shadow: var(--shadow-active);
+    transform: translateY(var(--translate-active)) scale(var(--scale-active));
+  }
+}
+
+.navlink:focus-visible {
+  border-radius: var(--radius-md);
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 1px;
+}
+
+.navlink:hover {
+  border-bottom: 1px solid var(--color-surface);
+}
+
+.active {
+  border-bottom: 1px solid var(--color-surface);
+}

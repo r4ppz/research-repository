@@ -1,0 +1,14 @@
+.actionButtonContainer {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.actionButton {
+  max-width: 50px;
+  font-size: var(--font-size-sm);
+}
+
+.actionIcon {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}

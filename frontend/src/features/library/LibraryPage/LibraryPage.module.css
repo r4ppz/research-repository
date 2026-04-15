@@ -1,0 +1,130 @@
+.loadingContainer,
+.emptyState {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  grid-column: 1 / -1;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 70vh;
+  margin-top: var(--space-7xl);
+}
+
+.page {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+  min-height: 100dvh;
+
+  /* I need this for the useScrollToTop hook works. idk why */
+  overflow-y: auto;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  max-width: var(--container-max-width);
+  padding: var(--space-xl) var(--space-xl);
+  margin: 0 auto;
+}
+
+@media (width >= 768px) {
+  .mainContainer {
+    padding: var(--space-2xl) var(--space-7xl);
+  }
+}
+
+.heroHeader {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.mobileHeroText {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+}
+
+@media (width >= 768px) {
+  .mobileHeroText {
+    display: none;
+  }
+}
+
+.desktopHeroText {
+  display: none;
+}
+
+@media (width >= 768px) {
+  .desktopHeroText {
+    display: block;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+.searchSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+@media (width >= 768px) {
+  .searchSection {
+    flex-direction: row;
+  }
+}
+
+.researchSection {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--space-lg);
+}
+
+@media (width >= 768px) {
+  .researchSection {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 1024px) {
+  .researchSection {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.paginationSection {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-md);
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-xl);
+}
+
+.pagingButton {
+  width: fit-content;
+  padding: var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+
+.pagingIndicator {
+  flex: none;
+  width: auto;
+  font-size: var(--font-size-md);
+}
+
+.iconChevron {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+}
