@@ -33,10 +33,22 @@ make install-docs
 make dev
 ```
 
-Then navigate to:
+You can access each services:
 
 - Frontend (React): [http://localhost:5173](http://localhost:5173)
 - Documentation (MDDocs): [http://localhost:8000](http://localhost:8000)
 - Backend (Spring Boot): [http://localhost:8080](http://localhost:8080)
 
+## Demo
+
+- [https://research-repository.r4ppz.dev/](https://research-repository.r4ppz.dev/)
+
+> There is no server yet so it will not work :(
+
+Read our docs for more info (kinda outdated)
+
+- [https://research-repo.docs.r4ppz.dev/](https://research-repo.docs.r4ppz.dev/)
+
 _still migrating..._
+
+_This project is still in alpha._
