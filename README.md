@@ -68,10 +68,8 @@ docker-compose down
 
 > There is no server yet so it will not work :(
 
-Read our docs for more info (kinda outdated)
+Read our docs for more info (_outdated_)
 
 - [https://research-repo.docs.r4ppz.dev/](https://research-repo.docs.r4ppz.dev/)
-
-_still migrating..._
 
 _This project is still in alpha._
