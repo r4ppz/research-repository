@@ -80,7 +80,7 @@ docker compose restart backend
 | **Stop**       | `docker compose stop`    | Halts the app but keeps your data/uploads safe.             |
 | **Resume**     | `docker compose start`   | Quickly wakes the app back up.                              |
 | **Shutdown**   | `docker compose down`    | Fully stops and removes the temporary containers.           |
-| **Full Reset** | `docker compose down -v` | Deletes all uploaded papers and drop database. (clean data) |
+| **Full Reset** | `docker compose down -v` | Deletes all uploaded papers (including MinIO objects), volumes, and drops the database. (clean data) |
 
 ### 7. Updating to the Latest Version
 
@@ -110,7 +110,8 @@ For more info on Docker, visit: [Docker Documentation](https://docs.docker.com/)
         - frontend: NGINX serving the frontend SPA
         - backend: Spring Boot API (business logic)
         - postgres: database storage
-    - On first start, the backend creates an uploads/ folder. Uploaded PDF/DOCX files are saved there on disk. The database stores only the file path (not the binary).
+        - minio: S3-compatible object storage (for file uploads when APP_STORAGE_PROVIDER=minio)
+    - On first start, the backend creates an uploads/ folder (local provider) or initialises the MinIO bucket (MinIO provider). Uploaded PDF/DOCX files are saved to the configured storage backend. The database stores only the file path (not the binary).
     - Docker compose does not pull the entire codebase. It retrieves and builds container images from a registry. Images contain the packaged/compiled application (e.g., binaries and dependencies), not the raw source code.
     - For source code access, refer to the [research-repository](https://github.com/r4ppz/research-repository).
 <!-- prettier-ignore-end -->

@@ -66,5 +66,15 @@ app:
   privileged-users-yaml-path: /app/config/privileged-users.yaml
 
   storage:
-    # Path to where the binary files will be saved
-    upload-dir: ./uploads
+    # Storage provider: local or minio
+    provider: ${APP_STORAGE_PROVIDER:local}
+    # Path to where the binary files will be saved (used when provider=local)
+    upload-dir: ${APP_STORAGE_UPLOAD_DIR:./uploads}
+
+  minio:
+    # MinIO connection (used when provider=minio)
+    endpoint: ${APP_MINIO_ENDPOINT:http://minio:9000}
+    access-key: ${APP_MINIO_ACCESS_KEY:minioadmin}
+    secret-key: ${APP_MINIO_SECRET_KEY:minioadmin}
+    bucket: ${APP_MINIO_BUCKET:research-papers}
+    secure: ${APP_MINIO_SECURE:false}

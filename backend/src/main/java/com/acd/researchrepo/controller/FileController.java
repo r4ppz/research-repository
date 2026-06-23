@@ -1,14 +1,9 @@
 package com.acd.researchrepo.controller;
 
-import com.acd.researchrepo.exception.ApiException;
-import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.service.ResearchPaperService;
 import io.swagger.v3.oas.annotations.Operation;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,29 +31,23 @@ public class FileController {
       @RequestParam(defaultValue = "false") boolean view,
       @AuthenticationPrincipal CustomUserPrincipal userPrincipal) {
 
-    Path filePath = researchPaperService.downloadPaper(paperId, userPrincipal);
+    String filename = researchPaperService.getPaperFileName(paperId, userPrincipal);
+    Resource resource = researchPaperService.downloadPaper(paperId, userPrincipal);
 
-    try {
-      Resource resource = new UrlResource(filePath.toUri());
-      String contentType = determineContentType(filePath);
-      String disposition = view ? "inline" : "attachment";
-      String filename = filePath.getFileName().toString();
+    String contentType = determineContentType(filename);
+    String disposition = view ? "inline" : "attachment";
 
-      return ResponseEntity.ok()
-          .contentType(MediaType.parseMediaType(contentType))
-          .header(HttpHeaders.CONTENT_DISPOSITION, disposition + "; filename=\"" + filename + "\"")
-          .body(resource);
-
-    } catch (MalformedURLException e) {
-      throw new ApiException(ErrorCode.FILE_STORAGE_ERROR, "Could not read file");
-    }
+    return ResponseEntity.ok()
+        .contentType(MediaType.parseMediaType(contentType))
+        .header(HttpHeaders.CONTENT_DISPOSITION, disposition + "; filename=\"" + filename + "\"")
+        .body(resource);
   }
 
-  private String determineContentType(Path path) {
-    String filename = path.getFileName().toString().toLowerCase();
-    if (filename.endsWith(".pdf")) {
+  private String determineContentType(String filename) {
+    String lower = filename.toLowerCase();
+    if (lower.endsWith(".pdf")) {
       return "application/pdf";
-    } else if (filename.endsWith(".docx")) {
+    } else if (lower.endsWith(".docx")) {
       return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     }
     return "application/octet-stream";

@@ -21,6 +21,7 @@ public class AppProperties {
   @Valid @NotNull private final Token token;
   @Valid @NotNull private final Cors cors;
   @Valid @NotNull private final Storage storage;
+  @Valid @NotNull private final Minio minio;
   @NotBlank private final String privilegedUsersYamlPath;
 
   @Getter
@@ -65,7 +66,29 @@ public class AppProperties {
   @Getter
   @RequiredArgsConstructor
   public static class Storage {
+    @NotBlank(message = "APP_STORAGE_PROVIDER must be set.")
+    private final String provider;
+
     @NotBlank(message = "APP_STORAGE_UPLOAD_DIR must be set.")
     private final String uploadDir;
+  }
+
+  @Getter
+  @RequiredArgsConstructor
+  public static class Minio {
+    @NotBlank(message = "APP_MINIO_ENDPOINT must be set.")
+    private final String endpoint;
+
+    @NotBlank(message = "APP_MINIO_ACCESS_KEY must be set.")
+    private final String accessKey;
+
+    @NotBlank(message = "APP_MINIO_SECRET_KEY must be set.")
+    private final String secretKey;
+
+    @NotBlank(message = "APP_MINIO_BUCKET must be set.")
+    private final String bucket;
+
+    @NotNull(message = "APP_MINIO_SECURE must be set.")
+    private final boolean secure;
   }
 }

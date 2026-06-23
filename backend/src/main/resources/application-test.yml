@@ -36,3 +36,14 @@ app:
 
   # Path for the privileged users file during tests
   privileged-users-config-path: "src/main/resources/privileged-users.yaml"
+
+  storage:
+    provider: local
+    upload-dir: "build/tmp/uploads"
+
+  minio:
+    endpoint: "http://localhost:9000"
+    access-key: "test-access-key"
+    secret-key: "test-secret-key"
+    bucket: "test-bucket"
+    secure: false

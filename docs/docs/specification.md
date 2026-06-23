@@ -71,9 +71,36 @@ requirements, see the full [API Contract](./api_contract.md).
 
 ## File Storage Handling
 
-PDF files are stored directly on the server's local filesystem using Docker bind. A host directory is mounted to the container to persist files across container restarts. Files are tied to the physical server; proper backup strategy is essential for disaster recovery (dont have a plan yet).
+File storage uses a pluggable provider abstraction (`FileStorageProvider`), currently supporting two backends:
 
-The `file_path` column stores only the relative file path rather than full API paths. The database does **not** store file binary but just the path. The complete URL is constructed dynamically in the DTO/Mapper layer.
+| Provider | Description | Best For |
+|----------|-------------|----------|
+| `local` | Local filesystem storage (Docker bind mount) | Development, testing |
+| `minio` | S3-compatible object storage via MinIO, self-hosted in Docker | Production |
+
+The provider is selected at runtime via the `APP_STORAGE_PROVIDER` environment variable (`local` or `minio`). This allows switching between storage backends without code changes.
+
+### Local Provider (default)
+
+Files are stored on the server's local filesystem using Docker bind mounts. A host directory is mounted to the container to persist files across restarts. Files are tied to the physical server; proper backup strategy is essential for disaster recovery.
+
+### MinIO Provider
+
+When `APP_STORAGE_PROVIDER=minio`, files are stored in a MinIO (S3-compatible) object storage bucket. The backend proxies all upload/download/delete operations through the MinIO client. Benefits include:
+
+- **Decoupled from physical server** — files are not tied to a specific host's filesystem
+- **Scalability** — MinIO supports distributed mode, S3 API compatibility, and can be backed by external S3 services
+- **Backup** — MinIO supports bucket replication, versioning, and lifecycle policies (addresses the prior "no plan yet" gap)
+- **Security** — access control is still enforced by the backend; clients never interact with MinIO directly
+
+### Shared Characteristics
+
+Regardless of provider, the following apply:
+
+- The `file_path` column in `research_papers` stores only the relative object/key path (e.g., `2025/dept_computer_science/paper_123.pdf`).
+- The database does **not** store file binaries — only the path.
+- File upload/download is always proxied through the backend API to enforce access control.
+- Only PDF and DOCX files are accepted (max 20MB).
 
 ---
 

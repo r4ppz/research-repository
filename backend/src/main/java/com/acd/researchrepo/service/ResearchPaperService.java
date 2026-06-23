@@ -18,11 +18,11 @@ import com.acd.researchrepo.repository.ResearchPaperRepository;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.spec.ResearchPaperSpec;
 import com.acd.researchrepo.util.RoleBasedAccess;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -213,7 +213,19 @@ public class ResearchPaperService {
     researchPaperRepository.save(paper);
   }
 
-  public Path downloadPaper(Integer paperId, CustomUserPrincipal principal) {
+  public String getPaperFileName(Integer paperId, CustomUserPrincipal principal) {
+    ResearchPaper paper =
+        researchPaperRepository
+            .findById(paperId)
+            .orElseThrow(() -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Paper not found"));
+
+    validateDownloadAccess(paper, principal);
+
+    String filePath = paper.getFilePath();
+    return filePath.substring(filePath.lastIndexOf('/') + 1);
+  }
+
+  public Resource downloadPaper(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper =
         researchPaperRepository
             .findById(paperId)
