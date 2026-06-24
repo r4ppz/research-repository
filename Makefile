@@ -1,11 +1,9 @@
 ENV ?= dev
 
-COMPOSE_FILE := backend/docker-compose.yml
-ENV_FILE := backend/.env.$(ENV)
-ifneq ($(wildcard $(ENV_FILE)),)
-  COMPOSE := docker compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE)
+ifeq ($(ENV),prod)
+  COMPOSE := docker compose -f docker-compose.yml
 else
-  COMPOSE := docker compose -f $(COMPOSE_FILE)
+  COMPOSE := docker compose -f backend/docker-compose.yml
 endif
 
 .DEFAULT_GOAL := help
@@ -78,8 +76,9 @@ help:
 	@echo "  doc-build           Build static site (auto-installs deps)"
 	@echo ""
 	@echo "Configuration:"
-	@echo '  ENV=<dev|prod>      Select env file (default: dev)'
-	@echo '                      Uses backend/.env.$${ENV}, falls back to backend/.env'
+	@echo '  ENV=<dev|prod>      Select environment (default: dev)'
+	@echo '                      dev:  backend/docker-compose.yml  ←  backend/.env'
+	@echo '                      prod: docker-compose.yml          ←  .env (root)'
 	@echo ""
 	@echo "Examples:"
 	@echo "  make up"

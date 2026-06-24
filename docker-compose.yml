@@ -1,0 +1,100 @@
+services:
+  database:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${APP_MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${APP_MINIO_SECRET_KEY:-minioadmin}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  backend:
+    build: ./backend
+    image: research-repo-backend:prod
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+
+      SPRING_SECURITY_USER_NAME: ${SPRING_SECURITY_USER_NAME}
+      SPRING_SECURITY_USER_PASSWORD: ${SPRING_SECURITY_USER_PASSWORD}
+
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+
+      APP_GOOGLE_CLIENT_ID: ${APP_GOOGLE_CLIENT_ID}
+      APP_GOOGLE_CLIENT_SECRET: ${APP_GOOGLE_CLIENT_SECRET}
+
+      APP_JWT_SECRET: ${APP_JWT_SECRET}
+      APP_JWT_ACCESS_TOKEN_EXPIRY: ${APP_JWT_ACCESS_TOKEN_EXPIRY}
+
+      APP_REFRESH_TOKEN_COOKIE_NAME: ${APP_REFRESH_TOKEN_COOKIE_NAME}
+      APP_REFRESH_TOKEN_MAX_AGE: ${APP_REFRESH_TOKEN_MAX_AGE}
+
+      APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS}
+      APP_CORS_ALLOWED_METHODS: ${APP_CORS_ALLOWED_METHODS}
+      APP_CORS_ALLOWED_HEADERS: ${APP_CORS_ALLOWED_HEADERS}
+      APP_CORS_ALLOW_CREDENTIALS: ${APP_CORS_ALLOW_CREDENTIALS}
+
+      APP_STORAGE_PROVIDER: ${APP_STORAGE_PROVIDER:-local}
+      APP_MINIO_ENDPOINT: ${APP_MINIO_ENDPOINT:-http://minio:9000}
+      APP_MINIO_ACCESS_KEY: ${APP_MINIO_ACCESS_KEY:-minioadmin}
+      APP_MINIO_SECRET_KEY: ${APP_MINIO_SECRET_KEY:-minioadmin}
+      APP_MINIO_BUCKET: ${APP_MINIO_BUCKET:-research-papers}
+      APP_MINIO_SECURE: ${APP_MINIO_SECURE:-false}
+
+    ports:
+      - "8080:8080"
+
+    volumes:
+      - ${PRIVILEGED_USERS_CONFIG_HOST_PATH}:/app/config/privileged-users.yaml
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID}
+        VITE_BACKEND_API_BASE_URL: ${VITE_BACKEND_API_BASE_URL}
+    image: research-repo-frontend:prod
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  pgdata:
+  minio_data:

@@ -7,6 +7,7 @@ Thumbs.db
 # Environment / Secrets
 .env
 .env.*
+!/.env.example
 !backend/.env.example
 !frontend/.env.example
 

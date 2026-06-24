@@ -49,12 +49,21 @@ make rebuild    # Rebuild Docker image and restart
 
 ### Environment files
 
-Create `backend/.env.dev` and/or `backend/.env.prod` (copy from `backend/.env.example`) and set the environment:
+Each compose file loads `.env` from its own directory automatically:
+
+| File            | Used by             | Purpose                     |
+| --------------- | ------------------- | --------------------------- |
+| `backend/.env`  | `make up` (default) | Backend + database + MinIO  |
+| `.env` (root)   | `make up ENV=prod`  | Full stack (all 4 services) |
+| `frontend/.env` | `make front-dev`    | Vite dev server             |
 
 ```bash
-make up               # Uses backend/.env.dev (or backend/.env)
-make up ENV=prod      # Uses backend/.env.prod
+cp backend/.env.example backend/.env     # Dev environment
+cp .env.example .env                      # Prod environment (root)
+cp frontend/.env.example frontend/.env    # Frontend
 ```
+
+> `.env` files contain secrets and are gitignored. Only `.env.example` templates are tracked.
 
 ### Available targets
 
