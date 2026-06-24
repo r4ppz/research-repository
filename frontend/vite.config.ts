@@ -5,11 +5,14 @@ import { defineConfig } from "vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 
 export default defineConfig({
-  plugins: [react({
-    babel: {
-      plugins: ["babel-plugin-react-compiler"],
-    },
-  }), cloudflare()],
+  plugins: [
+    react({
+      babel: {
+        plugins: ["babel-plugin-react-compiler"],
+      },
+    }),
+    cloudflare(),
+  ],
   preview: {
     allowedHosts: true, // for testing
   },
