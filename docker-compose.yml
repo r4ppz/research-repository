@@ -1,7 +1,7 @@
 services:
   database:
     image: postgres:16
-    restart: unless-stopped
+    restart: no
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -20,7 +20,7 @@ services:
   minio:
     image: minio/minio:latest
     command: server /data --console-address ":9001"
-    restart: unless-stopped
+    restart: no
     environment:
       MINIO_ROOT_USER: ${APP_MINIO_ACCESS_KEY:-minioadmin}
       MINIO_ROOT_PASSWORD: ${APP_MINIO_SECRET_KEY:-minioadmin}
@@ -39,7 +39,7 @@ services:
   backend:
     build: ./backend
     image: research-repo-backend:prod
-    restart: unless-stopped
+    restart: no
     depends_on:
       database:
         condition: service_healthy
@@ -89,7 +89,7 @@ services:
         VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID}
         VITE_BACKEND_API_BASE_URL: ${VITE_BACKEND_API_BASE_URL}
     image: research-repo-frontend:prod
-    restart: unless-stopped
+    restart: no
     depends_on:
       - backend
     ports:

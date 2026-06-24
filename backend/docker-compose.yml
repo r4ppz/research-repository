@@ -22,7 +22,7 @@ services:
     image: minio/minio:latest
     container_name: minio
     command: server /data --console-address ":9001"
-    restart: unless-stopped
+    restart: no
     environment:
       MINIO_ROOT_USER: ${APP_MINIO_ACCESS_KEY:-minioadmin}
       MINIO_ROOT_PASSWORD: ${APP_MINIO_SECRET_KEY:-minioadmin}
