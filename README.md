@@ -1,10 +1,5 @@
 # Research Repository System
 
-> This is a monorepo migrated from independent repos: [front](https://github.com/r4ppz/research-repository-frontend),
-> [back](https://github.com/r4ppz/research-repository-backend), and [docs](https://github.com/r4ppz/research-repo-docs).
-
-> It became difficult to manage three separate repositories at the same time, so this setup is used instead.
-
 ## Requirements (local development)
 
 - Git
@@ -13,7 +8,7 @@
 - Docker and Docker Compose — used to run the backend service and a local PostgreSQL instance.
 - Python 3.8+ — used for the docs site (mkdocs).
 
-## Run the project locally:
+## Run the project locally
 
 > Before running, copy `.env.example` to `.env` in each component (`backend/`, `frontend/`) and fill in the required values.
 
@@ -22,51 +17,58 @@ git clone https://github.com/r4ppz/research-repository.git
 cd research-repository
 ```
 
-To run the application, you will need to open separate terminal windows for each service:
-
-**1. Backend**
+All commands are run from the project root via `make`:
 
 ```bash
-cd backend
-docker-compose up -d
+make up               # Start backend services (PostgreSQL, MinIO, app)
+make front-dev        # Start frontend dev server
+make doc-serve        # Start documentation server
 ```
 
-**2. Frontend**
+Open separate terminals for each — `make up` runs in the background, `make front-dev` and `make doc-serve` run in the foreground.
+
+| Service                | URL                                            |
+| ---------------------- | ---------------------------------------------- |
+| Frontend (Vite)        | [http://localhost:5173](http://localhost:5173) |
+| Backend (Spring Boot)  | [http://localhost:8080](http://localhost:8080) |
+| Documentation (MkDocs) | [http://localhost:8000](http://localhost:8000) |
+
+### First-time setup
 
 ```bash
-cd frontend
-pnpm install
-pnpm dev
+make front-install    # Install frontend dependencies
+make doc-install      # Set up MkDocs virtualenv
 ```
 
-**3. Documentation**
+### Managing services
 
 ```bash
-cd docs
-python -m venv .venv
-source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
-pip install -r requirements.txt
-mkdocs serve
+make down       # Stop backend services
+make restart    # Restart backend services
+make reset      # Stop backend services and wipe database/storage volumes
+make rebuild    # Rebuild Docker image and restart
 ```
 
-You can access each service at:
+### Environment files
 
-- Frontend (React): [http://localhost:5173](http://localhost:5173)
-- Documentation (MkDocs): [http://localhost:8000](http://localhost:8000)
-- Backend (Spring Boot): [http://localhost:8080](http://localhost:8080)
-
-To stop the backend services:
+Create `backend/.env.dev` and/or `backend/.env.prod` (copy from `backend/.env.example`) and set the environment:
 
 ```bash
-cd backend
-docker-compose down
+make up               # Uses backend/.env.dev (or backend/.env)
+make up ENV=prod      # Uses backend/.env.prod
+```
+
+### Available targets
+
+```text
+make help  # List all available targets
 ```
 
 ## Demo
 
 - [https://research-repository.r4ppz.dev/](https://research-repository.r4ppz.dev/)
 
-> There is no server yet so it will not work :(
+> There is no backend server yet so it will not work :(
 
 Read our docs for more info (_outdated_)
 
