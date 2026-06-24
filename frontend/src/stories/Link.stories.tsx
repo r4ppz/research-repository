@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Link } from "./Link";
+import { Link } from "@/components/common/Link/Link";
 
 const meta = {
   component: Link,

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect } from "react";
-import { ErrorBoundary } from "./ErrorBoundary";
+import { ErrorBoundary } from "@/components/layout/ErrorBoundary/ErrorBoundary";
 import { ApiError } from "@/types";
 
 const meta: Meta<typeof ErrorBoundary> = {
@@ -14,7 +14,6 @@ export default meta;
 
 type Story = StoryObj<typeof ErrorBoundary>;
 
-// Example component that can throw an error
 function BuggyComponent() {
   useEffect(() => {
     throw new ApiError("INTERNAL_ERROR", "An unexpected error occurred", undefined);

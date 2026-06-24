@@ -33,6 +33,7 @@ frontend/side/
 frontend/site/
 frontend/notes*
 frontend/.stylelintcache
+frontend/.eslintcache
 
 # =========================
 # Backend (Spring Boot / Java)

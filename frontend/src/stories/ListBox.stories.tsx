@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import type { Selection } from "react-aria-components";
 
-import { ListBox, ListBoxItem } from "./ListBox";
+import { ListBox, ListBoxItem } from "@/components/common/ListBox/ListBox";
 
 const meta = {
   component: ListBox,

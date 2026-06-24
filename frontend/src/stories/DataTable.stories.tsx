@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
-import { DataTable } from "./DataTable";
+import { DataTable } from "@/components/common/DataTable/DataTable";
 
 const meta = {
   component: DataTable,

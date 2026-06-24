@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
-import { ProfileButton } from "./ProfileButton";
+import { ProfileButton } from "@/components/common/ProfileButton/ProfileButton";
 import { User } from "@/types";
 
 const meta = {

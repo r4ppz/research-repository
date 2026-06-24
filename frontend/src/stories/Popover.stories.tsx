@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DialogTrigger } from "react-aria-components";
-import { Button } from "../Button/Button";
-import { Heading, Text } from "../Content/Content";
-import { Popover } from "./Popover";
+import { Button } from "@/components/common/Button/Button";
+import { Heading, Text } from "@/components/common/Content/Content";
+import { Popover } from "@/components/common/Popover/Popover";
 
 const meta = {
   component: Popover,

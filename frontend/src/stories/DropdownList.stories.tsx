@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { DropdownItem, DropdownListBox } from "./DropdownList";
+import { DropdownItem, DropdownListBox } from "@/components/common/DropdownList/DropdownList";
 
 const meta = {
   component: DropdownListBox,
