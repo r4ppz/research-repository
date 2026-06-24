@@ -71,15 +71,23 @@ frontend/
 
 ### Styling
 
-- Use CSS Modules for all component styles — never inline styles.
-- Compose classes with `clsx` utility.
+- Use only CSS custom properties from `variables.css`.
 - Follow existing patterns in `src/components/*/`.
+- Accept and forward external `className` props for overrides.
+- Use only semantic tokens from `variables.css`; no hardcoded values.
+- Nesting in CSS Modules must mirror the component or document hierarchy (parent element nests children).
+- Never use inline styles (except storybooks) or global element selectors.
+- Style exclusively via CSS Modules, imported as `styles` and composed with `clsx`.
 
 ### Components
 
-- Wrap Radix UI / react-aria-components primitives in local components under `src/components/common/`.
+- react-aria-components primitives in local components under `src/components/common/`.
 - Export component props as a named interface extending the underlying library's type.
 - Accept and forward `className` prop for external overrides.
+- Always scan and use existing components from `components/` first.
+- Co-locate in `src/components/{category}/{ComponentName}/` — component, CSS module.
+- Wrapping Aria components pattern: extend Aria props interface, add local variants/props, use explicit interface.
+- Extract component props into a named interface extending the Aria type when adding local variants/props — keeps function signatures terse and consistent.
 
 ### Features
 
@@ -88,9 +96,9 @@ frontend/
 
 ### General
 
+- Idiomatic, modular code is the top priority in this project, not a collection of hacks and workarounds.
 - Named exports only — no default exports (not applicable to Next.js special files; this is a Vite SPA).
 - PascalCase for components and types; camelCase for variables, functions, and file names.
 - `@/` alias maps to `src/` — use `@/components/...` instead of relative imports.
 - React Compiler is enabled via Babel plugin — ensure new components are compatible.
 - No comments unless explaining a non-obvious decision.
-- Husky pre-commit runs lint-staged (Prettier + ESLint on staged files).
