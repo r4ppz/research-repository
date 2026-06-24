@@ -6,7 +6,7 @@ A full-stack monorepo for managing academic research papers. Built with Java 21 
 
 - [https://research-repository.r4ppz.dev/](https://research-repository.r4ppz.dev/)
 
-> There is no backend server yet so it will not work :(
+> There is no backend server yet :(
 
 Read our docs for more info (_outdated_)
 

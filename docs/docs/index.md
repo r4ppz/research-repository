@@ -4,7 +4,7 @@ This is the documentation site for the school project **Research Repository Syst
 
 The **Research Repository** is a gated academic research portal where students can browse paper metadata, request access to full documents, and administrators review, manage papers and student requests.
 
-- [Frontend](https://github.com/r4ppz/research-repository-frontend), [backend](https://github.com/r4ppz/research-repository-backend) and [documentation](https://github.com/r4ppz/research-repo-docs) are all open source — [contributions](./contribute.md) are welcome.
+The whole project is a [monorepo](https://github.com/r4ppz/research-repository) — [contributions](./contribute.md) are welcome.
 
 <!-- prettier-ignore-start -->
 !!! question "Available for testing!"
@@ -29,11 +29,11 @@ The **Research Repository** is a gated academic research portal where students c
 
 ## Tech Stack
 
-### [Backend](https://github.com/r4ppz/research-repository-backend)
+### Backend
 
 RESTful API with Java 21 and Spring Boot.
 
-> Dependencies and exact versions are defined in [pom.xml](https://github.com/r4ppz/research-repository-backend/blob/main/pom.xml).
+> Dependencies and exact versions are defined in [`backend/pom.xml`](https://github.com/r4ppz/research-repository/blob/main/backend/pom.xml).
 
 - Framework: Spring Boot 3
 - Build: Maven
@@ -42,11 +42,11 @@ RESTful API with Java 21 and Spring Boot.
 - Utilities: Lombok, Bean Validation
 - Infrastructure: Docker
 
-### [Frontend](https://github.com/r4ppz/research-repository-frontend)
+### Frontend
 
 SPA with React and TypeScript.
 
-> Dependencies and exact versions are defined in [package.json](https://github.com/r4ppz/research-repository-frontend/blob/main/package.json).
+> Dependencies and exact versions are defined in [`frontend/package.json`](https://github.com/r4ppz/research-repository/blob/main/frontend/package.json).
 
 - Framework: React 19 (with compiler)
 - Build: Vite
@@ -56,21 +56,21 @@ SPA with React and TypeScript.
 - Routing: React Router DOM
 - Styling: CSS Modules
 - Tooling: ESLint, Stylelint, Prettier
-- Deployment: Github Pages via GitHub Actions
+- Deployment: Cloudflare Pages via Wrangler
 
-### [Documentation](https://github.com/r4ppz/research-repo-docs)
+### Documentation
 
-> Dependencies and exact versions are defined in [requirements.txt](https://github.com/r4ppz/research-repo-docs/blob/main/requirements.txt).
+> Dependencies and exact versions are defined in [`docs/requirements.txt`](https://github.com/r4ppz/research-repository/blob/main/docs/requirements.txt).
 
 - Site Generator: MkDocs
 - Format: Markdown
-- Deployment: Github Pages via GitHub Actions
+- Deployment: Cloudflare Pages via Wrangler
 
 ---
 
 ## Branding and Licensing
 
-The **source code** (backend, frontend) and documentation are licensed under the [MIT License](https://github.com/r4ppz/research-repository-frontend/blob/main/LICENSE). You may use, copy, modify, and distribute the code in accordance with the terms of that license.
+The **source code** (backend, frontend) and documentation are licensed under the [MIT License](https://github.com/r4ppz/research-repository/blob/main/LICENSE). You may use, copy, modify, and distribute the code in accordance with the terms of that license.
 
 The school's name, logo, trademarks, and all research papers or uploaded content within the system are the exclusive property of the school and their respective authors. These materials are not covered by the MIT License and may not be used, reproduced, or redistributed without permission.
 

@@ -4,10 +4,10 @@ We are student developers learning to design a reliable system. If you see a pro
 
 ---
 
+See [CONTRIBUTING.md](https://github.com/r4ppz/research-repository/blob/main/CONTRIBUTING.md) for setup instructions, git workflow, and how to run the project locally.
+
 _Links_:
 
-- _[Meta Repository](https://github.com/r4ppz/research-repository) - Central project repository, keeping all components synchronized using git submodules._
-- _[Frontend Demo](https://researchrepo.r4ppz.dev/) – No server yet; you can test it using Docker. See [Testing page](./testing.md)._
-- _[Backend Codebase](https://github.com/r4ppz/research-repository-backend) – Backend application logic and API services_
-- _[Frontend Codebase](https://github.com/r4ppz/research-repository-frontend) – Frontend user interface and client-side logic._
-- _[Documentation Codebase](https://github.com/r4ppz/research-repo-docs/) – Detailed project information, including API contracts and specifications._
+- _[Monorepo](https://github.com/r4ppz/research-repository) – All components in one repository._
+- _[Frontend Demo](https://researchrepo.r4ppz.dev/) – Live demo (server may be offline)._
+- _[Testing page](./testing.md) – How to test the system locally._
