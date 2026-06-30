@@ -9,6 +9,7 @@ import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -67,6 +68,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     log.warn("Validation failed for {}: {}", request.getDescription(false), fieldErrors);
 
     return ResponseEntity.badRequest().body(errorResponse);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(
+      HttpMessageNotReadableException exception,
+      HttpHeaders headers,
+      HttpStatusCode status,
+      WebRequest request) {
+
+    String traceId = MDC.get("traceId");
+    
+    log.warn("Malformed request body [{}]: {}", traceId, exception.getMessage());
+    return ResponseEntity.badRequest()
+        .body(
+            ErrorResponse.builder()
+                .code(ErrorCode.INVALID_REQUEST.name())
+                .message(ErrorCode.INVALID_REQUEST.getDefaultMessage())
+                .details(null)
+                .traceId(traceId)
+                .build());
   }
 
   // Ultimate fallback
