@@ -30,6 +30,10 @@ const RESEARCH_PATH: Partial<Record<Role, string>> = {
   SUPER_ADMIN: "/super-admin/research",
 };
 
+const USERS_PATH: Partial<Record<Role, string>> = {
+  SUPER_ADMIN: "/super-admin/users",
+};
+
 interface ComponentProps {
   className?: string;
 }
@@ -47,6 +51,7 @@ export const Header = ({ className, ...props }: ComponentProps) => {
   const generalRoleLabel = GENERAL_ROLE_LABEL[role];
   const requestPath = REQUEST_PATH[role];
   const researchPath = RESEARCH_PATH[role];
+  const usersPath = USERS_PATH[role];
 
   const handleLogout = () => {
     void logout();
@@ -74,6 +79,7 @@ export const Header = ({ className, ...props }: ComponentProps) => {
           <div className={style.rightWrapper}>
             <nav className={style.desktopNavigation}>
               <NavLink to="/">Library</NavLink>
+              {usersPath && <NavLink to={usersPath}>Users</NavLink>}
               <NavLink to={requestPath}>Request</NavLink>
               {researchPath && <NavLink to={researchPath}>Research</NavLink>}
             </nav>
@@ -112,6 +118,7 @@ export const Header = ({ className, ...props }: ComponentProps) => {
         <div className={style.dropDownMenu}>
           <nav className={style.mobileNavigation}>
             <NavLink to="/">Library</NavLink>
+            {usersPath && <NavLink to={usersPath}>Users</NavLink>}
             <NavLink to={requestPath}>Request</NavLink>
             {researchPath && <NavLink to={researchPath}>Research</NavLink>}
             <NavLink to="/login">Logout</NavLink>
