@@ -75,12 +75,10 @@ services:
       APP_MINIO_SECRET_KEY: ${APP_MINIO_SECRET_KEY:-minioadmin}
       APP_MINIO_BUCKET: ${APP_MINIO_BUCKET:-research-papers}
       APP_MINIO_SECURE: ${APP_MINIO_SECURE:-false}
+      INITIAL_SUPER_ADMIN_EMAIL: ${INITIAL_SUPER_ADMIN_EMAIL}
 
     ports:
       - "8080:8080"
-
-    volumes:
-      - ${PRIVILEGED_USERS_CONFIG_HOST_PATH}:/app/config/privileged-users.yaml
 
   frontend:
     build:

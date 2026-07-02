@@ -25,20 +25,15 @@ public class GoogleAuthService {
   private final String googleClientSecret;
   private final String redirectUri;
 
-  private final PrivilegedUserConfigLoader privilegedUserConfigLoader;
-
   private final GoogleAuthorizationCodeFlow authorizationFlow;
   private final GoogleIdTokenVerifier idTokenVerifier;
   private final AppProperties appProperties;
 
   public GoogleAuthService(
-      AppProperties appProperties,
-      PrivilegedUserConfigLoader privilegedUserConfigLoader,
-      @Value("${spring.profiles.active}") String environment) {
+      AppProperties appProperties, @Value("${spring.profiles.active}") String environment) {
 
     this.environment = environment;
     this.appProperties = appProperties;
-    this.privilegedUserConfigLoader = privilegedUserConfigLoader;
     this.googleClientId = this.appProperties.getGoogle().getClientId();
     this.googleClientSecret = this.appProperties.getGoogle().getClientSecret();
     this.redirectUri = this.appProperties.getGoogle().getRedirectUri();
@@ -68,11 +63,7 @@ public class GoogleAuthService {
 
     String email = getVerifiedEmail(payload);
 
-    // Previleged users dont need to follow email format (acdeducation)
-    // This is bacause I dont know if they have one :p
-    if (!isPrivilegedUser(email)) {
-      enforceDomainRestrictions(email);
-    }
+    enforceDomainRestrictions(email);
 
     return GoogleUserInfo.builder()
         .email(email)
@@ -122,25 +113,6 @@ public class GoogleAuthService {
             ErrorCode.DOMAIN_NOT_ALLOWED, "Development mode only allows .com emails");
       }
     }
-  }
-
-  private boolean isPrivilegedUser(String email) {
-    String normalized = email.toLowerCase().trim();
-    var config = privilegedUserConfigLoader.getPrivilegedUserConfig();
-    if (config == null) return false;
-
-    if (config.getSuperAdmins() != null
-        && config.getSuperAdmins().stream().map(String::toLowerCase).anyMatch(normalized::equals)) {
-      return true;
-    }
-    if (config.getFaculty() != null
-        && config.getFaculty().stream().map(String::toLowerCase).anyMatch(normalized::equals)) {
-      return true;
-    }
-    if (config.getDepartmentAdminsMap().containsKey(normalized)) {
-      return true;
-    }
-    return false;
   }
 
   private String getVerifiedEmail(GoogleIdToken.Payload payload) {
