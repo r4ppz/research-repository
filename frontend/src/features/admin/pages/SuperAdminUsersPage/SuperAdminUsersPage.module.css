@@ -37,66 +37,6 @@
   color: var(--color-text-muted);
 }
 
-.statusBox {
-  padding: var(--space-md);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-md);
-}
-
-.tableShell {
-  overflow-x: auto;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-resting);
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.tableHeadCell,
-.tableCell {
-  padding: var(--space-md);
-  text-align: left;
-  border-bottom: 1px solid var(--color-border-default);
-}
-
-.tableHeadCell {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  background: var(--color-bg-alt);
-}
-
-.userName {
-  font-weight: var(--font-weight-semibold);
-}
-
-.mutedText {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-.select,
-.departmentSelect {
-  width: 100%;
-  min-width: 180px;
-  padding: 0.6rem 0.75rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-md);
-}
-
-.actionsCell {
-  width: 1%;
-  white-space: nowrap;
-}
-
 .errorText {
   font-size: var(--font-size-sm);
   color: var(--color-danger, #b42318);
@@ -105,26 +45,4 @@
 .successText {
   font-size: var(--font-size-sm);
   color: var(--color-success, #16a34a);
-}
-
-.pagination {
-  display: flex;
-  gap: var(--space-md);
-  align-items: center;
-  justify-content: space-between;
-}
-
-.paginationInfo {
-  color: var(--color-text-muted);
-}
-
-@media (width <= 768px) {
-  .main {
-    padding: var(--space-lg) var(--space-md);
-  }
-
-  .pagination {
-    flex-direction: column;
-    align-items: stretch;
-  }
 }
