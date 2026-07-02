@@ -59,12 +59,11 @@ app:
     allowed-headers: ${APP_CORS_ALLOWED_HEADERS:*}
     allow-credentials: ${APP_CORS_ALLOW_CREDENTIALS:true}
 
+  initial-super-admin-email: ${INITIAL_SUPER_ADMIN_EMAIL:}
+
   # ================================================================================
   # Storage configuration (inside Docker service not host, not configurable via env)
   # ================================================================================
-  # Path to privileged users YAML file
-  privileged-users-yaml-path: /app/config/privileged-users.yaml
-
   storage:
     # Storage provider: local or minio
     provider: ${APP_STORAGE_PROVIDER:local}

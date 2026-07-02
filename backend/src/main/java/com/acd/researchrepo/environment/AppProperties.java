@@ -22,7 +22,7 @@ public class AppProperties {
   @Valid @NotNull private final Cors cors;
   @Valid @NotNull private final Storage storage;
   @Valid @NotNull private final Minio minio;
-  @NotBlank private final String privilegedUsersYamlPath;
+  private final String initialSuperAdminEmail;
 
   @Getter
   @RequiredArgsConstructor
