@@ -16,6 +16,14 @@ export default defineConfig({
   preview: {
     allowedHosts: true, // for testing
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+    },
+  },
   base: "/",
   resolve: {
     alias: {
