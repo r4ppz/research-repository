@@ -1,6 +1,6 @@
 import type { PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
-import { useUserRequests } from "../../hooks/useUserRequests";
+import { useUserRequests } from "../hooks/useUserRequests";
 import { columns, type TableMeta } from "./columns";
 import { downloadFile } from "@/api/files";
 import { deleteRequest } from "@/api/request";
@@ -9,7 +9,7 @@ import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinne
 import { triggerBrowserDownload } from "@/util/download";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
-export function StudentRequestTable() {
+export function MyRequestTable() {
   const [removalError, setRemovalError] = useState<string | null>(null);
   const [removingIds, setRemovingIds] = useState<Set<number>>(new Set());
   const [downloadError, setDownloadError] = useState<string | null>(null);
@@ -45,7 +45,6 @@ export function StudentRequestTable() {
     },
     onRemove: (requestId: number) => {
       setRemovalError(null);
-      // Check before mutating state or firing network
       if (removingIds.has(requestId)) {
         return;
       }
@@ -56,7 +55,6 @@ export function StudentRequestTable() {
         return newSet;
       });
 
-      // Fire and forget - no await
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       (async () => {
         try {
