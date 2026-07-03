@@ -24,7 +24,7 @@ public class LocalFileStorageProvider implements FileStorageProvider {
   private final Path rootLocation;
 
   public LocalFileStorageProvider(@Value("${app.storage.upload-dir}") String uploadDir) {
-    this.rootLocation = Paths.get(uploadDir);
+    this.rootLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
     try {
       Files.createDirectories(rootLocation);
     } catch (IOException e) {
@@ -36,9 +36,9 @@ public class LocalFileStorageProvider implements FileStorageProvider {
   @Override
   public String saveFile(MultipartFile file, String subPath) {
     try {
-      Path destinationFile = rootLocation.resolve(Paths.get(subPath)).normalize().toAbsolutePath();
+      Path destinationFile = rootLocation.resolve(Paths.get(subPath)).normalize();
 
-      if (!destinationFile.getParent().startsWith(rootLocation.toAbsolutePath())) {
+      if (!destinationFile.getParent().startsWith(rootLocation)) {
         throw new ApiException(
             ErrorCode.INVALID_REQUEST, "Cannot store file outside current directory");
       }
@@ -56,9 +56,9 @@ public class LocalFileStorageProvider implements FileStorageProvider {
   @Override
   public Resource loadFile(String subPath) {
     try {
-      Path file = rootLocation.resolve(subPath).normalize().toAbsolutePath();
+      Path file = rootLocation.resolve(subPath).normalize();
 
-      if (!file.startsWith(rootLocation.toAbsolutePath())) {
+      if (!file.startsWith(rootLocation)) {
         throw new ApiException(ErrorCode.FILE_NOT_FOUND, "File not found");
       }
 
