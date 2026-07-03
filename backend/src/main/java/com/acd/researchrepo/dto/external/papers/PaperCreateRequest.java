@@ -1,6 +1,5 @@
 package com.acd.researchrepo.dto.external.papers;
 
-import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -13,5 +12,5 @@ public class PaperCreateRequest {
   private String authorName;
   private String abstractText;
   private Integer departmentId;
-  private LocalDate submissionDate;
+  private String submissionDate;
 }
