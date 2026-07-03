@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /** Global exception handler for managing and formatting API error responses. */
@@ -67,6 +68,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     log.warn("Validation failed for {}: {}", request.getDescription(false), fieldErrors);
 
     return ResponseEntity.badRequest().body(errorResponse);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleMaxUploadSizeExceededException(
+      MaxUploadSizeExceededException ex,
+      HttpHeaders headers,
+      HttpStatusCode status,
+      WebRequest request) {
+    String traceId = MDC.get("traceId");
+    log.warn("File upload too large [{}]: {}", traceId, ex.getMessage());
+
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .code(ErrorCode.FILE_TOO_LARGE.name())
+            .message(ErrorCode.FILE_TOO_LARGE.getDefaultMessage())
+            .details(null)
+            .traceId(traceId)
+            .build();
+
+    return ResponseEntity.status(ErrorCode.FILE_TOO_LARGE.getHttpStatus()).body(errorResponse);
   }
 
   // Ultimate fallback
