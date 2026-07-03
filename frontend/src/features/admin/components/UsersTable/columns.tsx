@@ -126,9 +126,6 @@ const departmentColumn = columnHelper.display({
         <RadixSelect.Portal>
           <RadixSelect.Content className={styles.selectContent} position="popper" sideOffset={4}>
             <RadixSelect.Viewport className={styles.selectViewport}>
-              <RadixSelect.Item value="" className={styles.selectItem}>
-                <RadixSelect.ItemText>Select department</RadixSelect.ItemText>
-              </RadixSelect.Item>
               {meta.departments.map((dept) => (
                 <RadixSelect.Item
                   key={dept.departmentId}
