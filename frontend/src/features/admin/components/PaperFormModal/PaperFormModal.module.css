@@ -44,6 +44,12 @@
   font-weight: var(--font-weight-semibold);
 }
 
+.error {
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  text-align: center;
+}
+
 .actionsContainer {
   display: flex;
   gap: var(--space-sm);

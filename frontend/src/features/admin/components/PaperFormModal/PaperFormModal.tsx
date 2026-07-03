@@ -10,6 +10,7 @@ import { Input } from "@/components/common/Input/Input";
 import { OldSelect } from "@/components/common/Select/OldSelect";
 import { Textarea } from "@/components/common/Textarea/Textarea";
 import { useAuth } from "@/features/auth/context/useAuth";
+import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
 interface PaperFormModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
   const [departmentId, setDepartmentId] = useState<number | "">("");
   const [submissionDate, setSubmissionDate] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Auto-set department for Department Admin
   useEffect(() => {
@@ -42,7 +44,17 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    if (!file || departmentId === "") return;
+    setSubmitError(null);
+
+    if (!file) {
+      setSubmitError("Please select a file to upload.");
+      return;
+    }
+
+    if (departmentId === "") {
+      setSubmitError("Please select a department.");
+      return;
+    }
 
     createMutation.mutate(
       {
@@ -59,6 +71,9 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
         onSuccess: () => {
           onClose();
           resetForm();
+        },
+        onError: (error: unknown) => {
+          setSubmitError(getUserErrorMessage(extractApiError(error)));
         },
       },
     );
@@ -179,6 +194,8 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
               </div>
             </div>
           </div>
+
+          {submitError && <p className={style.error}>{submitError}</p>}
 
           <div className={style.actionsContainer}>
             <Button variant="secondary" onClick={onClose} type="button">
