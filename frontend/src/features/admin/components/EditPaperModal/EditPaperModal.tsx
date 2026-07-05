@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/common/Dialog/Dialog";
 import { Input } from "@/components/common/Input/Input";
-import { OldSelect } from "@/components/common/Select/OldSelect";
+import { Select, SelectItem } from "@/components/common/Select/Select";
 import { Textarea } from "@/components/common/Textarea/Textarea";
 import { useAuth } from "@/features/auth/context/useAuth";
 import type { ResearchPaper } from "@/types";
@@ -122,25 +122,19 @@ export const EditPaperModal = ({ isOpen, onClose, paper }: EditPaperModalProps) 
             </div>
 
             <div className={style.field}>
-              <label htmlFor="department">Department</label>
-              <OldSelect
-                value={departmentId ? departmentId.toString() : ""}
-                onValueChange={(v) => {
+              <Select
+                label="Department"
+                selectedKey={departmentId ? departmentId.toString() : undefined}
+                onSelectionChange={(v) => {
                   setDepartmentId(Number(v));
                 }}
-                disabled={isDepartmentDisabled}
-                options={
-                  departments?.map((dept) => ({
-                    value: dept.departmentId.toString(),
-                    label: dept.departmentName,
-                  })) ?? []
-                }
-                placeholder={
-                  isDepartmentDisabled && paper
-                    ? paper.department.departmentName
-                    : "Select Department"
-                }
-              />
+                isDisabled={isDepartmentDisabled}
+                placeholder="Select Department"
+              >
+                {departments?.map((dept) => (
+                  <SelectItem id={dept.departmentId.toString()}>{dept.departmentName}</SelectItem>
+                )) ?? []}
+              </Select>
             </div>
 
             <div className={style.field}>
