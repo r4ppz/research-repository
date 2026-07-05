@@ -5,7 +5,12 @@ import { useUpdatePaper } from "../../hooks/useAdminPaperActions";
 import style from "./EditPaperModal.module.css";
 import { getDepartments } from "@/api/filter";
 import { Button } from "@/components/common/Button/Button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/common/Dialog/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/common/Dialog/Dialog";
 import { Input } from "@/components/common/Input/Input";
 import { OldSelect } from "@/components/common/Select/OldSelect";
 import { Textarea } from "@/components/common/Textarea/Textarea";
@@ -89,6 +94,7 @@ export const EditPaperModal = ({ isOpen, onClose, paper }: EditPaperModalProps) 
     >
       <DialogContent className={style.modal}>
         <DialogTitle className={style.modalTitle}>Edit Research Paper</DialogTitle>
+        <DialogDescription style={{ display: "none" }}>Edit the paper metadata.</DialogDescription>
         <form onSubmit={handleSubmit} className={style.form}>
           <div className={style.leftColumn}>
             <div className={style.field}>
