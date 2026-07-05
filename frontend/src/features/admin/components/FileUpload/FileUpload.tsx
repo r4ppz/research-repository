@@ -41,12 +41,7 @@ export const FileUpload = ({
   return (
     <div className={clsx(style.fileUploadContainer, className)} style={customStyle}>
       <label htmlFor={id} className={style.fileInputLabel}>
-        <Upload className={style.iconUpload} />
-        <span>{placeholder}</span>
-        <span className={style.fileInputNote}>
-          {accept.replace(/\./g, "").replace(/,/g, ", ").toUpperCase()} (Max 20MB)
-        </span>
-        {value && (
+        {value ? (
           <div className={style.fileNameContainer}>
             <span className={style.fileName}>{value.name}</span>
             <button
@@ -61,6 +56,14 @@ export const FileUpload = ({
               ×
             </button>
           </div>
+        ) : (
+          <>
+            <Upload className={style.iconUpload} />
+            <span>{placeholder}</span>
+            <span className={style.fileInputNote}>
+              {accept.replace(/\./g, "").replace(/,/g, ", ").toUpperCase()} (Max 20MB)
+            </span>
+          </>
         )}
       </label>
       <input

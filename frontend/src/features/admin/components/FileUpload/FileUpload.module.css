@@ -22,6 +22,12 @@
   border-radius: var(--radius-lg);
 }
 
+.fileInputLabel:has(.fileNameContainer) {
+  padding: var(--space-sm);
+  border-color: var(--color-border-hover);
+  border-style: solid;
+}
+
 @media (width >= 768px) {
   .fileInputLabel {
     box-shadow: var(--shadow-resting);
