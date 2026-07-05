@@ -35,6 +35,11 @@ export function DataTable<TData extends RowData>({
   caption,
   meta,
 }: DataTableProps<TData>) {
+  const handlePaginationChange: OnChangeFn<PaginationState> = (updater) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    onPaginationChange(updater);
+  };
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
@@ -42,7 +47,7 @@ export function DataTable<TData extends RowData>({
     pageCount,
     manualPagination: true,
     state: { pagination },
-    onPaginationChange,
+    onPaginationChange: handlePaginationChange,
     getCoreRowModel: getCoreRowModel(),
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     meta,
