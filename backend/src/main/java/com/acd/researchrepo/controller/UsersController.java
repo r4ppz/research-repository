@@ -43,10 +43,10 @@ public class UsersController {
     log.debug("api/users/me endpoint hit");
 
     UserDto userDto =
-      userRepository
-        .findById(principal.getUserId())
-        .map(userMapper::toDto)
-        .orElseThrow(() -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "User not found"));
+        userRepository
+            .findById(principal.getUserId())
+            .map(userMapper::toDto)
+            .orElseThrow(() -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "User not found"));
     return ResponseEntity.ok(userDto);
   }
 
