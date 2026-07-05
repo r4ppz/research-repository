@@ -1,4 +1,3 @@
-import type { PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
 import { useUserRequests } from "../hooks/useUserRequests";
 import { columns, type TableMeta } from "./columns";
@@ -15,8 +14,17 @@ export function MyRequestTable() {
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [downloadingIds, setDownloadingIds] = useState<Set<number>>(new Set());
 
-  const { data, pageIndex, pageSize, pageCount, setPageIndex, isLoading, error, refresh } =
-    useUserRequests();
+  const {
+    data,
+    pageIndex,
+    pageSize,
+    pageCount,
+    setPageIndex,
+    setPageSize,
+    isLoading,
+    error,
+    refresh,
+  } = useUserRequests();
 
   const tableMeta: TableMeta = {
     onDownload: (paperId: number) => {
@@ -90,15 +98,10 @@ export function MyRequestTable() {
       pageCount={pageCount}
       pagination={{ pageIndex, pageSize }}
       onPaginationChange={(updater) => {
-        let nextState: PaginationState;
-
-        if (typeof updater === "function") {
-          nextState = updater({ pageIndex, pageSize });
-        } else {
-          nextState = updater;
-        }
-
+        const nextState =
+          typeof updater === "function" ? updater({ pageIndex, pageSize }) : updater;
         setPageIndex(nextState.pageIndex);
+        setPageSize(nextState.pageSize);
       }}
       meta={{ ...tableMeta, removingIds, downloadingIds }}
     />

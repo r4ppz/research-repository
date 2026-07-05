@@ -1,5 +1,4 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
 import { useAdminUsers } from "../../hooks/useAdminUsers";
 import { columns, type RowDraft, type TableMeta } from "./columns";
@@ -31,6 +30,7 @@ export function UsersTable({ currentUserId }: UsersTableProps) {
     pageIndex,
     pageSize,
     setPageIndex,
+    setPageSize,
   } = useAdminUsers();
 
   const departmentsQuery = useQuery({
@@ -107,15 +107,10 @@ export function UsersTable({ currentUserId }: UsersTableProps) {
         pageCount={pageCount}
         pagination={{ pageIndex, pageSize }}
         onPaginationChange={(updater) => {
-          let nextState: PaginationState;
-
-          if (typeof updater === "function") {
-            nextState = updater({ pageIndex, pageSize });
-          } else {
-            nextState = updater;
-          }
-
+          const nextState =
+            typeof updater === "function" ? updater({ pageIndex, pageSize }) : updater;
           setPageIndex(nextState.pageIndex);
+          setPageSize(nextState.pageSize);
         }}
         meta={tableMeta}
       />
