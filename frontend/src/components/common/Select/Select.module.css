@@ -1,15 +1,60 @@
 .select {
   position: relative;
-  width: 200px;
-  color: #333;
+  width: 100%;
+  color: var(--color-input-text);
 }
 
 .button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
+  min-height: 40px;
+  padding: 0 var(--space-md);
+  font-family: inherit;
+  font-size: var(--font-size-md);
+  color: var(--color-input-text);
+  cursor: pointer;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  outline: none;
+  transition: border-color 0.2s;
 
   &[data-pressed] {
     transform: scale(1);
   }
+}
+
+@media (width >= 768px) {
+  .button {
+    box-shadow: var(--shadow-resting);
+    transition: var(--transition-elevation);
+  }
+
+  .button:hover {
+    background-color: var(--color-input-bg-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
+  }
+
+  .button:active {
+    box-shadow: var(--shadow-active);
+    transform: translateY(var(--translate-active)) scale(var(--scale-active));
+  }
+}
+
+.button:focus {
+  border-radius: var(--radius-md);
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 1px;
+}
+
+.select[data-disabled] .button {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  background-color: var(--color-surface-disabled);
+  border-color: var(--color-border-disabled);
 }
 
 .selectValue {
@@ -21,21 +66,28 @@
 
   &[data-placeholder] {
     font-weight: normal;
-    color: #999;
-  }
-
-  .chevron {
-    width: var(--icon-size-xs);
-  }
-
-  .selectValue {
-    [slot="description"] {
-      display: none;
-    }
+    color: var(--color-text-muted);
   }
 }
 
+.chevron {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  margin-left: var(--space-sm);
+  color: var(--color-text-muted);
+}
+
+.selectPopover {
+  min-width: var(--trigger-width);
+  max-width: min(var(--available-width), 400px);
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-resting);
+}
+
 .selectPopover[data-trigger="Select"] {
-  width: 100px;
+  width: auto;
   padding: 0;
 }
