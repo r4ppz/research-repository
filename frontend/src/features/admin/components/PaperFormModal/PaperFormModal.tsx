@@ -5,7 +5,12 @@ import { FileUpload } from "../FileUpload/FileUpload";
 import style from "./PaperFormModal.module.css";
 import { getDepartments } from "@/api/filter";
 import { Button } from "@/components/common/Button/Button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/common/Dialog/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/common/Dialog/Dialog";
 import { Input } from "@/components/common/Input/Input";
 import { OldSelect } from "@/components/common/Select/OldSelect";
 import { Textarea } from "@/components/common/Textarea/Textarea";
@@ -105,93 +110,94 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
     >
       <DialogContent className={style.modal}>
         <DialogTitle className={style.modalTitle}>Add New Research Paper</DialogTitle>
+        <DialogDescription style={{ display: "none" }}>
+          Fill in the paper metadata and upload a file.
+        </DialogDescription>
         <form onSubmit={handleSubmit} className={style.form}>
-          <div className={style.columnContainer}>
-            <div className={style.leftColumn}>
-              <div className={style.field}>
-                <label htmlFor="title">Title</label>
-                <Input
-                  id="title"
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                  }}
-                  required
-                />
-              </div>
-
-              <div className={style.field}>
-                <label htmlFor="author">Author Name</label>
-                <Input
-                  id="author"
-                  value={authorName}
-                  onChange={(e) => {
-                    setAuthorName(e.target.value);
-                  }}
-                  required
-                />
-              </div>
-
-              <div className={style.field}>
-                <label htmlFor="department">Department</label>
-                <OldSelect
-                  value={departmentId ? departmentId.toString() : ""}
-                  onValueChange={(v) => {
-                    setDepartmentId(Number(v));
-                  }}
-                  disabled={isDepartmentDisabled}
-                  options={
-                    departments?.map((dept) => ({
-                      value: dept.departmentId.toString(),
-                      label: dept.departmentName,
-                    })) ?? []
-                  }
-                  placeholder={
-                    isDepartmentDisabled && user.department
-                      ? user.department.departmentName
-                      : "Select Department"
-                  }
-                />
-              </div>
-
-              <div className={style.field}>
-                <label htmlFor="date">Submission Date</label>
-                <Input
-                  id="date"
-                  type="date"
-                  value={submissionDate}
-                  onChange={(e) => {
-                    setSubmissionDate(e.target.value);
-                  }}
-                  required
-                />
-              </div>
+          <div className={style.leftColumn}>
+            <div className={style.field}>
+              <label htmlFor="title">Title</label>
+              <Input
+                id="title"
+                value={title}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                }}
+                required
+              />
             </div>
 
-            <div className={style.rightColumn}>
-              <div className={style.field}>
-                <label htmlFor="abstract">Abstract</label>
-                <Textarea
-                  id="abstract"
-                  value={abstractText}
-                  onChange={(e) => {
-                    setAbstractText(e.target.value);
-                  }}
-                  required
-                />
-              </div>
+            <div className={style.field}>
+              <label htmlFor="author">Author Name</label>
+              <Input
+                id="author"
+                value={authorName}
+                onChange={(e) => {
+                  setAuthorName(e.target.value);
+                }}
+                required
+              />
+            </div>
 
-              <div className={style.field}>
-                <label htmlFor="paper-file">Paper File (PDF/DOCX)</label>
-                <FileUpload
-                  id="paper-file"
-                  value={file}
-                  onChange={(f) => {
-                    setFile(f);
-                  }}
-                  required
-                />
-              </div>
+            <div className={style.field}>
+              <label htmlFor="department">Department</label>
+              <OldSelect
+                value={departmentId ? departmentId.toString() : ""}
+                onValueChange={(v) => {
+                  setDepartmentId(Number(v));
+                }}
+                disabled={isDepartmentDisabled}
+                options={
+                  departments?.map((dept) => ({
+                    value: dept.departmentId.toString(),
+                    label: dept.departmentName,
+                  })) ?? []
+                }
+                placeholder={
+                  isDepartmentDisabled && user.department
+                    ? user.department.departmentName
+                    : "Select Department"
+                }
+              />
+            </div>
+
+            <div className={style.field}>
+              <label htmlFor="date">Submission Date</label>
+              <Input
+                id="date"
+                type="date"
+                value={submissionDate}
+                onChange={(e) => {
+                  setSubmissionDate(e.target.value);
+                }}
+                required
+              />
+            </div>
+          </div>
+
+          <div className={style.rightColumn}>
+            <div className={style.field}>
+              <label htmlFor="abstract">Abstract</label>
+              <Textarea
+                id="abstract"
+                value={abstractText}
+                onChange={(e) => {
+                  setAbstractText(e.target.value);
+                }}
+                required
+              />
+            </div>
+
+            <div className={style.field}>
+              <label htmlFor="paper-file">Paper File (PDF/DOCX)</label>
+              <FileUpload
+                id="paper-file"
+                value={file}
+                onChange={(f) => {
+                  setFile(f);
+                }}
+                required
+              />
             </div>
           </div>
 
