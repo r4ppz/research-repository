@@ -15,9 +15,6 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   min-height: 100dvh;
-
-  /* I need this for the useScrollToTop hook works. idk why */
-  overflow-y: auto;
 }
 
 .main {

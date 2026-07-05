@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { LibraryResults } from "../components/LibraryResults/LibraryResults";
 import { useLibrary } from "../hooks/useLibrary";
 import style from "./LibraryPage.module.css";
@@ -15,8 +15,7 @@ export const LibraryPage = () => {
   const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const pageRef = useRef<HTMLDivElement>(null);
-  useScrollToTop(pageRef, [state.currentPage]);
+  useScrollToTop([state.currentPage]);
 
   const handleOpenModal = (id: number) => {
     setSelectedPaperId(id);
@@ -24,7 +23,7 @@ export const LibraryPage = () => {
   };
 
   return (
-    <div className={style.page} ref={pageRef}>
+    <div className={style.page}>
       <Header />
       <main className={style.main}>
         <div className={style.mainContainer}>
