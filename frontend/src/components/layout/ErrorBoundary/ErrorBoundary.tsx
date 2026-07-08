@@ -28,7 +28,7 @@ function SimpleFallback({ error }: FallbackProps) {
           can{" "}
           <Link href={repoUrl} className={styles.link}>
             report this issue on GitHub
-           </Link>
+          </Link>
           .
         </Text>
 
