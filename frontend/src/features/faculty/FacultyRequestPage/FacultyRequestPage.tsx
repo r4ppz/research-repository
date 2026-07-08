@@ -1,7 +1,7 @@
 import style from "./FacultyRequestPage.module.css";
 import { Footer } from "@/components/layout/Footer/Footer";
 import { Header } from "@/components/layout/Header/Header";
-import { StudentRequestTable } from "@/features/student/components/StudentRequestTable/StudentRequestTable";
+import { MyRequestTable } from "@/features/my-requests/MyRequestTable/MyRequestTable";
 
 export const FacultyRequestPage = () => {
   return (
@@ -10,8 +10,7 @@ export const FacultyRequestPage = () => {
       <main className={style.main}>
         <div className={style.mainContainer}>
           <section className={style.tableSection}>
-            {/* Just reuse the student table cause I am lazy asf */}
-            <StudentRequestTable />
+            <MyRequestTable />
           </section>
         </div>
       </main>

@@ -2,13 +2,17 @@ import { Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute/ProtectedRoute";
 import { AdminPapersPage } from "@/features/admin/pages/AdminPapersPage/AdminPapersPage";
 import { AdminRequestsPage } from "@/features/admin/pages/AdminRequestsPage/AdminRequestsPage";
+import { SuperAdminUsersPage } from "@/features/admin/pages/SuperAdminUsersPage/SuperAdminUsersPage";
 import { AuthRestorer } from "@/features/auth/components/AuthRestorer/AuthRestorer";
+import { useRoleWatcher } from "@/features/auth/hooks/useRoleWatcher";
 import { LoginPage } from "@/features/auth/LoginPage/LoginPage";
 import { FacultyRequestPage } from "@/features/faculty/FacultyRequestPage/FacultyRequestPage";
 import { LibraryPage } from "@/features/library/LibraryPage/LibraryPage";
 import { StudentRequestPage } from "@/features/student/StudentRequestPage/StudentRequestPage";
 
 export const App = () => {
+  useRoleWatcher();
+
   return (
     <>
       <AuthRestorer />
@@ -70,6 +74,14 @@ export const App = () => {
           element={
             <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
               <AdminPapersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/super-admin/users"
+          element={
+            <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
+              <SuperAdminUsersPage />
             </ProtectedRoute>
           }
         />

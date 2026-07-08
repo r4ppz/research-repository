@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /** Global exception handler for managing and formatting API error responses. */
@@ -78,7 +79,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
       WebRequest request) {
 
     String traceId = MDC.get("traceId");
-    
+
     log.warn("Malformed request body [{}]: {}", traceId, exception.getMessage());
     return ResponseEntity.badRequest()
         .body(
@@ -88,6 +89,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .details(null)
                 .traceId(traceId)
                 .build());
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleMaxUploadSizeExceededException(
+      MaxUploadSizeExceededException ex,
+      HttpHeaders headers,
+      HttpStatusCode status,
+      WebRequest request) {
+    String traceId = MDC.get("traceId");
+    log.warn("File upload too large [{}]: {}", traceId, ex.getMessage());
+
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .code(ErrorCode.FILE_TOO_LARGE.name())
+            .message(ErrorCode.FILE_TOO_LARGE.getDefaultMessage())
+            .details(null)
+            .traceId(traceId)
+            .build();
+
+    return ResponseEntity.status(ErrorCode.FILE_TOO_LARGE.getHttpStatus()).body(errorResponse);
   }
 
   // Ultimate fallback

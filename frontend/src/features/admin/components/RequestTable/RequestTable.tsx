@@ -1,11 +1,10 @@
-import type { PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
 import { useAdminRequests } from "../../hooks/useAdminDocumentRequest";
 import { useAcceptRequest, useRejectRequest } from "../../hooks/useAdminRequestMutations";
-import { ResearchModal } from "../ResearchModal/ResearchModal";
 import { columns, columnsWithoutDepartment, type TableMeta } from "./columns";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
 import type { ResearchPaper } from "@/types";
 
 interface RequestsTableProps {
@@ -15,9 +14,8 @@ interface RequestsTableProps {
 export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
 
-  const { data, pageIndex, pageSize, pageCount, setPageIndex, isLoading, error } = useAdminRequests(
-    { status: "PENDING" },
-  );
+  const { data, pageIndex, pageSize, pageCount, setPageIndex, setPageSize, isLoading, error } =
+    useAdminRequests({ status: "PENDING" });
 
   const acceptMutation = useAcceptRequest();
   const rejectMutation = useRejectRequest();
@@ -55,15 +53,10 @@ export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
         pageCount={pageCount}
         pagination={{ pageIndex, pageSize }}
         onPaginationChange={(updater) => {
-          let nextState: PaginationState;
-
-          if (typeof updater === "function") {
-            nextState = updater({ pageIndex, pageSize });
-          } else {
-            nextState = updater;
-          }
-
+          const nextState =
+            typeof updater === "function" ? updater({ pageIndex, pageSize }) : updater;
           setPageIndex(nextState.pageIndex);
+          setPageSize(nextState.pageSize);
         }}
         meta={tableMeta}
       />

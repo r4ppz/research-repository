@@ -51,6 +51,15 @@
     color: var(--color-text-muted);
   }
 
+  .infoNotice {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-secondary);
+    background: color-mix(in srgb, var(--color-secondary) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-secondary) 25%, transparent);
+    border-radius: var(--radius-md);
+  }
+
   .googleButtonContainer {
     display: flex;
     justify-content: center;

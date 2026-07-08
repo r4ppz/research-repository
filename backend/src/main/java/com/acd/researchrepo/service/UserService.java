@@ -1,11 +1,9 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.config.PrivilegedUserConfig;
 import com.acd.researchrepo.dto.internal.GoogleUserInfo;
-import com.acd.researchrepo.model.Department;
+import com.acd.researchrepo.environment.AppProperties;
 import com.acd.researchrepo.model.User;
 import com.acd.researchrepo.model.UserRole;
-import com.acd.researchrepo.repository.DepartmentRepository;
 import com.acd.researchrepo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.Objects;
@@ -15,43 +13,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-  private UserRepository userRepository;
-  private PrivilegedUserConfigLoader privilegedUserConfigLoader;
-  private DepartmentRepository departmentRepository;
+  private final AppProperties appProperties;
+  private final UserRepository userRepository;
 
-  public UserService(
-      UserRepository userRepository,
-      PrivilegedUserConfigLoader privilegedUserConfigLoader,
-      DepartmentRepository departmentRepository) {
+  public UserService(AppProperties appProperties, UserRepository userRepository) {
+    this.appProperties = appProperties;
     this.userRepository = userRepository;
-    this.privilegedUserConfigLoader = privilegedUserConfigLoader;
-    this.departmentRepository = departmentRepository;
   }
 
   @Transactional
   public User findOrCreateUser(GoogleUserInfo googleInfo) {
-    PrivilegedUserConfig config = privilegedUserConfigLoader.getPrivilegedUserConfig();
     String email = normalizeEmail(googleInfo.getEmail());
-    UserRole assignedRole = determineUserRole(email, config);
-    Department assignedDepartment = resolveDepartment(email, config);
 
     Optional<User> existingUser = userRepository.findByEmail(email);
 
     if (existingUser.isPresent()) {
       User user = existingUser.get();
-      boolean updated = updateUserIfChanged(user, googleInfo, assignedRole, assignedDepartment);
+      boolean updated = updateUserIfChanged(user, googleInfo);
       if (updated) {
         userRepository.save(user);
       }
       return user;
     } else {
+      UserRole assignedRole = determineInitialRole(email);
       User newUser =
           User.builder()
               .email(email)
               .fullName(googleInfo.getName())
               .profilePictureUrl(googleInfo.getProfilePictureUrl())
               .role(assignedRole)
-              .department(assignedDepartment)
               .build();
       return userRepository.save(newUser);
     }
@@ -61,48 +51,19 @@ public class UserService {
     return email.toLowerCase().trim();
   }
 
-  private UserRole determineUserRole(String email, PrivilegedUserConfig config) {
-    if (config.getSuperAdmins() != null && config.getSuperAdmins().contains(email)) {
+  private UserRole determineInitialRole(String email) {
+    String bootstrapEmail = appProperties.getInitialSuperAdminEmail();
+    if (bootstrapEmail != null
+        && !bootstrapEmail.isBlank()
+        && email.equals(bootstrapEmail.toLowerCase().trim())) {
       return UserRole.SUPER_ADMIN;
-    }
-    if (config.getFaculty() != null && config.getFaculty().contains(email)) {
-      return UserRole.FACULTY;
-    }
-    if (config.getDepartmentAdminsMap().containsKey(email)) {
-      return UserRole.DEPARTMENT_ADMIN;
     }
     return UserRole.STUDENT;
   }
 
-  private Department resolveDepartment(String email, PrivilegedUserConfig config) {
-    if (config.getDepartmentAdminsMap().containsKey(email)) {
-      Integer departmentId = config.getDepartmentAdminsMap().get(email);
-      if (departmentId != null) {
-        return departmentRepository
-            .findById(departmentId)
-            .orElseThrow(
-                () ->
-                    new IllegalArgumentException(
-                        "No department with id: " + departmentId + " for user " + email));
-      }
-    }
-    return null;
-  }
-
-  private boolean updateUserIfChanged(
-      User user, GoogleUserInfo googleInfo, UserRole newRole, Department newDepartment) {
+  private boolean updateUserIfChanged(User user, GoogleUserInfo googleInfo) {
 
     boolean changed = false;
-
-    if (!user.getRole().equals(newRole)) {
-      user.setRole(newRole);
-      changed = true;
-    }
-
-    if (!Objects.equals(user.getDepartment(), newDepartment)) {
-      user.setDepartment(newDepartment);
-      changed = true;
-    }
 
     if (!user.getFullName().equals(googleInfo.getName())) {
       user.setFullName(googleInfo.getName());

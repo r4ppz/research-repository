@@ -13,7 +13,7 @@
 
   .checkIcon {
     position: absolute;
-    right: 5;
+    right: 5px;
     width: var(--icon-size-md);
     height: auto;
     stroke-width: 1;

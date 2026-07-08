@@ -22,6 +22,14 @@ import {
 export const LoginPage = () => {
   const { authError, setAuthError, isLoading } = useAuth();
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [authMessage] = useState<string | null>(() => {
+    const storedMessage = sessionStorage.getItem("auth_message");
+    if (storedMessage) {
+      sessionStorage.removeItem("auth_message");
+      return storedMessage;
+    }
+    return null;
+  });
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 
   const handleGoogleSuccess = useGoogleLogin(setShowErrorModal);
@@ -89,6 +97,8 @@ export const LoginPage = () => {
           Please sign in using your official Assumption College of Davao email address.
         </p>
 
+        {authMessage && <p className={style.infoNotice}>{authMessage}</p>}
+
         <div className={style.googleButtonContainer}>
           <GoogleButton
             clientId={googleClientId}
@@ -106,16 +116,16 @@ export const LoginPage = () => {
 
           <div className={style.descriptionContainer}>
             <DialogDescription className={style.modalDescription}>
-              <p>{errorMessage}</p>
+              <span>{errorMessage}</span>
 
               {isNetworkError && (
-                <p className={style.errorNote}>
+                <span className={style.errorNote}>
                   Please read our{" "}
                   <Link className={style.errorNoteLink} href={docsLink}>
                     docs
                   </Link>{" "}
                   for more info.
-                </p>
+                </span>
               )}
             </DialogDescription>
           </div>

@@ -1,3 +1,4 @@
+import { AlertCircle } from "lucide-react";
 import type { ReactNode } from "react";
 import { type FallbackProps, ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
 import styles from "./ErrorBoundary.module.css";
@@ -11,19 +12,28 @@ interface ErrorBoundaryProps {
 
 function SimpleFallback({ error }: FallbackProps) {
   const errorTraceId = extractApiError(error).traceId;
-  const githublink = "https://github.com/r4ppz/research-repository-frontend/issues";
-  const ytLink = "https://youtu.be/K3V2_BxrT7c";
+  const repoUrl = "https://github.com/r4ppz/research-repository-frontend/issues";
 
   return (
-    <div className={styles.mainContainer} role="alert">
-      <Heading className={styles.heading}>This isn't supposed to happened ( ` ᴖ ´ )</Heading>
-      <Text>
-        If you are reading this, I probably fucked up. Please report this on our{" "}
-        <Link href={githublink}>GitHub</Link> repo by taking a screenshot of this page and
-        optionally telling us what you were doing when the error happened. Then just restart the
-        page to see if it’s usable again. <Link href={ytLink}>Sorry</Link>
-      </Text>
-      {errorTraceId && <code>trace ID: {errorTraceId}</code>}
+    <div className={styles.page} role="alert">
+      <div className={styles.card}>
+        <div className={styles.iconWrapper}>
+          <AlertCircle className={styles.icon} />
+        </div>
+
+        <Heading className={styles.heading}>Something went wrong</Heading>
+
+        <Text className={styles.description}>
+          An unexpected error occurred. Please try refreshing the page. If the problem persists, you
+          can{" "}
+          <Link href={repoUrl} className={styles.link}>
+            report this issue on GitHub
+          </Link>
+          .
+        </Text>
+
+        {errorTraceId && <code className={styles.traceId}>Trace ID: {errorTraceId}</code>}
+      </div>
     </div>
   );
 }

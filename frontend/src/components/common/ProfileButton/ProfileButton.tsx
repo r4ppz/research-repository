@@ -19,7 +19,7 @@ const ROLE_LABEL: Record<Role, string> = {
   SUPER_ADMIN: "S Admin",
 };
 
-export const ProfileButton = ({ user }: ProfileButtonProps) => {
+export const ProfileButton = ({ user, className }: ProfileButtonProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const roleLabel = ROLE_LABEL[user.role];
   const firstName = user.fullName.split(" ")[0];
@@ -30,7 +30,11 @@ export const ProfileButton = ({ user }: ProfileButtonProps) => {
 
   return (
     <>
-      <Button className={clsx(style.profileButton)} variant="secondary" onClick={openModal}>
+      <Button
+        className={clsx(style.profileButton, className)}
+        variant="secondary"
+        onClick={openModal}
+      >
         <UserIcon className={style.iconUser} />
         <div className={style.profileContainer}>
           <h3 className={style.userName}>{firstName}</h3>
