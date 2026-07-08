@@ -116,16 +116,16 @@ export const LoginPage = () => {
 
           <div className={style.descriptionContainer}>
             <DialogDescription className={style.modalDescription}>
-              <p>{errorMessage}</p>
+              <span>{errorMessage}</span>
 
               {isNetworkError && (
-                <p className={style.errorNote}>
+                <span className={style.errorNote}>
                   Please read our{" "}
                   <Link className={style.errorNoteLink} href={docsLink}>
                     docs
                   </Link>{" "}
                   for more info.
-                </p>
+                </span>
               )}
             </DialogDescription>
           </div>
