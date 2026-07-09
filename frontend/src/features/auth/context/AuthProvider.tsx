@@ -1,6 +1,6 @@
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useState } from "react";
 import { AuthContext, type AuthContextValue } from "./AuthContext";
-import { getAccessToken, removeAccessToken, setAccessToken } from "./tokenStore";
+import { removeAccessToken, setAccessToken } from "./tokenStore";
 import { postLoginGoogle, postLogout } from "@/api/auth";
 import type { ApiError, AuthResponse, User } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
@@ -42,17 +42,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
     }
   };
-
-  // Initialize auth state on app load
-  // Initially check if there's no token to set appropriate loading state
-  // If no token exists, authentication state is complete (as "not logged in")
-  // If there is a token, isLoading remains true and AuthRestorer will handle it
-  useEffect(() => {
-    const token = getAccessToken();
-    if (!token) {
-      setIsLoading(false);
-    }
-  }, []);
 
   const value: AuthContextValue = {
     user,
