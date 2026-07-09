@@ -319,6 +319,7 @@ The Refresh Token is **never** exposed in the JSON body. It is handled strictly 
 
 - Returns years in descending order (newest first)
 - Empty array if no papers exist within user's scope
+- If no years are available, returns `204 No Content`
 - Years are extracted from paper `submissionDate` field
 - Frontend may filter displayed options based on page context (e.g., show only user's department
   years on admin pages using auth context)
@@ -353,6 +354,7 @@ The Refresh Token is **never** exposed in the JSON body. It is handled strictly 
 
 - Only includes departments that have at least one paper within user's scope
 - Empty array if no departments have accessible papers
+- If no departments are available, returns `204 No Content`
 - Frontend may filter displayed options based on page context (e.g., show only user's department on
   admin pages using auth context)
 
@@ -472,35 +474,39 @@ papers.
 
 ### GET /api/papers/{paperId}/my-request
 
-NOTE: The return type of this endpoint is incorrect. It should return 200 whether the resource is found or not, or 200 with no content.
-its currently implemented so I am not touching this lol.
+Returns the current user's request for the specified paper, if it exists. Available to STUDENT and FACULTY roles.
 
-- Returns the current user's request for the specified paper, if it exists.
+**Path Parameters:**
+- `paperId` (integer, required)
 
-- Available to STUDENT and FACULTY roles.
+**Request:** No body.
 
-- **Request:**
+**Response (200 OK):**
 
-- Method: GET
+```json
+{
+    "requestId": 42,
+    "status": "PENDING",
+    "createdAt": "2024-06-01T12:00:00Z",
+    "updatedAt": "2024-06-01T12:00:00Z"
+}
+```
 
-- Path parameter: `paperId` (integer, required)
+**Field Descriptions:**
 
-- No request body.
+| Field       | Type   | Description                                 |
+|-------------|--------|---------------------------------------------|
+| `requestId` | number | Unique identifier for the request           |
+| `status`    | string | Current status: `PENDING`, `ACCEPTED`, or `REJECTED` |
+| `createdAt` | string | ISO 8601 timestamp of when the request was created |
+| `updatedAt` | string | ISO 8601 timestamp of the last status change |
 
-- **Response:**
+**Error Codes:**
 
-    ```json
-    {
-        "requestId": 42,
-        "status": "PENDING",
-        "createdAt": "2024-06-01T12:00:00Z",
-        "updatedAt": "2024-06-01T12:00:00Z"
-    }
-    ```
-
-- **Errors:**
-    - 404 RESOURCE_NOT_FOUND (no request for this paper/user)
-    - 401 UNAUTHENTICATED
+| Condition                     | HTTP | Code               | Message                           |
+|-------------------------------|------|--------------------|-----------------------------------|
+| No request for this paper/user | 404  | RESOURCE_NOT_FOUND | "Request not found"               |
+| Missing/Invalid JWT           | 401  | UNAUTHENTICATED    | "Authentication required"         |
 
 ---
 
@@ -953,42 +959,6 @@ this parameter is ignored and results are always scoped to their assigned depart
 | Non-admin role          | 403  | `ACCESS_DENIED`   | "Admin privileges required" |
 | Invalid pagination/sort | 400  | `INVALID_REQUEST` | "Invalid query parameters"  |
 
----
-
-### GET /api/admin/papers/{id}
-
-Retrieve a single paper object for administrative purposes (e.g., viewing details or pre-filling an
-edit form).
-
-- **Authentication:** JWT Required (`DEPARTMENT_ADMIN` or `SUPER_ADMIN`)
-
-- **Authorization Rules:**
-
-- **DEPARTMENT_ADMIN:** `403 ACCESS_DENIED` if paper is outside their department.
-
-- **SUPER_ADMIN:** Full access.
-
-- **Response (200 OK):**
-
-```json
-{
-    "paperId": 123,
-    "title": "Quantum Computing Trends",
-    "authorName": "Dr. Aris Thorne",
-    "abstractText": "Detailed exploration of...",
-    "department": {
-        "departmentId": 1,
-        "departmentName": "Computer Science"
-    },
-    "submissionDate": "2025-12-01",
-    "filePath": "2025/dept_1/paper_123.pdf",
-    "archived": false,
-    "archivedAt": null
-}
-```
-
----
-
 ### POST /api/admin/papers
 
 Create a new paper and upload its file. This uses `multipart/form-data`.
@@ -1047,16 +1017,7 @@ delete and re-create the paper (standard MVP behavior).
 Idempotent endpoints to toggle paper visibility.
 
 - **Authentication:** JWT Required
-- **Logic:** Sets `archived` flag and `archivedAt` timestamp.
-- **Response (200 OK):**
-
-```json
-{
-    "paperId": 123,
-    "archived": true,
-    "archivedAt": "2025-10-01T14:00:00Z"
-}
-```
+- **Response:** `200 OK` (no body)
 
 **Archiving behavior and side-effects**
 

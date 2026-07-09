@@ -6,7 +6,7 @@
 
 The **Purpose** of the system is to serve as a gated school research repository where students can browse paper metadata, request access to full documents, and where admins manage papers and requests.
 
-**Authentication** is handled through Google SSO restricted to `@acdeducation.com`.
+**Authentication** is handled through Google SSO. In production the domain is restricted to `@acdeducation.com`; in development any `.com` email is accepted.
 
 **Authorization** uses access tokens (`JWT`) with role-based access (`STUDENT`, `FACULTY`, `DEPARTMENT_ADMIN`, `SUPER_ADMIN`). Department scoping for `DEPARTMENT_ADMIN` applies only to admin operations (paper CRUD, request approvals); homepage browsing shows all departments.
 
@@ -106,7 +106,7 @@ Regardless of provider, the following apply:
 
 ## Data Privacy & Collection
 
-The system handles authentication entirely via [Google OAuth 2.0](https://dev.to/yaswanth_bonumaddi/understanding-google-oauth-20-57fn), ensuring that the system **never** sees or stores user passwords. For **identity**, we store only the user's name, email, and Google profile picture URL from the Google Account that the user agreed to use (`@acdeducation.com`).
+The system handles authentication entirely via [Google OAuth 2.0](https://dev.to/yaswanth_bonumaddi/understanding-google-oauth-20-57fn), ensuring that the system **never** sees or stores user passwords. For **identity**, we store only the user's name, email, and Google profile picture URL from the Google Account that the user agreed to use (domain enforced per environment).
 
 Academic data includes research metadata such as Title, Author, Abstract, and Department, along with the uploaded PDF/DOCX binary files.
 
@@ -118,10 +118,10 @@ Academic data includes research metadata such as Title, Author, Abstract, and De
     - Refresh token - long-lived (30 days), returned in `httpOnly`, `Secure`, `SameSite=Strict`, `Path=/api/auth/` cookie.
 - Backend verifies the **Google ID token**:
     - Signature, Issuer, Audience, Expiry.
-    - Domain enforced: must be `acdeducation.com`.
+    - Domain enforced: `@acdeducation.com` in production, any `.com` in development.
     - Extracts user profile data: `email`, `name`, `picture` (from `profile` OAuth scope).
 - On first login, a new user record is created with:
-    - Default role: `STUDENT`.
+    - Default role: `STUDENT` (unless email matches `INITIAL_SUPER_ADMIN_EMAIL` env var — gets `SUPER_ADMIN`).
     - Profile picture URL from Google (extracted from ID token claims).
     - Profile picture is stored as a URL string (not binary) to minimize storage and leverage Google's CDN.
 
@@ -157,21 +157,25 @@ Academic data includes research metadata such as Title, Author, Abstract, and De
 - **Transport:** Strictly `httpOnly`, `Secure`, `SameSite=Strict`, `Path=/api/auth/` cookie (never in JSON body).
 - Primary security relies on expiration + rotation.
 
-### Manual Role Assignment
+### Initial Super Admin Bootstrap
 
-Privileged roles (`FACULTY`, `SUPER_ADMIN`, `DEPARTMENT_ADMIN`) are managed on the backend using a configuration file.
-When a user logs in via Google SSO, the system checks their email against this config file to determine their role and assigned department.
-If not included or configured, the user is assigned the default `STUDENT` role.
+On first startup, the first user whose email matches `INITIAL_SUPER_ADMIN_EMAIL` (env var) is automatically assigned `SUPER_ADMIN`. All other new users default to `STUDENT`.
 
-The system does not handle sign-ups, only logins. So, in order to manage roles & permissions, this config file is needed.
+### Role Management via Admin UI
 
-Roles listed in this file can bypass the email restriction `@acdeducation.com`.
-This is because we don't know if they even have a `@acdeducation.com` account like students do.
+Privileged roles (`FACULTY`, `SUPER_ADMIN`, `DEPARTMENT_ADMIN`) are managed through the admin UI or API:
 
-In production, this file will be secured on the server and only developers or admins will be able to modify it.
-Any changes to the config file may require a service restart or a fresh login by the user.
+- `GET /api/admin/users` — list users (pagination, SUPER_ADMIN only)
+- `PUT /api/admin/users/{id}/role` — change a user's role
+  - `DEPARTMENT_ADMIN` requires a `departmentId`
+  - Setting any non-`DEPARTMENT_ADMIN` role clears the user's department
+  - All changes are audit-logged in `role_change_log` table
+  - The user's active refresh tokens are revoked on role change, forcing re-login
 
-We will eventually implement a full authentication system in the **future** that includes sign-up/registration and a UI/frontend way to manage roles & permissions instead of this config file.
-But that's way too [complicated and unnecessary](https://auth0.com/blog/building-account-systems/#1--Ideally--Don-t); **for now**, this is enough for simplicity.
+### First-Login Flow
 
-> If you worry about the security of how we manage roles & permissions, you can PR or issue for a better alternative through our [GitHub](https://github.com/r4ppz/research-repo-docs/issues). Note that making a _complete authentication system_ is beyond our current skillset.
+On first login via Google SSO:
+
+1. A new user record is created with default role `STUDENT` (unless `INITIAL_SUPER_ADMIN_EMAIL` matches).
+2. Profile picture URL from Google is stored as a string (leveraging Google's CDN).
+3. An admin must promote the user to a privileged role if needed.

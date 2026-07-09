@@ -1,6 +1,6 @@
 # How to test the system
 
-The system is available for testing either [live](https://research-repository.r4ppz.dev/) or locally via Docker.
+The system is available for testing locally via Docker.<!-- TODO: add live demo URL when available -->
 
 > ⚠️ The system is currently in alpha. Bugs and instability are expected.
 
@@ -58,22 +58,13 @@ make rebuild    # Rebuild Docker image and restart
 
 ## Managing User Roles (Admin/Faculty/Student)
 
-The system uses your **Google Email** to determine what you see. By default, everyone is a **Student**. To test roles and capabilities you must edit the config file:
+The system uses your **Google Email** to determine what you see. By default, everyone is a **Student**. To test roles and capabilities:
 
-1. Open `backend/privileged-users.yaml` in a text editor.
-2. Add your email under the desired category.
+1. Set `INITIAL_SUPER_ADMIN_EMAIL` in `backend/.env` to your email before first login. That user will be auto-assigned `SUPER_ADMIN`.
+2. Log in with that Google account — you'll see the admin pages.
+3. Use the `/super-admin/users` page (or `PUT /api/admin/users/{id}/role` API) to assign roles to other users.
 
-After editing, apply changes:
-
-```bash
-make restart
-```
-
-<!-- prettier-ignore-start -->
-!!! warning "For more info about this"
-    Please read [Manual Role Assignment](./specification.md#manual-role-assignment)
-    and [Roles & Capabilities](./specification.md#roles-capabilities-authz).
-<!-- prettier-ignore-end -->
+> Once bootstrapped, role management is done entirely through the admin UI/API. See [Role Management](./specification.md#role-management) for details.
 
 ---
 
