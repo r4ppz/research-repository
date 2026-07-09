@@ -67,7 +67,7 @@ export function UsersTable({ currentUserId }: UsersTableProps) {
           : undefined;
 
       await changeUserRole(entry.userId, draft.role, departmentId);
-      await queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      await queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
       setNotification({
         type: "success",
         title: "Success",
