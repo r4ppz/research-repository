@@ -56,7 +56,6 @@ SPA with React and TypeScript.
 - Routing: React Router DOM
 - Styling: CSS Modules
 - Tooling: ESLint, Stylelint, Prettier
-- Deployment: Static build (Vite) served via nginx
 
 ### Documentation
 
