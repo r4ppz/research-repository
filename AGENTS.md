@@ -49,7 +49,7 @@ cp frontend/.env.example frontend/.env    # Frontend
 ## Tech Stack
 
 - Backend: Java 21, Spring Boot 3.5, Maven, PostgreSQL, Flyway, MinIO, JWT, Google OAuth, Lombok, Spotless (Google Java Format)
-- Frontend: React 19 + React Compiler, TypeScript strict, Vite 7, TanStack Query, React Router DOM 7, Radix UI, CSS Modules, ESLint, Stylelint, Prettier, Husky, Storybook 10, Vitest + Playwright, Cloudflare Pages
+- Frontend: React 19 + React Compiler, TypeScript strict, Vite 7, TanStack Query, React Router DOM 7, Radix UI, CSS Modules, ESLint, Stylelint, Prettier, Husky, Storybook 10, Vitest + Playwright
 - Docs: MkDocs with Material theme (Python)
 - Infrastructure: Docker Compose, nginx (serves production frontend)
 
@@ -85,8 +85,7 @@ research-repository/
 │   │   ├── types/
 │   │   └── util/
 │   ├── Dockerfile          # Multi-stage: Vite build → nginx
-│   ├── wrangler.jsonc      # Cloudflare Pages config
-│   ├── vite.config.ts      # @/ alias, React Compiler, Cloudflare plugin
+│   ├── vite.config.ts      # @/ alias, React Compiler
 │   └── package.json
 ├── docs/               # MkDocs documentation site
 ├── docker-compose.yml  # Production compose (4 services)
