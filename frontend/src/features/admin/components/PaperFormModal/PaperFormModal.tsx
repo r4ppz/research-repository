@@ -5,11 +5,17 @@ import { FileUpload } from "../FileUpload/FileUpload";
 import style from "./PaperFormModal.module.css";
 import { getDepartments } from "@/api/filter";
 import { Button } from "@/components/common/Button/Button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/common/Dialog/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/common/Dialog/Dialog";
 import { Input } from "@/components/common/Input/Input";
-import { OldSelect } from "@/components/common/Select/OldSelect";
+import { Select, SelectItem } from "@/components/common/Select/Select";
 import { Textarea } from "@/components/common/Textarea/Textarea";
 import { useAuth } from "@/features/auth/context/useAuth";
+import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
 interface PaperFormModalProps {
   isOpen: boolean;
@@ -24,6 +30,7 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
   const [departmentId, setDepartmentId] = useState<number | "">("");
   const [submissionDate, setSubmissionDate] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Auto-set department for Department Admin
   useEffect(() => {
@@ -42,7 +49,17 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    if (!file || departmentId === "") return;
+    setSubmitError(null);
+
+    if (!file) {
+      setSubmitError("Please select a file to upload.");
+      return;
+    }
+
+    if (departmentId === "") {
+      setSubmitError("Please select a department.");
+      return;
+    }
 
     createMutation.mutate(
       {
@@ -59,6 +76,9 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
         onSuccess: () => {
           onClose();
           resetForm();
+        },
+        onError: (error: unknown) => {
+          setSubmitError(getUserErrorMessage(extractApiError(error)));
         },
       },
     );
@@ -90,95 +110,92 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
     >
       <DialogContent className={style.modal}>
         <DialogTitle className={style.modalTitle}>Add New Research Paper</DialogTitle>
+        <DialogDescription style={{ display: "none" }}>
+          Fill in the paper metadata and upload a file.
+        </DialogDescription>
         <form onSubmit={handleSubmit} className={style.form}>
-          <div className={style.columnContainer}>
-            <div className={style.leftColumn}>
-              <div className={style.field}>
-                <label htmlFor="title">Title</label>
-                <Input
-                  id="title"
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                  }}
-                  required
-                />
-              </div>
-
-              <div className={style.field}>
-                <label htmlFor="author">Author Name</label>
-                <Input
-                  id="author"
-                  value={authorName}
-                  onChange={(e) => {
-                    setAuthorName(e.target.value);
-                  }}
-                  required
-                />
-              </div>
-
-              <div className={style.field}>
-                <label htmlFor="department">Department</label>
-                <OldSelect
-                  value={departmentId ? departmentId.toString() : ""}
-                  onValueChange={(v) => {
-                    setDepartmentId(Number(v));
-                  }}
-                  disabled={isDepartmentDisabled}
-                  options={
-                    departments?.map((dept) => ({
-                      value: dept.departmentId.toString(),
-                      label: dept.departmentName,
-                    })) ?? []
-                  }
-                  placeholder={
-                    isDepartmentDisabled && user.department
-                      ? user.department.departmentName
-                      : "Select Department"
-                  }
-                />
-              </div>
-
-              <div className={style.field}>
-                <label htmlFor="date">Submission Date</label>
-                <Input
-                  id="date"
-                  type="date"
-                  value={submissionDate}
-                  onChange={(e) => {
-                    setSubmissionDate(e.target.value);
-                  }}
-                  required
-                />
-              </div>
+          <div className={style.leftColumn}>
+            <div className={style.field}>
+              <label htmlFor="title">Title</label>
+              <Input
+                id="title"
+                value={title}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                }}
+                required
+              />
             </div>
 
-            <div className={style.rightColumn}>
-              <div className={style.field}>
-                <label htmlFor="abstract">Abstract</label>
-                <Textarea
-                  id="abstract"
-                  value={abstractText}
-                  onChange={(e) => {
-                    setAbstractText(e.target.value);
-                  }}
-                  required
-                />
-              </div>
+            <div className={style.field}>
+              <label htmlFor="author">Author Name</label>
+              <Input
+                id="author"
+                value={authorName}
+                onChange={(e) => {
+                  setAuthorName(e.target.value);
+                }}
+                required
+              />
+            </div>
 
-              <div className={style.field}>
-                <label htmlFor="paper-file">Paper File (PDF/DOCX)</label>
-                <FileUpload
-                  id="paper-file"
-                  value={file}
-                  onChange={(f) => {
-                    setFile(f);
-                  }}
-                  required
-                />
-              </div>
+            <div className={style.field}>
+              <Select
+                label="Department"
+                selectedKey={departmentId ? departmentId.toString() : undefined}
+                onSelectionChange={(v) => {
+                  setDepartmentId(Number(v));
+                }}
+                isDisabled={isDepartmentDisabled}
+                placeholder="Select Department"
+              >
+                {departments?.map((dept) => (
+                  <SelectItem id={dept.departmentId.toString()}>{dept.departmentName}</SelectItem>
+                )) ?? []}
+              </Select>
+            </div>
+
+            <div className={style.field}>
+              <label htmlFor="date">Submission Date</label>
+              <Input
+                id="date"
+                type="date"
+                value={submissionDate}
+                onChange={(e) => {
+                  setSubmissionDate(e.target.value);
+                }}
+                required
+              />
             </div>
           </div>
+
+          <div className={style.rightColumn}>
+            <div className={style.field}>
+              <label htmlFor="abstract">Abstract</label>
+              <Textarea
+                id="abstract"
+                value={abstractText}
+                onChange={(e) => {
+                  setAbstractText(e.target.value);
+                }}
+                required
+              />
+            </div>
+
+            <div className={style.field}>
+              <label htmlFor="paper-file">Paper File (PDF/DOCX)</label>
+              <FileUpload
+                id="paper-file"
+                value={file}
+                onChange={(f) => {
+                  setFile(f);
+                }}
+                required
+              />
+            </div>
+          </div>
+
+          {submitError && <p className={style.error}>{submitError}</p>}
 
           <div className={style.actionsContainer}>
             <Button variant="secondary" onClick={onClose} type="button">

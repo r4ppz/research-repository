@@ -18,6 +18,7 @@ import com.acd.researchrepo.repository.ResearchPaperRepository;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.spec.ResearchPaperSpec;
 import com.acd.researchrepo.util.RoleBasedAccess;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -170,7 +171,7 @@ public class ResearchPaperService {
     paper.setTitle(metadata.getTitle());
     paper.setAuthorName(metadata.getAuthorName());
     paper.setAbstractText(metadata.getAbstractText());
-    paper.setSubmissionDate(metadata.getSubmissionDate());
+    paper.setSubmissionDate(LocalDate.parse(metadata.getSubmissionDate()));
 
     // Update department if changed
     if (!paper.getDepartment().getDepartmentId().equals(metadata.getDepartmentId())) {
@@ -267,11 +268,12 @@ public class ResearchPaperService {
     paper.setAuthorName(metadata.getAuthorName());
     paper.setAbstractText(metadata.getAbstractText());
     paper.setDepartment(department);
-    paper.setSubmissionDate(metadata.getSubmissionDate());
+    LocalDate submissionDate = LocalDate.parse(metadata.getSubmissionDate());
+    paper.setSubmissionDate(submissionDate);
     paper.setArchived(false);
 
     // We need a path. Pattern: {year}/{dept_slug}/filename
-    String year = String.valueOf(metadata.getSubmissionDate().getYear());
+    String year = String.valueOf(submissionDate.getYear());
     String deptSlug = department.getDepartmentName().toLowerCase().replaceAll("[^a-z0-9]", "_");
     String originalFilename = file.getOriginalFilename();
     String extension =

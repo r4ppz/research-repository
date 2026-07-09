@@ -27,32 +27,26 @@ export const Footer = ({ className, ...props }: ComponentProps) => {
       <div className={style.footerContainer}>
         <div className={style.mainContainer}>
           <div className={style.titlelogoContainer}>
-            <Button
-              variant="secondary"
-              className={style.logoContainerButton}
-              onClick={() => {
-                void navigate("/");
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-            >
-              <img className={style.schoolLogo} src={schoolLogo} alt="school-logo" />
-            </Button>
+            <div className={style.logoTitleRow}>
+              <Button
+                variant="secondary"
+                className={style.logoContainerButton}
+                onClick={() => {
+                  void navigate("/");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                <img className={style.schoolLogo} src={schoolLogo} alt="school-logo" />
+              </Button>
 
-            <div className={style.titleContainer}>
               <h1 className={style.title}>ACD Research Repository</h1>
-              <p className={style.schoolName}>Assumption College of Davao</p>
-
-              <p className={style.desktopDescription}>
-                The official research repository of Assumption College of Davao, providing access to
-                academic research and scholarly work.
-              </p>
             </div>
-          </div>
 
-          <p className={style.mobileDescription}>
-            The official research repository of Assumption College of Davao, providing access to
-            academic research and scholarly work.
-          </p>
+            <p className={style.description}>
+              The official research repository of Assumption College of Davao, providing access to
+              academic research and scholarly work.
+            </p>
+          </div>
 
           <div className={style.linkcontactContainer}>
             <div className={style.linksContainer}>

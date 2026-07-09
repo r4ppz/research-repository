@@ -1,11 +1,7 @@
 import { useEffect } from "react";
 import { postRefresh } from "@/api/auth";
 import { getCurrentUser } from "@/api/users";
-import {
-  getAccessToken,
-  removeAccessToken,
-  setAccessToken,
-} from "@/features/auth/context/tokenStore";
+import { removeAccessToken, setAccessToken } from "@/features/auth/context/tokenStore";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { extractApiError, isAuthError } from "@/util/errorHandler";
 
@@ -14,9 +10,7 @@ export const AuthRestorer = () => {
 
   useEffect(() => {
     const restoreAuth = async () => {
-      const token = getAccessToken();
-
-      if (user || !token) {
+      if (user) {
         setIsLoading(false);
         return;
       }

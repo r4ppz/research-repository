@@ -24,6 +24,10 @@ rebuild: down
 	$(COMPOSE) build
 	$(COMPOSE) up -d
 
+.PHONY: trace
+trace:
+	$(COMPOSE) logs backend | grep "$(id)"
+
 .PHONY: front-install front-dev front-build front-preview
 front-install:
 	pnpm --dir frontend install
@@ -74,6 +78,9 @@ help:
 	@echo "  doc-install         Create virtualenv and install dependencies"
 	@echo "  doc-serve           Start development server (auto-installs deps)"
 	@echo "  doc-build           Build static site (auto-installs deps)"
+	@echo ""
+	@echo "Debug:"
+	@echo "  trace id=<id>       Search app logs by traceId"
 	@echo ""
 	@echo "Configuration:"
 	@echo '  ENV=<dev|prod>      Select environment (default: dev)'

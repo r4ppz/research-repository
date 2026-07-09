@@ -34,7 +34,7 @@ pnpm build-storybook  # Build Storybook static site
 - UI Components: Radix UI (AlertDialog, Dialog, Select, Tooltip, Icons), react-aria-components, Lucide React, react-icons
 - Styling: CSS Modules, `clsx` for composition
 - Format & Lint: ESLint 9, Stylelint (recess-order + standard), Prettier 3
-- Git Hooks: Husky 9 + lint-staged
+- Git Hooks: Husky 9 + lint-staged (in dependencies, hooks not yet initialized)
 - Testing: Vitest 4 + Playwright browser runner, Storybook 10 + addon-vitest
 - CI/CD: semantic-release
 
@@ -43,6 +43,8 @@ pnpm build-storybook  # Build Storybook static site
 ```
 frontend/src/
 ├── api/              # API client config and request functions (Axios)
+│   └── admin/        # Admin API calls (papers, requests, users)
+├── assets/           # Static assets (images, icons)
 ├── components/
 │   ├── common/       # Shared UI primitives (wrappers around Radix/Aria)
 │   └── layout/       # Page layout components (header, sidebar, etc.)
@@ -50,9 +52,11 @@ frontend/src/
 │   ├── admin/        # Admin-only pages and components
 │   ├── auth/         # Authentication (Google OAuth flow)
 │   ├── faculty/      # Faculty-specific functionality
-│   ├── library/      # Paper browsing/searching (student view)
+│   ├── library/      # Paper browsing/searching (all roles)
+│   ├── my-requests/  # User's own document requests
 │   └── student/      # Student-specific functionality
 ├── hooks/            # Shared React hooks
+├── stories/          # Storybook stories
 ├── styles/           # Global styles, CSS variables, design tokens
 ├── types/            # Shared TypeScript types/interfaces
 └── util/             # Utility/helper functions

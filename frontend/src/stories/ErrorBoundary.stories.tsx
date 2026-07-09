@@ -19,7 +19,7 @@ function BuggyComponent() {
     throw new ApiError("INTERNAL_ERROR", "An unexpected error occurred", undefined);
   });
 
-  return <div>Bug just happened :0</div>;
+  return <div>This will not render</div>;
 }
 
 export const Default: Story = {

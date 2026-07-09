@@ -43,14 +43,26 @@ svg {
 .titlelogoContainer {
   display: flex;
   flex: 1;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.logoTitleRow {
+  display: flex;
   flex-direction: row;
   gap: var(--space-md);
+  align-items: center;
 }
 
 @media (width >= 768px) {
-  .titlelogoContainer {
+  .logoTitleRow {
     gap: var(--space-lg);
   }
+}
+
+.description {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-normal);
 }
 
 .logoContainerButton {
@@ -58,62 +70,34 @@ svg {
   align-items: center;
   justify-content: center;
   width: auto;
-  min-width: var(--size-logo-sm);
-  padding: var(--space-md);
+  min-width: var(--size-logo-xs);
+  padding: var(--space-sm);
   background-color: var(--color-surface);
   border-radius: var(--radius-lg);
 }
 
+@media (width >= 768px) {
+  .logoContainerButton {
+    min-width: var(--size-logo-md);
+    padding: var(--space-md);
+  }
+}
+
 .schoolLogo {
   flex-shrink: 0;
-  width: var(--size-logo-sm);
+  width: var(--size-logo-xs);
   height: auto;
 }
 
 @media (width >= 768px) {
   .schoolLogo {
-    width: var(--size-logo-lg);
+    width: var(--size-logo-xs);
   }
-}
-
-.titleContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
 }
 
 .title {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
-}
-
-.schoolName {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-}
-
-.mobileDescription {
-  padding-top: var(--space-md);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-normal);
-}
-
-@media (width >= 768px) {
-  .mobileDescription {
-    display: none;
-  }
-}
-
-.desktopDescription {
-  display: none;
-}
-
-@media (width >= 768px) {
-  .desktopDescription {
-    display: flex;
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-normal);
-  }
 }
 
 .linkcontactContainer {

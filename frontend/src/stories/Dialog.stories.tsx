@@ -26,29 +26,10 @@ function DialogDemo() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          style={{
-            fontSize: "13px",
-            borderRadius: "5px",
-          }}
-          variant="primary"
-        >
-          Open Dialog
-        </Button>
+        <Button variant="primary">Open Dialog</Button>
       </DialogTrigger>
-      <DialogContent
-        style={{
-          maxWidth: "400px",
-        }}
-      >
-        <DialogTitle
-          style={{
-            textAlign: "center",
-            marginBottom: "20px",
-          }}
-        >
-          The Replay
-        </DialogTitle>
+      <DialogContent>
+        <DialogTitle>The Replay</DialogTitle>
         <DialogDescription>
           This moment is already a memory. You are just watching the playback. You are currently the
           oldest you have ever been and the youngest you will ever be again.
@@ -59,6 +40,5 @@ function DialogDemo() {
 }
 
 export const Default: Story = {
-  args: {},
   render: () => <DialogDemo />,
 };

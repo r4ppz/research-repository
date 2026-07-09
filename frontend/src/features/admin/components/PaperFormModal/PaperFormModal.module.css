@@ -5,6 +5,12 @@
   overflow-y: auto;
 }
 
+@media (width < 768px) {
+  .modal {
+    max-height: 55vh;
+  }
+}
+
 .modalTitle {
   margin-bottom: var(--space-lg);
   font-size: var(--font-size-lg);
@@ -12,40 +18,55 @@
 }
 
 .form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md) var(--space-xl);
+  min-height: 0;
 }
 
-.columnContainer {
-  display: flex;
-  flex-direction: row;
-  gap: var(--space-lg);
+@media (width >= 768px) {
+  .form {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .leftColumn {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-md);
 }
 
 .rightColumn {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-md);
 }
 
 .field {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  font-weight: var(--font-weight-semibold);
+}
+
+.field label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.error {
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  text-align: center;
 }
 
 .actionsContainer {
   display: flex;
+  grid-column: 1 / -1;
   gap: var(--space-sm);
   justify-content: flex-end;
   margin-top: var(--space-md);

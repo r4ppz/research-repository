@@ -117,6 +117,23 @@ VALUES
 
 ---
 
+## V3\_\_add_role_change_log.sql
+
+Audit log for all role assignment changes. Each row records who changed which user's role, from what to what.
+
+```sql
+CREATE TABLE role_change_log (
+    log_id SERIAL PRIMARY KEY,
+    target_user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    changed_by_user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    old_role VARCHAR(50) NOT NULL,
+    new_role VARCHAR(50) NOT NULL,
+    changed_at TIMESTAMP NOT NULL DEFAULT now()
+);
+```
+
+---
+
 <!-- prettier-ignore-start -->
 !!! warning "MOCKS"
     These are mocks or fake data.
@@ -125,7 +142,7 @@ VALUES
 
 <!-- prettier-ignore-end -->
 
-## V3\_\_populate_papers.sql
+## V4\_\_populate_papers.sql
 
 > AI generated data (fake).
 
@@ -371,3 +388,9 @@ VALUES
 ('The Gig Economy and Social Security Systems', 'Dr. Karen White, Liam Archer', 'As more workers transition to platform-based labor, traditional social safety nets are failing. This research compares the legislative approaches of California (AB5) and the EU’s Platform Work Directive. We model a portable benefits system that follows the worker rather than the employer.', '/files/biz/gig_economy_policy.pdf', 5, '2025-03-10', FALSE, NOW(), NOW());
 
 ```
+
+---
+
+## V5\_\_populate_papers.sql (dev only)
+
+> Located under `db/dev/` — only loaded when the `dev` Spring profile is active. Contains the same mock data as V4 but in larger batches for development/testing with a richer dataset.

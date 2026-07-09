@@ -1,4 +1,3 @@
-import type { PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
 import {
   useArchivePaper,
@@ -7,7 +6,6 @@ import {
 } from "../../hooks/useAdminPaperActions";
 import { useAdminPapers } from "../../hooks/useAdminPapers";
 import { EditPaperModal } from "../EditPaperModal/EditPaperModal";
-import { ResearchModal } from "../ResearchModal/ResearchModal";
 import {
   columnsActive,
   columnsActiveWithoutDepartment,
@@ -17,6 +15,7 @@ import {
 } from "./columns";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
 import type { ResearchPaper } from "@/types";
 
 interface PapersTableProps {
@@ -28,9 +27,10 @@ export function PapersTable({ archived, showDepartment = true }: PapersTableProp
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
   const [editingPaper, setEditingPaper] = useState<ResearchPaper | null>(null);
 
-  const { data, pageIndex, pageSize, pageCount, setPageIndex, isLoading, error } = useAdminPapers({
-    archived,
-  });
+  const { data, pageIndex, pageSize, pageCount, setPageIndex, setPageSize, isLoading, error } =
+    useAdminPapers({
+      archived,
+    });
 
   const archiveMutation = useArchivePaper();
   const unarchiveMutation = useUnarchivePaper();
@@ -81,15 +81,10 @@ export function PapersTable({ archived, showDepartment = true }: PapersTableProp
         pageCount={pageCount}
         pagination={{ pageIndex, pageSize }}
         onPaginationChange={(updater) => {
-          let nextState: PaginationState;
-
-          if (typeof updater === "function") {
-            nextState = updater({ pageIndex, pageSize });
-          } else {
-            nextState = updater;
-          }
-
+          const nextState =
+            typeof updater === "function" ? updater({ pageIndex, pageSize }) : updater;
           setPageIndex(nextState.pageIndex);
+          setPageSize(nextState.pageSize);
         }}
         meta={tableMeta}
       />

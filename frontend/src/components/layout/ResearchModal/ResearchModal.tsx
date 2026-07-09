@@ -6,19 +6,28 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/common/Dialog/D
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { usePaperById } from "@/features/library/hooks/usePaperById";
+import type { ResearchPaper } from "@/types";
 import { formatDateLong } from "@/util/formatDate";
 import { isUserFaculty, isUserStudent } from "@/util/roleBasedAccess";
 
 interface ResearchModalProps {
   isOpen: boolean;
-  paperId: number | null;
+  paperId?: number | null;
+  paper?: ResearchPaper | null;
   onClose: () => void;
 }
 
-export const ResearchModal = ({ isOpen, paperId, onClose }: ResearchModalProps) => {
-  const { paper, loading, error } = usePaperById(paperId);
+export const ResearchModal = ({
+  isOpen,
+  paper: paperProp,
+  paperId,
+  onClose,
+}: ResearchModalProps) => {
+  const effectiveId = paperProp ? null : (paperId ?? null);
+  const { paper: fetchedPaper, loading, error } = usePaperById(effectiveId);
+  const paper = paperProp ?? fetchedPaper;
   const { user } = useAuth();
-  const { requestExists, isRequestLoading, requestDocument } = usePaperRequest(paperId, user);
+  const { requestExists, isRequestLoading, requestDocument } = usePaperRequest(effectiveId, user);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {

@@ -6,9 +6,10 @@ import type { DocumentRequest } from "@/types";
 import { formatDateShort } from "@/util/formatDate";
 
 export interface TableMeta {
-  onDownload: () => void;
+  onDownload: (paperId: number) => void;
   onRemove: (requestId: number) => void;
   removingIds?: Set<number>;
+  downloadingIds?: Set<number>;
 }
 
 const columnHelper = createColumnHelper<DocumentRequest>();
@@ -68,8 +69,9 @@ export const columns = [
             <Button
               className={style.actionButton}
               isDisabled={isPending}
+              isPending={(meta.downloadingIds ?? new Set()).has(request.paper.paperId)}
               onClick={() => {
-                meta.onDownload();
+                meta.onDownload(request.paper.paperId);
               }}
             >
               <Download size={16} />

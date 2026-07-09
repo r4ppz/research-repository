@@ -8,6 +8,7 @@ import { ConfirmDialog } from "@/components/common/AlertDialog/ConfirmDialog";
 import { Button } from "@/components/common/Button/Button";
 import { NavLink } from "@/components/common/NavLink/NavLink";
 import { ProfileButton } from "@/components/common/ProfileButton/ProfileButton";
+import { ProfileModal } from "@/components/common/ProfileModal/ProfileModal";
 import { useAuth } from "@/features/auth/context/useAuth";
 import type { Role } from "@/types";
 
@@ -30,6 +31,10 @@ const RESEARCH_PATH: Partial<Record<Role, string>> = {
   SUPER_ADMIN: "/super-admin/research",
 };
 
+const USERS_PATH: Partial<Record<Role, string>> = {
+  SUPER_ADMIN: "/super-admin/users",
+};
+
 interface ComponentProps {
   className?: string;
 }
@@ -38,6 +43,7 @@ export const Header = ({ className, ...props }: ComponentProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   if (!user) {
     return null;
@@ -47,6 +53,7 @@ export const Header = ({ className, ...props }: ComponentProps) => {
   const generalRoleLabel = GENERAL_ROLE_LABEL[role];
   const requestPath = REQUEST_PATH[role];
   const researchPath = RESEARCH_PATH[role];
+  const usersPath = USERS_PATH[role];
 
   const handleLogout = () => {
     void logout();
@@ -74,6 +81,7 @@ export const Header = ({ className, ...props }: ComponentProps) => {
           <div className={style.rightWrapper}>
             <nav className={style.desktopNavigation}>
               <NavLink to="/">Library</NavLink>
+              {usersPath && <NavLink to={usersPath}>Users</NavLink>}
               <NavLink to={requestPath}>Request</NavLink>
               {researchPath && <NavLink to={researchPath}>Research</NavLink>}
             </nav>
@@ -112,14 +120,38 @@ export const Header = ({ className, ...props }: ComponentProps) => {
         <div className={style.dropDownMenu}>
           <nav className={style.mobileNavigation}>
             <NavLink to="/">Library</NavLink>
+            {usersPath && <NavLink to={usersPath}>Users</NavLink>}
             <NavLink to={requestPath}>Request</NavLink>
             {researchPath && <NavLink to={researchPath}>Research</NavLink>}
-            <NavLink to="/login">Logout</NavLink>
+            <button
+              type="button"
+              className={style.navlink}
+              onClick={() => {
+                setIsProfileOpen(true);
+              }}
+            >
+              Profile
+            </button>
+            <ConfirmDialog
+              title="Log out of your account?"
+              description="You will need to sign in with your Google account to access the portal again."
+              confirmText="Log out"
+              cancelText="Stay logged in"
+              onConfirm={handleLogout}
+              trigger={
+                <button type="button" className={style.navlink}>
+                  Logout
+                </button>
+              }
+            />
           </nav>
-
-          {/* NOTE: theres no profile button on mobile since I dont know how to style it lol */}
-          {/* TODO: add mobile profile button */}
-          {/* TODO: fix logout on mobile to make it consistent on desktop */}
+          <ProfileModal
+            isOpen={isProfileOpen}
+            onClose={() => {
+              setIsProfileOpen(false);
+            }}
+            user={user}
+          />
         </div>
       )}
     </header>

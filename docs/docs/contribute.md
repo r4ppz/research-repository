@@ -9,5 +9,4 @@ See [CONTRIBUTING.md](https://github.com/r4ppz/research-repository/blob/main/CON
 _Links_:
 
 - _[Monorepo](https://github.com/r4ppz/research-repository) – All components in one repository._
-- _[Frontend Demo](https://researchrepo.r4ppz.dev/) – Live demo (server may be offline)._
 - _[Testing page](./testing.md) – How to test the system locally._

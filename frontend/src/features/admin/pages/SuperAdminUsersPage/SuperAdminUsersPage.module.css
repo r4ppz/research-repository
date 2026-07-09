@@ -1,0 +1,48 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--color-bg);
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  width: min(1200px, 100%);
+  margin: 0 auto;
+}
+
+.headerSection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.titleHeader {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.errorText {
+  font-size: var(--font-size-sm);
+  color: var(--color-danger, #b42318);
+}
+
+.successText {
+  font-size: var(--font-size-sm);
+  color: var(--color-success, #16a34a);
+}
