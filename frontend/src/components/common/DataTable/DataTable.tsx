@@ -84,11 +84,17 @@ export function DataTable<TData extends RowData>({
           ) : (
             table.getRowModel().rows.map((row) => (
               <tr className={style.tableRow} key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td className={clsx(style.tableData, style.tableBodyData)} key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
+                {row.getVisibleCells().map((cell) => {
+                  const colMeta = cell.column.columnDef.meta as { className?: string } | undefined;
+                  return (
+                    <td
+                      className={clsx(style.tableData, style.tableBodyData, colMeta?.className)}
+                      key={cell.id}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  );
+                })}
               </tr>
             ))
           )}
