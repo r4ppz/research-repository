@@ -10,6 +10,10 @@ import org.springframework.data.repository.query.Param;
 public interface ResearchPaperRepository
     extends JpaRepository<ResearchPaper, Integer>, JpaSpecificationExecutor<ResearchPaper> {
 
+  boolean existsByDepartmentDepartmentId(Integer departmentId);
+
+  long countByDepartmentDepartmentId(Integer departmentId);
+
   /**
    * Retrieves a list of distinct years in which research papers were submitted, optionally filtered
    * by department and active status.
