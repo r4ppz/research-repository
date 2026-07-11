@@ -17,19 +17,24 @@ const departmentNameColumn = columnHelper.accessor("departmentName", {
   cell: (info) => info.getValue(),
 });
 
+const narrowFitMeta = { className: "narrowFit" } satisfies Record<string, unknown>;
+
 const paperCountColumn = columnHelper.accessor("paperCount", {
   header: "Papers",
   cell: (info) => info.getValue(),
+  meta: narrowFitMeta,
 });
 
 const userCountColumn = columnHelper.accessor("userCount", {
   header: "Users",
   cell: (info) => info.getValue(),
+  meta: narrowFitMeta,
 });
 
 const actionsColumn = columnHelper.display({
   id: "actions",
   header: "Action",
+  meta: narrowFitMeta,
   cell: ({ row, table }) => {
     const meta = table.options.meta as TableMeta;
     const department = row.original;
