@@ -4,7 +4,13 @@ import { Footer } from "@/components/layout/Footer/Footer";
 
 const meta: Meta<typeof Footer> = {
   component: Footer,
-  decorators: [(Story) => <MemoryRouter><Story /></MemoryRouter>],
+  decorators: [
+    (Story) => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    ),
+  ],
 };
 
 export default meta;
