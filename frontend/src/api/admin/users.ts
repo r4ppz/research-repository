@@ -16,6 +16,17 @@ export const getAdminUsers = async (params?: AdminUsersQueryParams): Promise<Pag
   return response.data;
 };
 
+export interface CreateUserRequest {
+  email: string;
+  role: User["role"];
+  departmentId?: number;
+}
+
+export const createUser = async (data: CreateUserRequest): Promise<User> => {
+  const response = await axiosClient.post<User>("/api/admin/users", data);
+  return response.data;
+};
+
 export const changeUserRole = async (
   userId: number,
   role: User["role"],
