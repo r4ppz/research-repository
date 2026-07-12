@@ -6,9 +6,9 @@ import schoolLogo from "@/assets/school-logo.svg";
 import { Button } from "@/components/common/Button/Button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogTrigger,
 } from "@/components/common/Dialog/Dialog";
 import { Link } from "@/components/common/Link/Link";
 
@@ -60,11 +60,20 @@ export const Footer = ({ className, ...props }: ComponentProps) => {
               <h3 className={style.contactText}>Contact</h3>
 
               {/* WARN: Temporary modal */}
+              <Link
+                onClick={() => {
+                  setOpenEmail(true);
+                }}
+              >
+                research@acd.edu.ph
+              </Link>
               <Dialog open={openEmail} onOpenChange={setOpenEmail}>
-                <DialogTrigger asChild>
-                  <Link>research@acd.edu.ph</Link>
-                </DialogTrigger>
                 <DialogContent>
+                  <DialogClose
+                    onClose={() => {
+                      setOpenEmail(false);
+                    }}
+                  />
                   <DialogDescription
                     style={{
                       padding: "20px",
@@ -75,11 +84,20 @@ export const Footer = ({ className, ...props }: ComponentProps) => {
                 </DialogContent>
               </Dialog>
 
+              <Link
+                onClick={() => {
+                  setOpenPhone(true);
+                }}
+              >
+                +63 82 123 4567
+              </Link>
               <Dialog open={openPhone} onOpenChange={setOpenPhone}>
-                <DialogTrigger asChild>
-                  <Link>+63 82 123 4567</Link>
-                </DialogTrigger>
                 <DialogContent>
+                  <DialogClose
+                    onClose={() => {
+                      setOpenPhone(false);
+                    }}
+                  />
                   <DialogDescription
                     style={{
                       padding: "20px",

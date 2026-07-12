@@ -7,6 +7,7 @@ import { getDepartments } from "@/api/filter";
 import { Button } from "@/components/common/Button/Button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogTitle,
@@ -93,6 +94,7 @@ export const EditPaperModal = ({ isOpen, onClose, paper }: EditPaperModalProps) 
       }}
     >
       <DialogContent className={style.modal}>
+        <DialogClose onClose={onClose} />
         <DialogTitle className={style.modalTitle}>Edit Research Paper</DialogTitle>
         <DialogDescription style={{ display: "none" }}>Edit the paper metadata.</DialogDescription>
         <form onSubmit={handleSubmit} className={style.form}>

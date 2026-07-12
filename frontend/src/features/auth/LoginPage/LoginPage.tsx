@@ -3,6 +3,7 @@ import style from "./LoginPage.module.css";
 import schoolLogo from "@/assets/school-logo.svg";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogTitle,
@@ -112,6 +113,7 @@ export const LoginPage = () => {
 
       <Dialog open={showErrorModal} onOpenChange={handleOpenChange}>
         <DialogContent className={style.errorModal}>
+          <DialogClose onClose={handleCloseModal} />
           <DialogTitle className={style.modalTitle}>{modalTitle}</DialogTitle>
 
           <div className={style.descriptionContainer}>

@@ -3,6 +3,7 @@ import type { AdminDepartment } from "@/api/admin/departments";
 import { Button } from "@/components/common/Button/Button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogTitle,
@@ -53,6 +54,7 @@ export function EditDepartmentModal({
       }}
     >
       <DialogContent>
+        <DialogClose onClose={onClose} />
         <DialogTitle>Edit Department</DialogTitle>
         <DialogDescription style={{ display: "none" }}>Edit the department name.</DialogDescription>
         <form onSubmit={handleSubmit}>

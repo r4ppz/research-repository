@@ -1,6 +1,6 @@
 import style from "./ProfileModal.module.css";
 import { Avatar } from "@/components/common/Avatar/Avatar";
-import { Dialog, DialogContent, DialogTitle } from "@/components/common/Dialog/Dialog";
+import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/common/Dialog/Dialog";
 import type { Role, User } from "@/types";
 
 interface ProfileModalProps {
@@ -29,6 +29,7 @@ export const ProfileModal = ({ isOpen, onClose, user, className }: ProfileModalP
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className={className} aria-describedby={undefined}>
+        <DialogClose onClose={onClose} />
         <div className={style.profileContainer}>
           <DialogTitle className={style.modalTitle}>Profile Information</DialogTitle>
 

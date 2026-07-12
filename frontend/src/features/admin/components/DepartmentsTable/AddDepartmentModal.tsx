@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/common/Button/Button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogTitle,
@@ -33,6 +34,7 @@ export function AddDepartmentModal({ isOpen, onClose, onSave, isSaving }: AddDep
       }}
     >
       <DialogContent>
+        <DialogClose onClose={onClose} />
         <DialogTitle>Add Department</DialogTitle>
         <DialogDescription style={{ display: "none" }}>Create a new department.</DialogDescription>
         <form onSubmit={handleSubmit}>
