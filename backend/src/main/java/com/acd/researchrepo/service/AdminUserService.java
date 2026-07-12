@@ -3,6 +3,7 @@ package com.acd.researchrepo.service;
 import com.acd.researchrepo.dto.external.model.UserDto;
 import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
 import com.acd.researchrepo.dto.external.requests.ChangeRoleRequest;
+import com.acd.researchrepo.dto.external.requests.CreateUserRequest;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.mapper.UserMapper;
@@ -17,7 +18,9 @@ import com.acd.researchrepo.repository.UserRepository;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.util.RoleBasedAccess;
 import jakarta.transaction.Transactional;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -104,6 +107,47 @@ public class AdminUserService {
     refreshTokenRepository.deleteByUserId(targetUserId);
 
     return userMapper.toDto(savedUser);
+  }
+
+  @Transactional
+  public UserDto createUser(CreateUserRequest request, CustomUserPrincipal principal) {
+    requireSuperAdmin(principal);
+
+    String email = request.getEmail().toLowerCase().trim();
+    if (userRepository.findByEmail(email).isPresent()) {
+      throw new ApiException(ErrorCode.VALIDATION_ERROR, "A user with this email already exists");
+    }
+
+    Department department = null;
+    if (UserRole.DEPARTMENT_ADMIN.equals(request.getRole())) {
+      if (request.getDepartmentId() == null) {
+        throw new ApiException(
+            ErrorCode.VALIDATION_ERROR, "departmentId is required for DEPARTMENT_ADMIN role");
+      }
+      department =
+          departmentRepository
+              .findById(request.getDepartmentId())
+              .orElseThrow(
+                  () -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Department not found"));
+    }
+
+    User user =
+        User.builder()
+            .email(email)
+            .fullName(deriveNameFromEmail(email))
+            .role(request.getRole())
+            .department(department)
+            .build();
+
+    return userMapper.toDto(userRepository.save(user));
+  }
+
+  private static String deriveNameFromEmail(String email) {
+    String localPart = email.substring(0, email.indexOf('@'));
+    String name = localPart.replaceAll("[._-]", " ");
+    return Arrays.stream(name.split(" "))
+        .map(word -> word.isEmpty() ? "" : Character.toUpperCase(word.charAt(0)) + word.substring(1))
+        .collect(Collectors.joining(" "));
   }
 
   private void requireSuperAdmin(CustomUserPrincipal principal) {
