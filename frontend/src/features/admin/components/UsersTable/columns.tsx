@@ -1,8 +1,7 @@
-import * as RadixSelect from "@radix-ui/react-select";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Check, ChevronDown } from "lucide-react";
 import styles from "./columns.module.css";
 import { Button } from "@/components/common/Button/Button";
+import { Select, SelectItem } from "@/components/common/Select/Select";
 import type { Department, User } from "@/types";
 
 export interface TableMeta {
@@ -60,37 +59,22 @@ const roleColumn = columnHelper.display({
     };
 
     return (
-      <RadixSelect.Root
+      <Select
         value={draft.role}
-        disabled={isSelf}
-        onValueChange={(value) => {
+        isDisabled={isSelf}
+        onChange={(value) => {
           meta.updateDraft(entry.userId, {
             role: value as User["role"],
             departmentId: value === "DEPARTMENT_ADMIN" ? draft.departmentId : "",
           });
         }}
       >
-        <RadixSelect.Trigger className={styles.selectTrigger} aria-label="Role">
-          <RadixSelect.Value />
-          <RadixSelect.Icon className={styles.selectIcon}>
-            <ChevronDown size={16} />
-          </RadixSelect.Icon>
-        </RadixSelect.Trigger>
-        <RadixSelect.Portal>
-          <RadixSelect.Content className={styles.selectContent} position="popper" sideOffset={4}>
-            <RadixSelect.Viewport className={styles.selectViewport}>
-              {ROLES.map((role) => (
-                <RadixSelect.Item key={role.value} value={role.value} className={styles.selectItem}>
-                  <RadixSelect.ItemText>{role.label}</RadixSelect.ItemText>
-                  <RadixSelect.ItemIndicator className={styles.selectIndicator}>
-                    <Check size={14} />
-                  </RadixSelect.ItemIndicator>
-                </RadixSelect.Item>
-              ))}
-            </RadixSelect.Viewport>
-          </RadixSelect.Content>
-        </RadixSelect.Portal>
-      </RadixSelect.Root>
+        {ROLES.map((role) => (
+          <SelectItem key={role.value} id={role.value}>
+            {role.label}
+          </SelectItem>
+        ))}
+      </Select>
     );
   },
 });
@@ -111,37 +95,19 @@ const departmentColumn = columnHelper.display({
     }
 
     return (
-      <RadixSelect.Root
-        value={draft.departmentId}
-        onValueChange={(value) => {
-          meta.updateDraft(entry.userId, { departmentId: value });
+      <Select
+        value={draft.departmentId || null}
+        onChange={(value) => {
+          meta.updateDraft(entry.userId, { departmentId: value as string });
         }}
+        placeholder="Select department"
       >
-        <RadixSelect.Trigger className={styles.selectTrigger} aria-label="Department">
-          <RadixSelect.Value placeholder="Select department" />
-          <RadixSelect.Icon className={styles.selectIcon}>
-            <ChevronDown size={16} />
-          </RadixSelect.Icon>
-        </RadixSelect.Trigger>
-        <RadixSelect.Portal>
-          <RadixSelect.Content className={styles.selectContent} position="popper" sideOffset={4}>
-            <RadixSelect.Viewport className={styles.selectViewport}>
-              {meta.departments.map((dept) => (
-                <RadixSelect.Item
-                  key={dept.departmentId}
-                  value={String(dept.departmentId)}
-                  className={styles.selectItem}
-                >
-                  <RadixSelect.ItemText>{dept.departmentName}</RadixSelect.ItemText>
-                  <RadixSelect.ItemIndicator className={styles.selectIndicator}>
-                    <Check size={14} />
-                  </RadixSelect.ItemIndicator>
-                </RadixSelect.Item>
-              ))}
-            </RadixSelect.Viewport>
-          </RadixSelect.Content>
-        </RadixSelect.Portal>
-      </RadixSelect.Root>
+        {meta.departments.map((dept) => (
+          <SelectItem key={dept.departmentId} id={String(dept.departmentId)}>
+            {dept.departmentName}
+          </SelectItem>
+        ))}
+      </Select>
     );
   },
 });
