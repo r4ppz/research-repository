@@ -22,7 +22,7 @@ public class ApiException extends RuntimeException {
 
   // For business/auth errors with CUSTOM message
   public ApiException(ErrorCode errorCode, String customMessage) {
-    this(errorCode, customMessage, null, null);
+    this(errorCode, customMessage, null, customMessage);
   }
 
   // For validation errors (uses default message but has details)
