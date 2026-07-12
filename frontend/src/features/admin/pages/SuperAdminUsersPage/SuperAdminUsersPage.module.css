@@ -37,6 +37,17 @@
   color: var(--color-text-muted);
 }
 
+.addUserButton {
+  width: 100%;
+}
+
+@media (width >= 768px) {
+  .addUserButton {
+    align-self: auto;
+    width: auto;
+  }
+}
+
 .errorText {
   font-size: var(--font-size-sm);
   color: var(--color-danger, #b42318);
