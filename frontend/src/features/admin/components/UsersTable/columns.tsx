@@ -58,10 +58,14 @@ const roleColumn = columnHelper.display({
       departmentId: entry.department ? String(entry.department.departmentId) : "",
     };
 
+    if (isSelf) {
+      const label = ROLES.find((r) => r.value === entry.role)?.label ?? entry.role;
+      return <span className={styles.userRole}>{label}</span>;
+    }
+
     return (
       <Select
         value={draft.role}
-        isDisabled={isSelf}
         onChange={(value) => {
           meta.updateDraft(entry.userId, {
             role: value as User["role"],
@@ -118,10 +122,11 @@ const actionsColumn = columnHelper.display({
   cell: ({ row, table }) => {
     const meta = table.options.meta as TableMeta;
     const isSelf = row.original.userId === meta.currentUserId;
+    if (isSelf) return <span className={styles.mutedText}>—</span>;
+
     return (
       <Button
         type="button"
-        isDisabled={isSelf}
         onClick={() => {
           void meta.saveUser(row.original);
         }}
