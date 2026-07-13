@@ -1,43 +1,34 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FilePlus2 } from "lucide-react";
 import { useState } from "react";
-import { AddDepartmentModal } from "../../components/DepartmentsTable/AddDepartmentModal";
+import { AddDepartmentModal } from "../../components/AddDepartmentModal/AddDepartmentModal";
 import { DepartmentsTable } from "../../components/DepartmentsTable/DepartmentsTable";
+import { EditDepartmentModal } from "../../components/EditDepartmentModal/EditDepartmentModal";
+import { useDeleteDepartment } from "../../hooks/useAdminDepartmentActions";
 import style from "./SuperAdminDepartmentsPage.module.css";
-import { createDepartment } from "@/api/admin/departments";
+import type { AdminDepartment } from "@/api/admin/departments";
 import { NotificationDialog } from "@/components/common/AlertDialog/NotificationDialog";
 import { Button } from "@/components/common/Button/Button";
 import { Footer } from "@/components/layout/Footer/Footer";
 import { Header } from "@/components/layout/Header/Header";
 
 export const SuperAdminDepartmentsPage = () => {
-  const queryClient = useQueryClient();
   const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const [editingDepartment, setEditingDepartment] = useState<AdminDepartment | null>(null);
   const [notification, setNotification] = useState<{
     type: "success" | "error";
     title: string;
     message: string;
   } | null>(null);
 
-  const addMutation = useMutation({
-    mutationFn: (name: string) => createDepartment({ departmentName: name }),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["adminDepartments"] });
-      setAddModalOpen(false);
-      setNotification({
-        type: "success",
-        title: "Success",
-        message: "Department added successfully.",
-      });
-    },
-    onError: (err) => {
-      setNotification({
-        type: "error",
-        title: "Error",
-        message: err instanceof Error ? err.message : "Failed to add department",
-      });
-    },
-  });
+  const deleteMutation = useDeleteDepartment();
+
+  const showSuccess = (message: string) => {
+    setNotification({ type: "success", title: "Success", message });
+  };
+
+  const showError = (message: string) => {
+    setNotification({ type: "error", title: "Error", message });
+  };
 
   return (
     <div className={style.page}>
@@ -60,7 +51,21 @@ export const SuperAdminDepartmentsPage = () => {
             </Button>
           </section>
 
-          <DepartmentsTable />
+          <DepartmentsTable
+            onEdit={(department) => {
+              setEditingDepartment(department);
+            }}
+            onDelete={(department) => {
+              deleteMutation.mutate(department.departmentId, {
+                onSuccess: () => {
+                  showSuccess("Department deleted successfully.");
+                },
+                onError: (err) => {
+                  showError(err instanceof Error ? err.message : "Failed to delete department");
+                },
+              });
+            }}
+          />
         </div>
       </main>
 
@@ -69,10 +74,26 @@ export const SuperAdminDepartmentsPage = () => {
         onClose={() => {
           setAddModalOpen(false);
         }}
-        onSave={(name) => {
-          addMutation.mutate(name);
+        onSuccess={() => {
+          showSuccess("Department added successfully.");
         }}
-        isSaving={addMutation.isPending}
+        onError={(message) => {
+          showError(message);
+        }}
+      />
+
+      <EditDepartmentModal
+        isOpen={!!editingDepartment}
+        department={editingDepartment}
+        onClose={() => {
+          setEditingDepartment(null);
+        }}
+        onSuccess={() => {
+          showSuccess("Department updated successfully.");
+        }}
+        onError={(message) => {
+          showError(message);
+        }}
       />
 
       <NotificationDialog
