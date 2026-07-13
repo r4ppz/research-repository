@@ -33,7 +33,7 @@ front-install:
 	pnpm --dir frontend install
 
 front-dev:
-	pnpm --dir frontend dev
+	pnpm --dir frontend dev --host 0.0.0.0
 
 front-build:
 	pnpm --dir frontend build
