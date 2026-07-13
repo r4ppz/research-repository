@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useCreateDepartment } from "../../hooks/useAdminDepartmentActions";
+import styles from "./AddDepartmentModal.module.css";
 import { Button } from "@/components/common/Button/Button";
 import {
   Dialog,
@@ -12,18 +14,33 @@ import { Input } from "@/components/common/Input/Input";
 interface AddDepartmentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (name: string) => void;
-  isSaving: boolean;
+  onSuccess?: () => void;
+  onError?: (message: string) => void;
 }
 
-export function AddDepartmentModal({ isOpen, onClose, onSave, isSaving }: AddDepartmentModalProps) {
+export function AddDepartmentModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  onError,
+}: AddDepartmentModalProps) {
   const [name, setName] = useState("");
+  const createMutation = useCreateDepartment();
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
-    onSave(name.trim());
-    setName("");
+
+    createMutation.mutate(name.trim(), {
+      onSuccess: () => {
+        setName("");
+        onClose();
+        onSuccess?.();
+      },
+      onError: (err) => {
+        onError?.(err instanceof Error ? err.message : "Failed to add department");
+      },
+    });
   };
 
   return (
@@ -38,7 +55,7 @@ export function AddDepartmentModal({ isOpen, onClose, onSave, isSaving }: AddDep
         <DialogTitle>Add Department</DialogTitle>
         <DialogDescription style={{ display: "none" }}>Create a new department.</DialogDescription>
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: "var(--space-md)" }}>
+          <div className={styles.field}>
             <Input
               value={name}
               onChange={(e) => {
@@ -49,18 +66,12 @@ export function AddDepartmentModal({ isOpen, onClose, onSave, isSaving }: AddDep
               maxLength={64}
             />
           </div>
-          <div
-            style={{
-              display: "flex",
-              gap: "var(--space-sm)",
-              justifyContent: "flex-end",
-            }}
-          >
+          <div className={styles.actions}>
             <Button variant="secondary" onClick={onClose} type="button">
               Cancel
             </Button>
-            <Button type="submit" isPending={isSaving}>
-              {isSaving ? "Adding..." : "Add"}
+            <Button type="submit" isPending={createMutation.isPending}>
+              {createMutation.isPending ? "Adding..." : "Add"}
             </Button>
           </div>
         </form>
