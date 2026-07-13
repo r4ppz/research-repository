@@ -4,6 +4,8 @@ import style from "./FilterDepartmentsButton.module.css";
 import { Button } from "@/components/common/Button/Button";
 import { useDepartments } from "@/features/library/hooks/useDepartments";
 
+//Don't migrate this to React Aria. It was purposely designed for the library unless explicitly approved.
+
 interface FilterDepartmentButtonProps {
   selectedDepartment: string | null;
   onDepartmentChange: (departmentId: string | null) => void;

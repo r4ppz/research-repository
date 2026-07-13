@@ -4,6 +4,8 @@ import style from "./FilterYearsButton.module.css";
 import { Button } from "@/components/common/Button/Button";
 import { useYears } from "@/features/library/hooks/useYears";
 
+//Don't migrate this to React Aria. It was purposely designed for the library unless explicitly approved.
+
 interface FilterYearsButtonProps {
   selectedYear: string | null;
   onYearChange: (year: string | null) => void;
