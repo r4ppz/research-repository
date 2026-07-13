@@ -4,7 +4,7 @@ import style from "./AddUserModal.module.css";
 import { createUser } from "@/api/admin/users";
 import { getDepartments } from "@/api/filter";
 import { Button } from "@/components/common/Button/Button";
-import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/common/Dialog/Dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/common/Dialog/Dialog";
 import { Select, SelectItem } from "@/components/common/Select/Select";
 import { TextField } from "@/components/common/TextField/TextField";
 import type { User } from "@/types";
@@ -79,7 +79,6 @@ export const AddUserModal = ({ isOpen, onClose, onUserAdded }: AddUserModalProps
       }}
     >
       <DialogContent className={style.modal}>
-        <DialogClose onClose={onClose} />
         <DialogTitle className={style.modalTitle}>Add New User</DialogTitle>
         <form onSubmit={handleSubmit} className={style.form}>
           <div className={style.field}>
@@ -95,8 +94,8 @@ export const AddUserModal = ({ isOpen, onClose, onUserAdded }: AddUserModalProps
 
           <Select
             label="Role"
-            value={role}
-            onChange={(v) => {
+            selectedKey={role}
+            onSelectionChange={(v) => {
               const r = v as User["role"];
               setRole(r);
               if (r !== "DEPARTMENT_ADMIN") {
@@ -114,8 +113,8 @@ export const AddUserModal = ({ isOpen, onClose, onUserAdded }: AddUserModalProps
           {role === "DEPARTMENT_ADMIN" && (
             <Select
               label="Department"
-              value={departmentId || null}
-              onChange={(v) => {
+              selectedKey={departmentId || null}
+              onSelectionChange={(v) => {
                 setDepartmentId(v as string);
               }}
               placeholder="Select Department"
