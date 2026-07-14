@@ -43,7 +43,6 @@ export const ProfileModal = ({ isOpen, onClose, user, className }: ProfileModalP
             className={style.avatar}
           />
           <DialogTitle className={style.name}>{user.fullName}</DialogTitle>
-          <p className={style.headerEmail}>{user.email}</p>
         </div>
 
         <div className={style.body}>
