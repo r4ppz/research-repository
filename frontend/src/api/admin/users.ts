@@ -4,6 +4,7 @@ import type { Page, User } from "@/types";
 export interface AdminUsersQueryParams {
   page?: number;
   size?: number;
+  search?: string;
 }
 
 export interface ChangeUserRoleRequest {

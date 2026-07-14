@@ -7,8 +7,10 @@ export function useAdminUsers(params: AdminUsersQueryParams = {}) {
   const [pageIndex, setPageIndex] = useState(params.page ?? 0);
   const [pageSize, setPageSize] = useState(params.size ?? 20);
 
+  const { search } = params;
+
   const query = useQuery({
-    queryKey: ["adminUsers", { pageIndex, pageSize }],
+    queryKey: ["adminUsers", { pageIndex, pageSize, search }],
     queryFn: () =>
       getAdminUsers({
         ...params,

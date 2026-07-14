@@ -48,6 +48,10 @@
   }
 }
 
+.searchWrapper {
+  width: 100%;
+}
+
 .errorText {
   font-size: var(--font-size-sm);
   color: var(--color-danger, #b42318);
