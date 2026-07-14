@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Check, Eye, X } from "lucide-react";
-import style from "./columns.module.css";
+import style from "../tableActionStyles.module.css";
 import { Button } from "@/components/common/Button/Button";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
 import type { DocumentRequest, ResearchPaper } from "@/types";
