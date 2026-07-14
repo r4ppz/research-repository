@@ -25,34 +25,38 @@ The **Purpose** of the system is to serve as a gated school research repository 
 
 ## Roles & Capabilities (AuthZ)
 
-| Role             | Department | Can View Metadata                               | Can Download/View PDF                           | Can CRUD Papers             | Can Approve/Reject Requests                 |
-| ---------------- | ---------- | ----------------------------------------------- | ----------------------------------------------- | --------------------------- | ------------------------------------------- |
-| STUDENT          | null       | All non-archived papers, all departments        | Only if request ACCEPTED and paper not archived | No                          | No                                          |
-| FACULTY          | null       | All papers, including archived, all departments | Only if request ACCEPTED and paper not archived | No                          | No                                          |
-| DEPARTMENT_ADMIN | Required   | All papers, including archived, all departments | Full for their department                       | Full for their department   | Approve/reject requests in their department |
-| SUPER_ADMIN      | null       | All papers, including archived, all departments | Full across all departments                     | Full across all departments | Full across all departments                 |
+| Role             | Department | Can View Metadata                                      | Can Download/View PDF                           | Can CRUD Papers             | Can Approve/Reject Requests                 |
+| ---------------- | ---------- | ------------------------------------------------------ | ----------------------------------------------- | --------------------------- | ------------------------------------------- |
+| STUDENT          | null       | All non-archived papers, all departments               | Only if request ACCEPTED and paper not archived | No                          | No                                          |
+| FACULTY          | null       | All papers, including archived, all departments        | Only if request ACCEPTED and paper not archived | No                          | No                                          |
+| DEPARTMENT_ADMIN | Required   | All papers, including archived, **within their department** | Full for their department                       | Full for their department   | Approve/reject requests in their department |
+| SUPER_ADMIN      | null       | All papers, including archived, all departments        | Full across all departments                     | Full across all departments | Full across all departments                 |
 
 ---
 
 ### Page Access (frontend)
 
-- **STUDENT**
-    - LibraryPage (non-archived papers, all departments)
-    - RequestPage → Own requests
+| Page                      | Route                       | STUDENT | FACULTY | DEPARTMENT_ADMIN | SUPER_ADMIN |
+| ------------------------- | --------------------------- | ------- | ------- | ---------------- | ----------- |
+| LibraryPage               | `/`                         | ✓       | ✓       | ✓                | ✓           |
+| StudentRequestPage        | `/student/requests`         | ✓       | —       | —                | —           |
+| FacultyRequestPage        | `/faculty/requests`         | —       | ✓       | —                | —           |
+| AdminRequestsPage         | `/department-admin/requests`| —       | —       | ✓ (dept-scoped)  | —           |
+| AdminPapersPage           | `/department-admin/research`| —       | —       | ✓ (dept-scoped)  | —           |
+| AdminRequestsPage         | `/super-admin/requests`     | —       | —       | —                | ✓ (global)  |
+| AdminPapersPage           | `/super-admin/research`     | —       | —       | —                | ✓ (global)  |
+| SuperAdminUsersPage       | `/super-admin/users`        | —       | —       | —                | ✓           |
+| SuperAdminDepartmentsPage | `/super-admin/departments`  | —       | —       | —                | ✓           |
 
-- **FACULTY**
-    - LibraryPage (all papers metadata, all departments)
-    - RequestPage → Own requests
+**Nav bar visibility:**
 
-- **DEPARTMENT_ADMIN**
-    - LibraryPage (all papers metadata, all departments)
-    - RequestPage → Request approvals (dept-scoped)
-    - ResearchPage → Paper management (dept-scoped)
-
-- **SUPER_ADMIN**
-    - LibraryPage (all papers, all departments)
-    - RequestPage → Request approvals (global)
-    - ResearchPage → Paper management (global)
+| Nav link  | STUDENT | FACULTY | DEPARTMENT_ADMIN | SUPER_ADMIN |
+| --------- | ------- | ------- | ---------------- | ----------- |
+| Library   | ✓       | ✓       | ✓                | ✓           |
+| Request   | ✓       | ✓       | ✓                | ✓           |
+| Research  | —       | —       | ✓                | ✓           |
+| Users     | —       | —       | —                | ✓           |
+| Departments | —     | —       | —                | ✓           |
 
 ---
 
