@@ -47,12 +47,18 @@ public class AdminUserService {
     this.userMapper = userMapper;
   }
 
-  public PaginatedResponse<UserDto> listUsers(int page, int size, CustomUserPrincipal principal) {
+  public PaginatedResponse<UserDto> listUsers(
+      int page, int size, String search, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
 
-    return PaginatedResponse.fromPage(
-        userRepository.findAll(PageRequest.of(page, size, Sort.by("userId").ascending())),
-        userMapper::toDto);
+    var pageable = PageRequest.of(page, size, Sort.by("userId").ascending());
+
+    if (search != null && !search.trim().isEmpty()) {
+      return PaginatedResponse.fromPage(
+          userRepository.searchByEmailOrFullName(search, pageable), userMapper::toDto);
+    }
+
+    return PaginatedResponse.fromPage(userRepository.findAll(pageable), userMapper::toDto);
   }
 
   @Transactional

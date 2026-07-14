@@ -35,11 +35,12 @@ public class AdminUserController {
   public ResponseEntity<PaginatedResponse<UserDto>> getUsers(
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "20") int size,
+      @RequestParam(required = false) String search,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
 
     log.debug("GET /api/admin/users endpoint hit");
 
-    return ResponseEntity.ok(adminUserService.listUsers(page, size, principal));
+    return ResponseEntity.ok(adminUserService.listUsers(page, size, search, principal));
   }
 
   @PostMapping
