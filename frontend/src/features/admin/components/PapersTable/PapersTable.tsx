@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useArchivePaper,
   useDeletePaper,
@@ -21,16 +21,22 @@ import type { ResearchPaper } from "@/types";
 interface PapersTableProps {
   archived: boolean;
   showDepartment?: boolean;
+  search?: string;
 }
 
-export function PapersTable({ archived, showDepartment = true }: PapersTableProps) {
+export function PapersTable({ archived, showDepartment = true, search }: PapersTableProps) {
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
   const [editingPaper, setEditingPaper] = useState<ResearchPaper | null>(null);
 
   const { data, pageIndex, pageSize, pageCount, setPageIndex, setPageSize, isLoading, error } =
     useAdminPapers({
       archived,
+      search,
     });
+
+  useEffect(() => {
+    setPageIndex(0);
+  }, [search, setPageIndex]);
 
   const archiveMutation = useArchivePaper();
   const unarchiveMutation = useUnarchivePaper();
@@ -87,6 +93,7 @@ export function PapersTable({ archived, showDepartment = true }: PapersTableProp
           setPageSize(nextState.pageSize);
         }}
         meta={tableMeta}
+        emptyMessage={search ? "No papers match your search." : undefined}
       />
 
       <ResearchModal

@@ -1,17 +1,22 @@
-import { Archive, CircleCheck, FilePlus2 } from "lucide-react";
+import { Archive, CircleCheck, FilePlus2, Search } from "lucide-react";
 import { useState } from "react";
 import { PaperFormModal } from "../../components/PaperFormModal/PaperFormModal";
 import { PapersTable } from "../../components/PapersTable/PapersTable";
 import style from "./AdminPapersPage.module.css";
 import { Button } from "@/components/common/Button/Button";
+import { Input } from "@/components/common/Input/Input";
 import { Footer } from "@/components/layout/Footer/Footer";
 import { Header } from "@/components/layout/Header/Header";
 import { useAuth } from "@/features/auth/context/useAuth";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export const AdminPapersPage = () => {
   const { user } = useAuth();
   const [tab, setTab] = useState<"active" | "archived">("active");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isPaperModalOpen, setPaperModalOpen] = useState(false);
+
+  const debouncedSearch = useDebounce(searchQuery, 500);
 
   const openModal = () => {
     setPaperModalOpen(true);
@@ -23,6 +28,10 @@ export const AdminPapersPage = () => {
 
   const changeTab = (t: "active" | "archived") => {
     setTab(t);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
   const isArchived = tab === "archived";
@@ -65,8 +74,22 @@ export const AdminPapersPage = () => {
             </Button>
           </div>
 
+          <div className={style.searchWrapper}>
+            <Input
+              icon={Search}
+              type="search"
+              placeholder="Search by title, author, or abstract..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+          </div>
+
           <div className={style.tableSection}>
-            <PapersTable archived={isArchived} showDepartment={showDepartment} />
+            <PapersTable
+              archived={isArchived}
+              showDepartment={showDepartment}
+              search={debouncedSearch}
+            />
           </div>
         </div>
       </main>
