@@ -11,7 +11,7 @@ import clsx from "clsx";
 import style from "./DataTable.module.css";
 import { Button } from "@/components/common/Button/Button";
 
-// TODO: Switch to React Aria
+// TODO: Not ready to switch to React Aria
 
 interface DataTableProps<TData extends RowData> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
