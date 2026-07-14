@@ -2,8 +2,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { Edit, Trash2 } from "lucide-react";
 import style from "../RequestTable/columns.module.css";
 import type { AdminDepartment } from "@/api/admin/departments";
-import { ConfirmDialog } from "@/components/common/AlertDialog/ConfirmDialog";
 import { Button } from "@/components/common/Button/Button";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
 
 export interface TableMeta {
   onEdit: (department: AdminDepartment) => void;
