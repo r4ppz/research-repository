@@ -4,9 +4,9 @@ import { useAdminUsers } from "../../hooks/useAdminUsers";
 import { columns, type RowDraft, type TableMeta } from "./columns";
 import { changeUserRole } from "@/api/admin/users";
 import { getDepartments } from "@/api/filter";
-import { NotificationDialog } from "@/components/common/AlertDialog/NotificationDialog";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { NotificationDialog } from "@/components/common/NotificationDialog/NotificationDialog";
 import type { User } from "@/types";
 
 interface UsersTableProps {

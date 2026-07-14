@@ -6,8 +6,8 @@ import { EditDepartmentModal } from "../../components/EditDepartmentModal/EditDe
 import { useDeleteDepartment } from "../../hooks/useAdminDepartmentActions";
 import style from "./SuperAdminDepartmentsPage.module.css";
 import type { AdminDepartment } from "@/api/admin/departments";
-import { NotificationDialog } from "@/components/common/AlertDialog/NotificationDialog";
 import { Button } from "@/components/common/Button/Button";
+import { NotificationDialog } from "@/components/common/NotificationDialog/NotificationDialog";
 import { Footer } from "@/components/layout/Footer/Footer";
 import { Header } from "@/components/layout/Header/Header";
 
