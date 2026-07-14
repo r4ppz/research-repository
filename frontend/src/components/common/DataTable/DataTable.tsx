@@ -22,6 +22,7 @@ interface DataTableProps<TData extends RowData> {
   onPaginationChange: OnChangeFn<PaginationState>;
   caption: string;
   isLoading?: boolean;
+  emptyMessage?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   meta?: any;
 }
@@ -33,6 +34,7 @@ export function DataTable<TData extends RowData>({
   pagination,
   onPaginationChange,
   caption,
+  emptyMessage = "No records yet.",
   meta,
 }: DataTableProps<TData>) {
   const handlePaginationChange: OnChangeFn<PaginationState> = (updater) => {
@@ -78,7 +80,7 @@ export function DataTable<TData extends RowData>({
                 className={clsx(style.tableData, style.tableBodyData, style.emptyStateCell)}
                 colSpan={table.getAllLeafColumns().length}
               >
-                This silence is the most accurate answer we can provide.
+                {emptyMessage}
               </td>
             </tr>
           ) : (
