@@ -94,8 +94,8 @@ export const AddUserModal = ({ isOpen, onClose, onUserAdded }: AddUserModalProps
 
           <Select
             label="Role"
-            selectedKey={role}
-            onSelectionChange={(v) => {
+            value={role}
+            onChange={(v) => {
               const r = v as User["role"];
               setRole(r);
               if (r !== "DEPARTMENT_ADMIN") {
@@ -113,8 +113,8 @@ export const AddUserModal = ({ isOpen, onClose, onUserAdded }: AddUserModalProps
           {role === "DEPARTMENT_ADMIN" && (
             <Select
               label="Department"
-              selectedKey={departmentId || null}
-              onSelectionChange={(v) => {
+              value={departmentId || null}
+              onChange={(v) => {
                 setDepartmentId(v as string);
               }}
               placeholder="Select Department"
