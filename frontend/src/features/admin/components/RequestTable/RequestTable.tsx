@@ -4,8 +4,10 @@ import { useAcceptRequest, useRejectRequest } from "../../hooks/useAdminRequestM
 import { columns, columnsWithoutDepartment, type TableMeta } from "./columns";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { NotificationDialog } from "@/components/common/NotificationDialog/NotificationDialog";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
 import type { ResearchPaper } from "@/types";
+import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
 interface RequestsTableProps {
   showDepartment?: boolean;
@@ -13,6 +15,11 @@ interface RequestsTableProps {
 
 export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    title: string;
+    message: string;
+  } | null>(null);
 
   const { data, pageIndex, pageSize, pageCount, setPageIndex, setPageSize, isLoading, error } =
     useAdminRequests({ status: "PENDING" });
@@ -25,10 +32,26 @@ export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
       setSelectedPaper(paper);
     },
     onReject: (requestId) => {
-      rejectMutation.mutate(requestId);
+      rejectMutation.mutate(requestId, {
+        onError: (error) => {
+          setNotification({
+            type: "error",
+            title: "Error",
+            message: getUserErrorMessage(extractApiError(error)),
+          });
+        },
+      });
     },
     onAccept: (requestId) => {
-      acceptMutation.mutate(requestId);
+      acceptMutation.mutate(requestId, {
+        onError: (error) => {
+          setNotification({
+            type: "error",
+            title: "Error",
+            message: getUserErrorMessage(extractApiError(error)),
+          });
+        },
+      });
     },
     pendingAcceptId: acceptMutation.isPending ? acceptMutation.variables : null,
     pendingRejectId: rejectMutation.isPending ? rejectMutation.variables : null,
@@ -67,6 +90,16 @@ export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
         onClose={() => {
           setSelectedPaper(null);
         }}
+      />
+
+      <NotificationDialog
+        open={!!notification}
+        onClose={() => {
+          setNotification(null);
+        }}
+        type={notification?.type ?? "error"}
+        title={notification?.title ?? ""}
+        description={notification?.message ?? ""}
       />
     </>
   );

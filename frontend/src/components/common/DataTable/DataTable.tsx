@@ -11,7 +11,7 @@ import clsx from "clsx";
 import style from "./DataTable.module.css";
 import { Button } from "@/components/common/Button/Button";
 
-// TODO: Switch to React Aria
+// TODO: Not ready to switch to React Aria
 
 interface DataTableProps<TData extends RowData> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,6 +22,7 @@ interface DataTableProps<TData extends RowData> {
   onPaginationChange: OnChangeFn<PaginationState>;
   caption: string;
   isLoading?: boolean;
+  emptyMessage?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   meta?: any;
 }
@@ -33,6 +34,7 @@ export function DataTable<TData extends RowData>({
   pagination,
   onPaginationChange,
   caption,
+  emptyMessage = "No records yet.",
   meta,
 }: DataTableProps<TData>) {
   const handlePaginationChange: OnChangeFn<PaginationState> = (updater) => {
@@ -78,17 +80,23 @@ export function DataTable<TData extends RowData>({
                 className={clsx(style.tableData, style.tableBodyData, style.emptyStateCell)}
                 colSpan={table.getAllLeafColumns().length}
               >
-                This silence is the most accurate answer we can provide.
+                {emptyMessage}
               </td>
             </tr>
           ) : (
             table.getRowModel().rows.map((row) => (
               <tr className={style.tableRow} key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td className={clsx(style.tableData, style.tableBodyData)} key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
+                {row.getVisibleCells().map((cell) => {
+                  const colMeta = cell.column.columnDef.meta as { className?: string } | undefined;
+                  return (
+                    <td
+                      className={clsx(style.tableData, style.tableBodyData, colMeta?.className)}
+                      key={cell.id}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  );
+                })}
               </tr>
             ))
           )}

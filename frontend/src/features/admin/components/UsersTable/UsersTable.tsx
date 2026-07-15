@@ -1,19 +1,20 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAdminUsers } from "../../hooks/useAdminUsers";
 import { columns, type RowDraft, type TableMeta } from "./columns";
 import { changeUserRole } from "@/api/admin/users";
 import { getDepartments } from "@/api/filter";
-import { NotificationDialog } from "@/components/common/AlertDialog/NotificationDialog";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { NotificationDialog } from "@/components/common/NotificationDialog/NotificationDialog";
 import type { User } from "@/types";
 
 interface UsersTableProps {
   currentUserId: number | undefined;
+  search?: string;
 }
 
-export function UsersTable({ currentUserId }: UsersTableProps) {
+export function UsersTable({ currentUserId, search }: UsersTableProps) {
   const queryClient = useQueryClient();
   const [drafts, setDrafts] = useState<Record<number, RowDraft>>({});
   const [notification, setNotification] = useState<{
@@ -31,7 +32,11 @@ export function UsersTable({ currentUserId }: UsersTableProps) {
     pageSize,
     setPageIndex,
     setPageSize,
-  } = useAdminUsers();
+  } = useAdminUsers({ search });
+
+  useEffect(() => {
+    setPageIndex(0);
+  }, [search, setPageIndex]);
 
   const departmentsQuery = useQuery({
     queryKey: ["departments"],
@@ -113,6 +118,7 @@ export function UsersTable({ currentUserId }: UsersTableProps) {
           setPageSize(nextState.pageSize);
         }}
         meta={tableMeta}
+        emptyMessage={search ? "No users match your search." : undefined}
       />
       <NotificationDialog
         open={!!notification}

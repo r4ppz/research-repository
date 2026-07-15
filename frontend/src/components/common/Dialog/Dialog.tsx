@@ -1,55 +1,77 @@
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Cross2Icon } from "@radix-ui/react-icons";
-import clsx from "clsx";
-import type { ComponentPropsWithoutRef, Ref } from "react";
+import { X } from "lucide-react";
+import { Dialog as AriaDialog, Modal, ModalOverlay } from "react-aria-components";
 import styles from "./Dialog.module.css";
 
-// TODO: switch to React Aria
-
-const { Root, Trigger, Portal, Overlay, Content, Title, Description, Close } = DialogPrimitive;
-
-type OverlayProps = ComponentPropsWithoutRef<typeof Overlay> & { ref?: Ref<HTMLDivElement> };
-type ContentProps = ComponentPropsWithoutRef<typeof Content> & { ref?: Ref<HTMLDivElement> };
-type TitleProps = ComponentPropsWithoutRef<typeof Title> & { ref?: Ref<HTMLHeadingElement> };
-type DescriptionProps = ComponentPropsWithoutRef<typeof Description> & {
-  ref?: Ref<HTMLParagraphElement>;
-};
-
-function DialogOverlay({ className, ref, ...props }: OverlayProps) {
-  return <Overlay ref={ref} className={clsx(styles.overlay, className)} {...props} />;
+interface DialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  children?: React.ReactNode;
 }
 
-function DialogContent({ className, children, ref, ...props }: ContentProps) {
+function Dialog({ open, onOpenChange, children }: DialogProps) {
   return (
-    <Portal>
-      <DialogOverlay />
-      <div className={styles.contentWrapper}>
-        <Content ref={ref} className={clsx(styles.dialogContent, className)} {...props}>
-          {children}
-          <Close className={styles.closeButton} aria-label="Close dialog">
-            <Cross2Icon className={styles.iconClose} />
-          </Close>
-        </Content>
-      </div>
-    </Portal>
+    <ModalOverlay
+      isOpen={open}
+      onOpenChange={onOpenChange}
+      className={styles.overlay}
+      isDismissable
+    >
+      <Modal className={styles.contentWrapper}>
+        <AriaDialog className={styles.dialog}>{children}</AriaDialog>
+      </Modal>
+    </ModalOverlay>
   );
 }
 
-function DialogTitle({ className, ref, ...props }: TitleProps) {
-  return <Title ref={ref} className={clsx(styles.title, className)} {...props} />;
+interface DialogContentProps {
+  className?: string;
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
-function DialogDescription({ className, ref, ...props }: DescriptionProps) {
-  return <Description ref={ref} className={clsx(styles.description, className)} {...props} />;
+function DialogContent({ className, children, style }: DialogContentProps) {
+  return (
+    <div className={[styles.dialogContent, className].filter(Boolean).join(" ")} style={style}>
+      {children}
+    </div>
+  );
 }
 
-export {
-  Root as Dialog,
-  Trigger as DialogTrigger,
-  Portal as DialogPortal,
-  Close as DialogClose,
-  DialogOverlay,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-};
+interface DialogTitleProps {
+  className?: string;
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
+}
+
+function DialogTitle({ className, children, style }: DialogTitleProps) {
+  return (
+    <h2 slot="title" className={[styles.title, className].filter(Boolean).join(" ")} style={style}>
+      {children}
+    </h2>
+  );
+}
+
+interface DialogDescriptionProps {
+  className?: string;
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
+}
+
+function DialogDescription({ className, children, style }: DialogDescriptionProps) {
+  return (
+    <div className={className} style={style}>
+      {children}
+    </div>
+  );
+}
+
+function DialogClose({ onClose }: { onClose: () => void }) {
+  return (
+    <button className={styles.closeButton} onClick={onClose} aria-label="Close dialog">
+      <X className={styles.iconClose} />
+    </button>
+  );
+}
+
+export { Dialog, DialogContent, DialogTitle, DialogClose, DialogDescription };
+export type { DialogProps };

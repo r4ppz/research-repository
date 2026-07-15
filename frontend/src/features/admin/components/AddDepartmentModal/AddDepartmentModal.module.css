@@ -1,0 +1,13 @@
+.field {
+  margin-bottom: var(--space-md);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+}
+
+.hiddenDescription {
+  display: none;
+}

@@ -59,6 +59,11 @@
   text-align: center;
 }
 
+:global(.narrowFit) {
+  width: 1%;
+  white-space: nowrap;
+}
+
 .tableRow:hover .tableBodyData {
   background: var(--color-bg);
 }

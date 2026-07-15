@@ -11,11 +11,25 @@ import { SearchNFilter } from "@/features/library/components/SearchNFilter/Searc
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 export const LibraryPage = () => {
-  const { state, handlers, papers, loading, error, pagination } = useLibrary();
+  const {
+    searchQuery,
+    selectedDepartment,
+    selectedYear,
+    currentPage,
+    handleSearchChange,
+    handleYearChange,
+    handleDepartmentChange,
+    goToNextPage,
+    goToPrevPage,
+    papers,
+    loading,
+    error,
+    pagination,
+  } = useLibrary();
   const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useScrollToTop([state.currentPage]);
+  useScrollToTop([currentPage]);
 
   const handleOpenModal = (id: number) => {
     setSelectedPaperId(id);
@@ -41,12 +55,12 @@ export const LibraryPage = () => {
           </section>
 
           <SearchNFilter
-            searchQuery={state.searchQuery}
-            onSearchChange={handlers.handleSearchChange}
-            selectedYear={state.selectedYear}
-            onYearChange={handlers.handleYearChange}
-            selectedDepartment={state.selectedDepartment}
-            onDepartmentChange={handlers.handleDepartmentChange}
+            searchQuery={searchQuery}
+            onSearchChange={handleSearchChange}
+            selectedYear={selectedYear}
+            onYearChange={handleYearChange}
+            selectedDepartment={selectedDepartment}
+            onDepartmentChange={handleDepartmentChange}
           />
 
           <section className={style.researchSection}>
@@ -54,9 +68,9 @@ export const LibraryPage = () => {
               loading={loading}
               error={error}
               papers={papers}
-              searchQuery={state.searchQuery}
-              selectedDepartment={state.selectedDepartment}
-              selectedYear={state.selectedYear}
+              searchQuery={searchQuery}
+              selectedDepartment={selectedDepartment}
+              selectedYear={selectedYear}
               onViewPaper={handleOpenModal}
             />
           </section>
@@ -65,21 +79,21 @@ export const LibraryPage = () => {
             <section className={style.paginationSection}>
               <Button
                 className={style.pagingButton}
-                onClick={handlers.goToPrevPage}
-                isDisabled={state.currentPage === 0}
+                onClick={goToPrevPage}
+                isDisabled={currentPage === 0}
               >
                 <ChevronLeft className={style.iconChevron} />
                 Previous
               </Button>
 
               <p className={style.pagingIndicator}>
-                Page {state.currentPage + 1} of {pagination.totalPages}
+                Page {currentPage + 1} of {pagination.totalPages}
               </p>
 
               <Button
                 className={style.pagingButton}
-                onClick={handlers.goToNextPage}
-                isDisabled={state.currentPage >= pagination.totalPages - 1}
+                onClick={goToNextPage}
+                isDisabled={currentPage >= pagination.totalPages - 1}
               >
                 Next
                 <ChevronRight className={style.iconChevron} />

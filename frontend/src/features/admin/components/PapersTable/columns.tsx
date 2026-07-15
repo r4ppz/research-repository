@@ -1,8 +1,8 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Archive, Edit, Eye, RotateCcw, Trash2 } from "lucide-react";
-import style from "../RequestTable/columns.module.css";
-import { ConfirmDialog } from "@/components/common/AlertDialog/ConfirmDialog";
+import style from "../tableActionStyles.module.css";
 import { Button } from "@/components/common/Button/Button";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
 import type { ResearchPaper } from "@/types";
 import { formatDateShort } from "@/util/formatDate";
 

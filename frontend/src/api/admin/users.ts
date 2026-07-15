@@ -4,6 +4,7 @@ import type { Page, User } from "@/types";
 export interface AdminUsersQueryParams {
   page?: number;
   size?: number;
+  search?: string;
 }
 
 export interface ChangeUserRoleRequest {
@@ -13,6 +14,17 @@ export interface ChangeUserRoleRequest {
 
 export const getAdminUsers = async (params?: AdminUsersQueryParams): Promise<Page<User>> => {
   const response = await axiosClient.get<Page<User>>("/api/admin/users", { params });
+  return response.data;
+};
+
+export interface CreateUserRequest {
+  email: string;
+  role: User["role"];
+  departmentId?: number;
+}
+
+export const createUser = async (data: CreateUserRequest): Promise<User> => {
+  const response = await axiosClient.post<User>("/api/admin/users", data);
   return response.data;
 };
 

@@ -41,14 +41,15 @@ export const useLibrary = () => {
   };
 
   return {
-    state: { searchQuery, selectedDepartment, selectedYear, currentPage },
-    handlers: {
-      handleSearchChange,
-      handleYearChange,
-      handleDepartmentChange,
-      goToNextPage,
-      goToPrevPage,
-    },
+    searchQuery,
+    selectedDepartment,
+    selectedYear,
+    currentPage,
+    handleSearchChange,
+    handleYearChange,
+    handleDepartmentChange,
+    goToNextPage,
+    goToPrevPage,
     ...queryResults,
   };
 };

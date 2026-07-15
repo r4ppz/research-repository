@@ -4,7 +4,7 @@
   color: var(--color-input-text);
 }
 
-.button {
+.trigger {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -21,36 +21,30 @@
   outline: none;
   transition: border-color 0.2s;
 
-  &[data-pressed] {
-    transform: scale(1);
+  &[data-hovered] {
+    background-color: var(--color-input-bg-hover);
   }
 }
 
 @media (width >= 768px) {
-  .button {
+  .trigger {
     box-shadow: var(--shadow-resting);
     transition: var(--transition-elevation);
   }
 
-  .button:hover {
+  .trigger:hover {
     background-color: var(--color-input-bg-hover);
     box-shadow: var(--shadow-hover);
-    transform: translateY(var(--translate-hover)) scale(var(--scale-hover));
-  }
-
-  .button:active {
-    box-shadow: var(--shadow-active);
-    transform: translateY(var(--translate-active)) scale(var(--scale-active));
   }
 }
 
-.button:focus {
+.trigger[data-focus-visible] {
   border-radius: var(--radius-md);
   outline: 2px solid var(--color-secondary);
   outline-offset: 1px;
 }
 
-.select[data-disabled] .button {
+.select[data-disabled] .trigger {
   color: var(--color-text-disabled);
   cursor: not-allowed;
   background-color: var(--color-surface-disabled);
@@ -77,7 +71,9 @@
   color: var(--color-text-muted);
 }
 
-.selectPopover {
+.popover {
+  position: relative;
+  z-index: 100;
   min-width: var(--trigger-width);
   max-width: min(var(--available-width), 400px);
   overflow: hidden;
@@ -87,7 +83,78 @@
   box-shadow: var(--shadow-resting);
 }
 
-.selectPopover[data-trigger="Select"] {
+.popover[data-trigger="Select"] {
   width: auto;
   padding: 0;
+}
+
+.listBox {
+  max-height: 300px;
+  overflow: auto;
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  outline: none;
+
+  &[data-focus-visible] {
+    outline: 1px solid var(--color-border-outline);
+    outline-offset: -1px;
+  }
+
+  &[data-empty] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+
+  & :global(.react-aria-ListBoxItem) {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 32px;
+    padding: var(--space-sm) var(--space-lg);
+    color: var(--color-text);
+    cursor: pointer;
+    outline: none;
+    transition:
+      background var(--transition-fast),
+      color var(--transition-fast);
+
+    &[data-hovered] {
+      background-color: var(--color-surface-hover);
+      outline: none;
+    }
+
+    &[data-focused] {
+      background-color: var(--color-surface-hover);
+    }
+
+    &[data-selected] {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-inverted);
+      background-color: var(--color-primary);
+    }
+
+    &[data-selected][data-focused] {
+      background-color: var(--color-primary-hover);
+    }
+
+    &[data-disabled] {
+      color: var(--color-text-disabled);
+      cursor: not-allowed;
+    }
+
+    &[data-selected]::after {
+      margin-left: var(--space-sm);
+      content: "✓";
+    }
+  }
+
+  :global([data-testid="hidden-select-container"]) {
+    pointer-events: none !important;
+  }
 }

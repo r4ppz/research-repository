@@ -3,14 +3,17 @@ package com.acd.researchrepo.controller;
 import com.acd.researchrepo.dto.external.model.UserDto;
 import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
 import com.acd.researchrepo.dto.external.requests.ChangeRoleRequest;
+import com.acd.researchrepo.dto.external.requests.CreateUserRequest;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.service.AdminUserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,11 +35,23 @@ public class AdminUserController {
   public ResponseEntity<PaginatedResponse<UserDto>> getUsers(
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "20") int size,
+      @RequestParam(required = false) String search,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
 
     log.debug("GET /api/admin/users endpoint hit");
 
-    return ResponseEntity.ok(adminUserService.listUsers(page, size, principal));
+    return ResponseEntity.ok(adminUserService.listUsers(page, size, search, principal));
+  }
+
+  @PostMapping
+  public ResponseEntity<UserDto> createUser(
+      @Valid @RequestBody CreateUserRequest request,
+      @AuthenticationPrincipal CustomUserPrincipal principal) {
+
+    log.debug("POST /api/admin/users endpoint hit");
+
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(adminUserService.createUser(request, principal));
   }
 
   @PutMapping("/{id}/role")

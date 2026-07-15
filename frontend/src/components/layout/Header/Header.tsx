@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import style from "./Header.module.css";
 import schoolLogo from "@/assets/school-logo.svg";
-import { ConfirmDialog } from "@/components/common/AlertDialog/ConfirmDialog";
 import { Button } from "@/components/common/Button/Button";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
 import { NavLink } from "@/components/common/NavLink/NavLink";
 import { ProfileButton } from "@/components/common/ProfileButton/ProfileButton";
 import { ProfileModal } from "@/components/common/ProfileModal/ProfileModal";
@@ -35,6 +35,10 @@ const USERS_PATH: Partial<Record<Role, string>> = {
   SUPER_ADMIN: "/super-admin/users",
 };
 
+const DEPARTMENTS_PATH: Partial<Record<Role, string>> = {
+  SUPER_ADMIN: "/super-admin/departments",
+};
+
 interface ComponentProps {
   className?: string;
 }
@@ -54,6 +58,7 @@ export const Header = ({ className, ...props }: ComponentProps) => {
   const requestPath = REQUEST_PATH[role];
   const researchPath = RESEARCH_PATH[role];
   const usersPath = USERS_PATH[role];
+  const departmentsPath = DEPARTMENTS_PATH[role];
 
   const handleLogout = () => {
     void logout();
@@ -82,6 +87,7 @@ export const Header = ({ className, ...props }: ComponentProps) => {
             <nav className={style.desktopNavigation}>
               <NavLink to="/">Library</NavLink>
               {usersPath && <NavLink to={usersPath}>Users</NavLink>}
+              {departmentsPath && <NavLink to={departmentsPath}>Departments</NavLink>}
               <NavLink to={requestPath}>Request</NavLink>
               {researchPath && <NavLink to={researchPath}>Research</NavLink>}
             </nav>
@@ -121,6 +127,7 @@ export const Header = ({ className, ...props }: ComponentProps) => {
           <nav className={style.mobileNavigation}>
             <NavLink to="/">Library</NavLink>
             {usersPath && <NavLink to={usersPath}>Users</NavLink>}
+            {departmentsPath && <NavLink to={departmentsPath}>Departments</NavLink>}
             <NavLink to={requestPath}>Request</NavLink>
             {researchPath && <NavLink to={researchPath}>Research</NavLink>}
             <button

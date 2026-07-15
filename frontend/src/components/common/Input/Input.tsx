@@ -1,8 +1,7 @@
 import clsx from "clsx";
 import type { ComponentType, InputHTMLAttributes, Ref } from "react";
+import { Input as AriaInput } from "react-aria-components";
 import style from "./Input.module.css";
-
-// TODO: Switch to React Aria
 
 type InputType =
   | "text"
@@ -35,7 +34,7 @@ export function Input({
       className={clsx(style.inputWrapper, { [style.inputWrapperDisabled]: disabled }, className)}
     >
       {Icon && <Icon className={style.icon} />}
-      <input ref={ref} type={type} className={style.input} disabled={disabled} {...props} />
+      <AriaInput ref={ref} type={type} className={style.input} disabled={disabled} {...props} />
     </div>
   );
 }

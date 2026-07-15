@@ -7,6 +7,7 @@ import { getDepartments } from "@/api/filter";
 import { Button } from "@/components/common/Button/Button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogTitle,
@@ -109,6 +110,7 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
       }}
     >
       <DialogContent className={style.modal}>
+        <DialogClose onClose={onClose} />
         <DialogTitle className={style.modalTitle}>Add New Research Paper</DialogTitle>
         <DialogDescription style={{ display: "none" }}>
           Fill in the paper metadata and upload a file.
@@ -142,8 +144,8 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
             <div className={style.field}>
               <Select
                 label="Department"
-                selectedKey={departmentId ? departmentId.toString() : undefined}
-                onSelectionChange={(v) => {
+                value={departmentId ? departmentId.toString() : undefined}
+                onChange={(v) => {
                   setDepartmentId(Number(v));
                 }}
                 isDisabled={isDepartmentDisabled}

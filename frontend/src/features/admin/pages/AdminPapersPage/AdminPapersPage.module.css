@@ -83,6 +83,10 @@
   height: var(--icon-size-md);
 }
 
+.searchWrapper {
+  width: 100%;
+}
+
 .tableSection {
   width: 100%;
 }

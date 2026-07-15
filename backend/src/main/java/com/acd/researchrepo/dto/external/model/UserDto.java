@@ -1,6 +1,7 @@
 package com.acd.researchrepo.dto.external.model;
 
 import com.acd.researchrepo.model.UserRole;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -15,4 +16,5 @@ public class UserDto {
   private final UserRole role;
   private final DepartmentDto department;
   private final String profilePictureUrl;
+  private final LocalDateTime createdAt;
 }

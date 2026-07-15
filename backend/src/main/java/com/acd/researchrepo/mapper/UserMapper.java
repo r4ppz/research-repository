@@ -25,7 +25,8 @@ public class UserMapper {
             .email(user.getEmail())
             .fullName(user.getFullName())
             .role(user.getRole())
-            .profilePictureUrl(user.getProfilePictureUrl());
+            .profilePictureUrl(user.getProfilePictureUrl())
+            .createdAt(user.getCreatedAt());
 
     // If its a DEPARTMENT_ADMIN include its department, if its not then dont
     if (UserRole.DEPARTMENT_ADMIN.equals(user.getRole()) && user.getDepartment() != null) {

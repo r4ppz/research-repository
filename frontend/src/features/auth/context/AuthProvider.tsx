@@ -39,6 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       removeAccessToken();
       setUser(null);
       setAuthError(null);
+
       setIsLoading(false);
     }
   };

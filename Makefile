@@ -28,12 +28,18 @@ rebuild: down
 trace:
 	$(COMPOSE) logs backend | grep "$(id)"
 
+.PHONY: seed
+seed:
+	$(COMPOSE) run --rm \
+	  -e SPRING_PROFILES_ACTIVE=dev,seed \
+	  backend
+
 .PHONY: front-install front-dev front-build front-preview
 front-install:
 	pnpm --dir frontend install
 
 front-dev:
-	pnpm --dir frontend dev
+	pnpm --dir frontend dev --host 0.0.0.0
 
 front-build:
 	pnpm --dir frontend build
@@ -67,6 +73,7 @@ help:
 	@echo "  restart             Restart backend services"
 	@echo "  reset               Stop services and remove volumes (wipes data)"
 	@echo "  rebuild             Rebuild Docker image and restart"
+	@echo "  seed                Populate database with sample papers and PDFs"
 	@echo ""
 	@echo "Front (pnpm):"
 	@echo "  front-install       Install dependencies"

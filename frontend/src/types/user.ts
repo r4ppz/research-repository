@@ -12,4 +12,5 @@ export interface User {
   role: Role;
   profilePictureUrl: string | null;
   department: Department | null;
+  createdAt?: string;
 }
