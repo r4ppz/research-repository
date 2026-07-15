@@ -17,6 +17,14 @@ public interface ResearchPaperRepository
 
   Optional<ResearchPaper> findByTitle(String title);
 
+  @Query("SELECT DISTINCT p.department.departmentId FROM ResearchPaper p")
+  List<Integer> findDistinctDepartmentIds();
+
+  @Query(
+      "SELECT p.department.departmentId, COUNT(p) FROM ResearchPaper p "
+          + "WHERE p.department.departmentId IN :ids GROUP BY p.department.departmentId")
+  List<Object[]> countByDepartmentIds(@Param("ids") List<Integer> ids);
+
   /**
    * Retrieves a list of distinct years in which research papers were submitted, optionally filtered
    * by department and active status.

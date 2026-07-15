@@ -18,6 +18,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
   long countByDepartmentDepartmentId(Integer departmentId);
 
   @Query(
+      "SELECT u.department.departmentId, COUNT(u) FROM User u "
+          + "WHERE u.department.departmentId IN :ids AND u.department IS NOT NULL "
+          + "GROUP BY u.department.departmentId")
+  List<Object[]> countByDepartmentIds(@Param("ids") List<Integer> ids);
+
+  @Query(
       "SELECT u FROM User u WHERE LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')) "
           + "OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :search, '%'))")
   Page<User> searchByEmailOrFullName(@Param("search") String search, Pageable pageable);
