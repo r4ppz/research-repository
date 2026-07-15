@@ -28,6 +28,12 @@ rebuild: down
 trace:
 	$(COMPOSE) logs backend | grep "$(id)"
 
+.PHONY: seed
+seed:
+	$(COMPOSE) run --rm \
+	  -e SPRING_PROFILES_ACTIVE=dev,seed \
+	  backend
+
 .PHONY: front-install front-dev front-build front-preview
 front-install:
 	pnpm --dir frontend install
