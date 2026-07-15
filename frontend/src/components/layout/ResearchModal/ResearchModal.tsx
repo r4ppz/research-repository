@@ -8,7 +8,9 @@ import { useAuth } from "@/features/auth/context/useAuth";
 import { usePaperById } from "@/features/library/hooks/usePaperById";
 import type { ResearchPaper } from "@/types";
 import { formatDateLong } from "@/util/formatDate";
-import { isUserFaculty, isUserStudent } from "@/util/roleBasedAccess";
+import { downloadFile } from "@/api/files";
+import { isUserAdmin, isUserFaculty, isUserStudent } from "@/util/roleBasedAccess";
+import { triggerBrowserDownload } from "@/util/download";
 
 interface ResearchModalProps {
   isOpen: boolean;
@@ -68,6 +70,13 @@ export const ResearchModal = ({
   const formattedDate = formatDateLong(paper.submissionDate);
   const department = paper.department.departmentName;
 
+  const handleDownload = () => {
+    if (!paper?.paperId) return;
+    downloadFile(paper.paperId).then(({ blob, filename }) => {
+      triggerBrowserDownload(blob, filename);
+    });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className={style.modal} aria-describedby={undefined}>
@@ -104,6 +113,11 @@ export const ResearchModal = ({
             variant="primary"
           >
             {requestExists ? "Request Submitted" : "Request Document"}
+          </Button>
+        )}
+        {isUserAdmin(user) && (
+          <Button onPress={handleDownload} variant="primary">
+            Download
           </Button>
         )}
       </DialogContent>
