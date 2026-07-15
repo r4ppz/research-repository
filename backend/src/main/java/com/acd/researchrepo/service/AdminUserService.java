@@ -152,7 +152,8 @@ public class AdminUserService {
     String localPart = email.substring(0, email.indexOf('@'));
     String name = localPart.replaceAll("[._-]", " ");
     return Arrays.stream(name.split(" "))
-        .map(word -> word.isEmpty() ? "" : Character.toUpperCase(word.charAt(0)) + word.substring(1))
+        .map(
+            word -> word.isEmpty() ? "" : Character.toUpperCase(word.charAt(0)) + word.substring(1))
         .collect(Collectors.joining(" "));
   }
 

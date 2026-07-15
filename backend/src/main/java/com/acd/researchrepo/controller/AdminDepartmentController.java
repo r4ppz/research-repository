@@ -61,8 +61,7 @@ public class AdminDepartmentController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteDepartment(
-      @PathVariable Integer id,
-      @AuthenticationPrincipal CustomUserPrincipal principal) {
+      @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("DELETE /api/admin/departments/{} endpoint hit", id);
     departmentService.deleteDepartment(id, principal);
     return ResponseEntity.noContent().build();
