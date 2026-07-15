@@ -73,6 +73,7 @@ help:
 	@echo "  restart             Restart backend services"
 	@echo "  reset               Stop services and remove volumes (wipes data)"
 	@echo "  rebuild             Rebuild Docker image and restart"
+	@echo "  seed                Populate database with sample papers and PDFs"
 	@echo ""
 	@echo "Front (pnpm):"
 	@echo "  front-install       Install dependencies"
