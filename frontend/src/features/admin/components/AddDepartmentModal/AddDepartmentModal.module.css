@@ -7,3 +7,7 @@
   gap: var(--space-sm);
   justify-content: flex-end;
 }
+
+.hiddenDescription {
+  display: none;
+}
