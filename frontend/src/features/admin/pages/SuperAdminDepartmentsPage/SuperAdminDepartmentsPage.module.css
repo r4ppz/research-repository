@@ -53,12 +53,3 @@
   height: var(--icon-size-md);
 }
 
-.errorText {
-  font-size: var(--font-size-sm);
-  color: var(--color-danger, #b42318);
-}
-
-.successText {
-  font-size: var(--font-size-sm);
-  color: var(--color-success, #16a34a);
-}
