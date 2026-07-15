@@ -15,7 +15,10 @@ import com.acd.researchrepo.repository.UserRepository;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.util.RoleBasedAccess;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
@@ -54,10 +57,7 @@ public class DepartmentService {
     departments = departmentRepository.findAll();
 
     // Only include departments that have at least one paper in scope
-    Set<Integer> deptHasPaper =
-        researchPaperRepository.findAll().stream()
-            .map(p -> p.getDepartment().getDepartmentId())
-            .collect(Collectors.toSet());
+    Set<Integer> deptHasPaper = new HashSet<>(researchPaperRepository.findDistinctDepartmentIds());
 
     List<DepartmentDto> departmentDto =
         departments.stream()
@@ -72,10 +72,19 @@ public class DepartmentService {
   public PaginatedResponse<AdminDepartmentDto> getAdminDepartments(
       int page, int size, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
+
     Page<Department> departments =
         departmentRepository.findAll(
             PageRequest.of(page, size, Sort.by("departmentName").ascending()));
-    return PaginatedResponse.fromPage(departments, this::toAdminDto);
+
+    List<Integer> ids = departments.getContent().stream().map(Department::getDepartmentId).toList();
+
+    Map<Integer, Long> paperCounts =
+        toDepartmentCountMap(researchPaperRepository.countByDepartmentIds(ids));
+    Map<Integer, Long> userCounts = toDepartmentCountMap(userRepository.countByDepartmentIds(ids));
+
+    return PaginatedResponse.fromPage(
+        departments, dept -> toAdminDto(dept, paperCounts, userCounts));
   }
 
   public AdminDepartmentDto createDepartment(
@@ -117,7 +126,8 @@ public class DepartmentService {
     if (hasPapers || hasUsers) {
       throw new ApiException(
           ErrorCode.INVALID_REQUEST,
-          "Cannot delete department with linked papers or users. Remove all linked papers and users first.");
+          "Cannot delete department with linked papers or users. Remove all linked papers and users"
+              + " first.");
     }
     departmentRepository.delete(department);
   }
@@ -125,13 +135,32 @@ public class DepartmentService {
   private AdminDepartmentDto toAdminDto(Department department) {
     long paperCount =
         researchPaperRepository.countByDepartmentDepartmentId(department.getDepartmentId());
-    long userCount =
-        userRepository.countByDepartmentDepartmentId(department.getDepartmentId());
+    long userCount = userRepository.countByDepartmentDepartmentId(department.getDepartmentId());
     return AdminDepartmentDto.builder()
         .departmentId(department.getDepartmentId())
         .departmentName(department.getDepartmentName())
         .paperCount(paperCount)
         .userCount(userCount)
+        .createdAt(department.getCreatedAt())
+        .updatedAt(department.getUpdatedAt())
+        .build();
+  }
+
+  private static Map<Integer, Long> toDepartmentCountMap(List<Object[]> rows) {
+    Map<Integer, Long> map = new HashMap<>();
+    for (Object[] row : rows) {
+      map.put((Integer) row[0], (Long) row[1]);
+    }
+    return map;
+  }
+
+  private static AdminDepartmentDto toAdminDto(
+      Department department, Map<Integer, Long> paperCounts, Map<Integer, Long> userCounts) {
+    return AdminDepartmentDto.builder()
+        .departmentId(department.getDepartmentId())
+        .departmentName(department.getDepartmentName())
+        .paperCount(paperCounts.getOrDefault(department.getDepartmentId(), 0L))
+        .userCount(userCounts.getOrDefault(department.getDepartmentId(), 0L))
         .createdAt(department.getCreatedAt())
         .updatedAt(department.getUpdatedAt())
         .build();
