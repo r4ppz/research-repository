@@ -4,7 +4,7 @@ A full-stack monorepo for managing academic research papers. Built with Java 21 
 
 ## Demo
 
-- [https://research-repository.r4ppz.dev/](https://research-repository.r4ppz.dev/)
+- [https://research-repository-mu.vercel.app](https://research-repository-mu.vercel.app)
 
 > There is no backend server yet :(
 

@@ -56,7 +56,6 @@ SPA with React and TypeScript.
 - Routing: React Router DOM
 - Styling: CSS Modules
 - Tooling: ESLint, Stylelint, Prettier
-- Deployment: Cloudflare Pages via Wrangler
 
 ### Documentation
 

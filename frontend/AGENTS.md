@@ -9,7 +9,7 @@
 ```bash
 pnpm dev              # Vite dev server
 pnpm build            # tsc -b && vite build
-pnpm preview          # build + wrangler dev (local Cloudflare preview)
+pnpm preview          # build + vite preview (local preview)
 pnpm lint             # ESLint on src/
 pnpm lint:fix         # ESLint with auto-fix
 pnpm lint:css         # Stylelint on src/**/*.css
@@ -18,7 +18,7 @@ pnpm type-check       # tsc --noEmit
 pnpm format           # Prettier (entire project)
 pnpm check            # lint:css + type-check + lint
 pnpm fix              # lint:fix + format + lint:css:fix
-pnpm deploy           # build + wrangler deploy (Cloudflare Pages)
+pnpm deploy           # build for production
 pnpm storybook        # Storybook dev server (port 6006)
 pnpm build-storybook  # Build Storybook static site
 ```
@@ -28,7 +28,7 @@ pnpm build-storybook  # Build Storybook static site
 - Framework: React 19 + React Compiler (Babel plugin), React DOM 19
 - Language: TypeScript strict (`typescript-eslint` strict + stylistic configs)
 - Build: Vite 7 with `@vitejs/plugin-react`
-- Cloudflare: `@cloudflare/vite-plugin`, Wrangler, deployed to Cloudflare Pages
+
 - State/Data: TanStack React Query 5, TanStack React Table 8, Axios
 - Routing: React Router DOM 7
 - UI Components: Radix UI (AlertDialog, Dialog, Select, Tooltip, Icons), react-aria-components, Lucide React, react-icons
@@ -62,8 +62,7 @@ frontend/src/
 └── util/             # Utility/helper functions
 
 frontend/
-├── vite.config.ts    # @/ alias, React Compiler, Cloudflare plugin
-├── wrangler.jsonc    # Cloudflare Pages deployment config
+├── vite.config.ts    # @/ alias, React Compiler
 ├── tsconfig.json     # TypeScript config
 ├── eslint.config.js  # ESLint flat config
 ├── stylelint.config.mjs
