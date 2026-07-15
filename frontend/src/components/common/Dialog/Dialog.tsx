@@ -45,7 +45,7 @@ interface DialogTitleProps {
 
 function DialogTitle({ className, children, style }: DialogTitleProps) {
   return (
-    <h2 className={[styles.title, className].filter(Boolean).join(" ")} style={style}>
+    <h2 slot="title" className={[styles.title, className].filter(Boolean).join(" ")} style={style}>
       {children}
     </h2>
   );
