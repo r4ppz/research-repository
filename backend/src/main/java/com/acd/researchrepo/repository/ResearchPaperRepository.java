@@ -2,6 +2,7 @@ package com.acd.researchrepo.repository;
 
 import com.acd.researchrepo.model.ResearchPaper;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,8 @@ public interface ResearchPaperRepository
   boolean existsByDepartmentDepartmentId(Integer departmentId);
 
   long countByDepartmentDepartmentId(Integer departmentId);
+
+  Optional<ResearchPaper> findByTitle(String title);
 
   /**
    * Retrieves a list of distinct years in which research papers were submitted, optionally filtered
