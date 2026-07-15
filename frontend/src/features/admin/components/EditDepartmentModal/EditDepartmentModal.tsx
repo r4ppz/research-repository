@@ -31,17 +31,10 @@ export function EditDepartmentModal({
   const updateMutation = useUpdateDepartment();
 
   useEffect(() => {
-    if (department && isOpen) {
-      const id = window.setTimeout(() => {
-        setName(department.departmentName);
-      }, 0);
-
-      return () => {
-        window.clearTimeout(id);
-      };
+    if (department) {
+      setName(department.departmentName);
     }
-    return undefined;
-  }, [isOpen, department]);
+  }, [department]);
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -63,6 +56,7 @@ export function EditDepartmentModal({
 
   return (
     <Dialog
+      key={department?.departmentId ?? 0}
       open={isOpen}
       onOpenChange={(open) => {
         if (!open) onClose();
@@ -71,7 +65,7 @@ export function EditDepartmentModal({
       <DialogContent>
         <DialogClose onClose={onClose} />
         <DialogTitle>Edit Department</DialogTitle>
-        <DialogDescription style={{ display: "none" }}>Edit the department name.</DialogDescription>
+        <DialogDescription className={styles.hiddenDescription}>Edit the department name.</DialogDescription>
         <form onSubmit={handleSubmit}>
           <div className={styles.field}>
             <Input
