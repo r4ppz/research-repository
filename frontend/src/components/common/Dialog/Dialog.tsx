@@ -1,14 +1,20 @@
 import { X } from "lucide-react";
-import { Dialog as AriaDialog, Modal, ModalOverlay } from "react-aria-components";
+import {
+  Dialog as AriaDialog,
+  Heading,
+  Modal,
+  ModalOverlay,
+} from "react-aria-components";
 import styles from "./Dialog.module.css";
 
 interface DialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   children?: React.ReactNode;
+  title?: string;
 }
 
-function Dialog({ open, onOpenChange, children }: DialogProps) {
+function Dialog({ open, onOpenChange, children, title }: DialogProps) {
   return (
     <ModalOverlay
       isOpen={open}
@@ -17,7 +23,10 @@ function Dialog({ open, onOpenChange, children }: DialogProps) {
       isDismissable
     >
       <Modal className={styles.contentWrapper}>
-        <AriaDialog className={styles.dialog}>{children}</AriaDialog>
+        <AriaDialog className={styles.dialog}>
+          {title && <Heading slot="title" style={{ display: "none" }}>{title}</Heading>}
+          {children}
+        </AriaDialog>
       </Modal>
     </ModalOverlay>
   );

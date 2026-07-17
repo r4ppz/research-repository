@@ -65,6 +65,7 @@ const roleColumn = columnHelper.display({
 
     return (
       <Select
+        aria-label="Role"
         value={draft.role}
         onChange={(value) => {
           meta.updateDraft(entry.userId, {
@@ -100,6 +101,7 @@ const departmentColumn = columnHelper.display({
 
     return (
       <Select
+        aria-label="Department"
         value={draft.departmentId || null}
         onChange={(value) => {
           meta.updateDraft(entry.userId, { departmentId: value as string });

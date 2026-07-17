@@ -77,6 +77,7 @@ export const AddUserModal = ({ isOpen, onClose, onUserAdded }: AddUserModalProps
           onClose();
         }
       }}
+      title="Add New User"
     >
       <DialogContent className={style.modal}>
         <DialogTitle className={style.modalTitle}>Add New User</DialogTitle>

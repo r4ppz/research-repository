@@ -4,7 +4,7 @@ import { useAcceptRequest, useRejectRequest } from "../../hooks/useAdminRequestM
 import { columns, columnsWithoutDepartment, type TableMeta } from "./columns";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
-import { NotificationDialog } from "@/components/common/NotificationDialog/NotificationDialog";
+import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
 import type { ResearchPaper } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
@@ -15,11 +15,6 @@ interface RequestsTableProps {
 
 export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
-  const [notification, setNotification] = useState<{
-    type: "success" | "error";
-    title: string;
-    message: string;
-  } | null>(null);
 
   const { data, pageIndex, pageSize, pageCount, setPageIndex, setPageSize, isLoading, error } =
     useAdminRequests({ status: "PENDING" });
@@ -33,22 +28,28 @@ export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
     },
     onReject: (requestId) => {
       rejectMutation.mutate(requestId, {
+        onSuccess: () => {
+          toastQueue.add({ variant: "success", title: "Request Rejected", description: "Request rejected." });
+        },
         onError: (error) => {
-          setNotification({
-            type: "error",
-            title: "Error",
-            message: getUserErrorMessage(extractApiError(error)),
+          toastQueue.add({
+            variant: "error",
+            title: "Reject Failed",
+            description: getUserErrorMessage(extractApiError(error)),
           });
         },
       });
     },
     onAccept: (requestId) => {
       acceptMutation.mutate(requestId, {
+        onSuccess: () => {
+          toastQueue.add({ variant: "success", title: "Request Accepted", description: "Request accepted." });
+        },
         onError: (error) => {
-          setNotification({
-            type: "error",
-            title: "Error",
-            message: getUserErrorMessage(extractApiError(error)),
+          toastQueue.add({
+            variant: "error",
+            title: "Accept Failed",
+            description: getUserErrorMessage(extractApiError(error)),
           });
         },
       });
@@ -90,16 +91,6 @@ export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
         onClose={() => {
           setSelectedPaper(null);
         }}
-      />
-
-      <NotificationDialog
-        open={!!notification}
-        onClose={() => {
-          setNotification(null);
-        }}
-        type={notification?.type ?? "error"}
-        title={notification?.title ?? ""}
-        description={notification?.message ?? ""}
       />
     </>
   );

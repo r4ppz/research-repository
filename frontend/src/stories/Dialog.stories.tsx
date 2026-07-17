@@ -33,7 +33,7 @@ function DialogDemo() {
       >
         Open Dialog
       </Button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={setOpen} title="The Replay">
         <DialogContent>
           <DialogClose
             onClose={() => {

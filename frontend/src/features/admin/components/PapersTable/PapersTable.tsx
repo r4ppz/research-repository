@@ -15,6 +15,7 @@ import {
 } from "./columns";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
 import type { ResearchPaper } from "@/types";
 
@@ -50,13 +51,34 @@ export function PapersTable({ archived, showDepartment = true, search }: PapersT
       setEditingPaper(paper);
     },
     onArchive: (paperId) => {
-      archiveMutation.mutate(paperId);
+      archiveMutation.mutate(paperId, {
+        onSuccess: () => {
+          toastQueue.add({ variant: "success", title: "Paper Archived", description: "Paper archived." });
+        },
+        onError: () => {
+          toastQueue.add({ variant: "error", title: "Archive Failed", description: "Failed to archive paper." });
+        },
+      });
     },
     onRestore: (paperId) => {
-      unarchiveMutation.mutate(paperId);
+      unarchiveMutation.mutate(paperId, {
+        onSuccess: () => {
+          toastQueue.add({ variant: "success", title: "Paper Restored", description: "Paper restored." });
+        },
+        onError: () => {
+          toastQueue.add({ variant: "error", title: "Restore Failed", description: "Failed to restore paper." });
+        },
+      });
     },
     onDelete: (paperId) => {
-      deleteMutation.mutate(paperId);
+      deleteMutation.mutate(paperId, {
+        onSuccess: () => {
+          toastQueue.add({ variant: "success", title: "Paper Deleted", description: "Paper deleted." });
+        },
+        onError: () => {
+          toastQueue.add({ variant: "error", title: "Delete Failed", description: "Failed to delete paper." });
+        },
+      });
     },
   };
 

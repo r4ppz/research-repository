@@ -30,7 +30,7 @@ export const ProfileModal = ({ isOpen, onClose, user, className }: ProfileModalP
     : "—";
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange} title={user.fullName}>
       <DialogContent className={`${style.modal} ${className ?? ""}`} aria-describedby={undefined}>
         <DialogClose onClose={onClose} />
 

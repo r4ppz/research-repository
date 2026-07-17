@@ -16,6 +16,7 @@ import { Input } from "@/components/common/Input/Input";
 import { Select, SelectItem } from "@/components/common/Select/Select";
 import { Textarea } from "@/components/common/Textarea/Textarea";
 import { useAuth } from "@/features/auth/context/useAuth";
+import { toastQueue } from "@/components/common/Toast/Toast";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
 interface PaperFormModalProps {
@@ -77,6 +78,7 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
         onSuccess: () => {
           onClose();
           resetForm();
+          toastQueue.add({ variant: "success", title: "Paper Created", description: "Paper created successfully." });
         },
         onError: (error: unknown) => {
           setSubmitError(getUserErrorMessage(extractApiError(error)));
@@ -108,6 +110,7 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
           onClose();
         }
       }}
+      title="Add New Research Paper"
     >
       <DialogContent className={style.modal}>
         <DialogClose onClose={onClose} />
@@ -152,7 +155,7 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
                 placeholder="Select Department"
               >
                 {departments?.map((dept) => (
-                  <SelectItem id={dept.departmentId.toString()}>{dept.departmentName}</SelectItem>
+                  <SelectItem key={dept.departmentId} id={dept.departmentId.toString()}>{dept.departmentName}</SelectItem>
                 )) ?? []}
               </Select>
             </div>

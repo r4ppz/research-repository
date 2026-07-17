@@ -36,7 +36,7 @@ export function ConfirmDialog({
             },
           })
         : trigger}
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={setOpen} title={title}>
         <DialogContent className={styles.content}>
           <DialogTitle className={styles.title}>{title}</DialogTitle>
           <p className={styles.description}>{description}</p>
