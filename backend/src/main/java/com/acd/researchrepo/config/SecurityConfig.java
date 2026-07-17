@@ -1,6 +1,7 @@
 package com.acd.researchrepo.config;
 
 import com.acd.researchrepo.environment.AppProperties;
+import com.acd.researchrepo.exception.RestAuthenticationEntryPoint;
 import com.acd.researchrepo.security.CustomJwtAuthConverter;
 import io.jsonwebtoken.security.Keys;
 import java.util.List;
@@ -28,14 +29,18 @@ public class SecurityConfig {
 
   private final AppProperties appProperties;
   private final CustomJwtAuthConverter customJwtAuthConverter;
+  private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
   private final List<String> allowedOrigins;
   private final String jwtSecret;
 
   public SecurityConfig(
-      AppProperties appProperties, CustomJwtAuthConverter customJwtAuthConverter) {
+      AppProperties appProperties,
+      CustomJwtAuthConverter customJwtAuthConverter,
+      RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
     this.appProperties = appProperties;
     this.customJwtAuthConverter = customJwtAuthConverter;
+    this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
     this.allowedOrigins = this.appProperties.getCors().getAllowedOrigins();
     this.jwtSecret = this.appProperties.getJwt().getSecret();
   }
@@ -53,6 +58,8 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .sessionManagement(sessionManagement())
         .oauth2ResourceServer(oauth2ResourceServer())
+        .exceptionHandling(
+            ex -> ex.authenticationEntryPoint(restAuthenticationEntryPoint))
         .authorizeHttpRequests(authorizeHttpRequests());
     return http.build();
   }
