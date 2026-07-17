@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
 import { Upload } from "lucide-react";
-import type { ChangeEvent, CSSProperties } from "react";
+import { type ChangeEvent, type CSSProperties, type DragEvent, useState } from "react";
 import style from "./FileUpload.module.css";
 
 interface FileUploadProps {
@@ -26,6 +26,8 @@ export const FileUpload = ({
   style: customStyle,
   placeholder = "Click to upload or drag and drop",
 }: FileUploadProps) => {
+  const [isDragOver, setIsDragOver] = useState(false);
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       onChange(e.target.files[0]);
@@ -38,8 +40,44 @@ export const FileUpload = ({
     onChange(null);
   };
 
+  const handleDragOver = (e: DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragEnter = (e: DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      onChange(file);
+    }
+  };
+
   return (
-    <div className={clsx(style.fileUploadContainer, className)} style={customStyle}>
+    <div
+      className={clsx(style.fileUploadContainer, isDragOver && style.isDragOver, className)}
+      style={customStyle}
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
       <label htmlFor={id} className={style.fileInputLabel}>
         {value ? (
           <div className={style.fileNameContainer}>
