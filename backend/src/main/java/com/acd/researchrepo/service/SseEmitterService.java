@@ -1,16 +1,10 @@
 package com.acd.researchrepo.service;
 
 import com.acd.researchrepo.dto.external.notifications.NotificationDto;
-import com.acd.researchrepo.mapper.NotificationMapper;
-import com.acd.researchrepo.model.Notification;
-import com.acd.researchrepo.repository.NotificationRepository;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Service
