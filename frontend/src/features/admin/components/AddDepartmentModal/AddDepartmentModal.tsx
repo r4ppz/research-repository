@@ -49,6 +49,7 @@ export function AddDepartmentModal({
       onOpenChange={(open) => {
         if (!open) onClose();
       }}
+      title="Add Department"
     >
       <DialogContent>
         <DialogClose onClose={onClose} />

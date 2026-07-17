@@ -108,6 +108,7 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
           onClose();
         }
       }}
+      title="Add New Research Paper"
     >
       <DialogContent className={style.modal}>
         <DialogClose onClose={onClose} />

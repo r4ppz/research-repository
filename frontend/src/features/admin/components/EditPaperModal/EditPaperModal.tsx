@@ -92,6 +92,7 @@ export const EditPaperModal = ({ isOpen, onClose, paper }: EditPaperModalProps) 
           onClose();
         }
       }}
+      title="Edit Research Paper"
     >
       <DialogContent className={style.modal}>
         <DialogClose onClose={onClose} />

@@ -39,7 +39,7 @@ export const ResearchModal = ({
 
   if (loading) {
     return (
-      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogContent
           className={clsx(style.modalLoadingOrError, style.moda)}
           aria-describedby={undefined}
@@ -53,7 +53,7 @@ export const ResearchModal = ({
 
   if (error || !paper) {
     return (
-      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <Dialog open={isOpen} onOpenChange={handleOpenChange} title="Error">
         <DialogContent
           className={clsx(style.modalLoadingOrError, style.modal)}
           aria-describedby={undefined}
@@ -78,7 +78,7 @@ export const ResearchModal = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange} title={paper.title}>
       <DialogContent className={style.modal} aria-describedby={undefined}>
         <DialogClose onClose={onClose} />
         <div className={style.infoWrapper}>

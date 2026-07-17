@@ -111,7 +111,7 @@ export const LoginPage = () => {
         <p className={style.textNotice}>Single Sign-On via Google Workspace</p>
       </div>
 
-      <Dialog open={showErrorModal} onOpenChange={handleOpenChange}>
+      <Dialog open={showErrorModal} onOpenChange={handleOpenChange} title={modalTitle}>
         <DialogContent className={style.errorModal}>
           <DialogClose onClose={handleCloseModal} />
           <DialogTitle className={style.modalTitle}>{modalTitle}</DialogTitle>
