@@ -1,5 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import {
+  Heading,
   Select as AriaSelect,
   type SelectProps as AriaSelectProps,
   Button,
@@ -29,7 +30,7 @@ export function Select<T extends object>({
 }: SelectProps<T>) {
   return (
     <div className={styles.select}>
-      <AriaSelect {...props}>
+      <AriaSelect {...props} aria-label={props["aria-label"] ?? label}>
         {label && <Label>{label}</Label>}
 
         <Button className={styles.trigger}>
@@ -41,6 +42,11 @@ export function Select<T extends object>({
         <FieldError>{errorMessage}</FieldError>
 
         <Popover className={styles.popover} offset={4}>
+          {(label || props["aria-label"]) && (
+            <Heading slot="title" style={{ display: "none" }}>
+              {label ?? props["aria-label"]}
+            </Heading>
+          )}
           <ListBox className={styles.listBox} shouldFocusWrap>
             {children}
           </ListBox>
