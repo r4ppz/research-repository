@@ -12,6 +12,7 @@ import { LibraryPage } from "@/features/library/LibraryPage/LibraryPage";
 import { NotificationProvider } from "@/features/notifications/context/NotificationContext";
 import { NotificationPage } from "@/features/notifications/NotificationPage/NotificationPage";
 import { StudentRequestPage } from "@/features/student/StudentRequestPage/StudentRequestPage";
+import { ToastRegionProvider } from "@/components/common/Toast/Toast";
 
 export const App = () => {
   useRoleWatcher();
@@ -109,6 +110,7 @@ export const App = () => {
           />
         </Routes>
       </NotificationProvider>
+      <ToastRegionProvider />
       <div id="modal-root" />
     </>
   );
