@@ -15,8 +15,10 @@ import {
 import { Input } from "@/components/common/Input/Input";
 import { Select, SelectItem } from "@/components/common/Select/Select";
 import { Textarea } from "@/components/common/Textarea/Textarea";
+import { toastQueue } from "@/components/common/Toast/Toast";
 import { useAuth } from "@/features/auth/context/useAuth";
 import type { ResearchPaper } from "@/types";
+import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
 interface EditPaperModalProps {
   isOpen: boolean;
@@ -79,6 +81,14 @@ export const EditPaperModal = ({ isOpen, onClose, paper }: EditPaperModalProps) 
       {
         onSuccess: () => {
           onClose();
+          toastQueue.add({ variant: "success", title: "Paper Updated", description: "Paper updated successfully." });
+        },
+        onError: (error) => {
+          toastQueue.add({
+            variant: "error",
+            title: "Update Failed",
+            description: getUserErrorMessage(extractApiError(error)),
+          });
         },
       },
     );
@@ -135,7 +145,7 @@ export const EditPaperModal = ({ isOpen, onClose, paper }: EditPaperModalProps) 
                 placeholder="Select Department"
               >
                 {departments?.map((dept) => (
-                  <SelectItem id={dept.departmentId.toString()}>{dept.departmentName}</SelectItem>
+                  <SelectItem key={dept.departmentId} id={dept.departmentId.toString()}>{dept.departmentName}</SelectItem>
                 )) ?? []}
               </Select>
             </div>

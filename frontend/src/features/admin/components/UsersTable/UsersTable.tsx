@@ -6,7 +6,7 @@ import { changeUserRole } from "@/api/admin/users";
 import { getDepartments } from "@/api/filter";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
-import { NotificationDialog } from "@/components/common/NotificationDialog/NotificationDialog";
+import { toastQueue } from "@/components/common/Toast/Toast";
 import type { User } from "@/types";
 
 interface UsersTableProps {
@@ -17,11 +17,6 @@ interface UsersTableProps {
 export function UsersTable({ currentUserId, search }: UsersTableProps) {
   const queryClient = useQueryClient();
   const [drafts, setDrafts] = useState<Record<number, RowDraft>>({});
-  const [notification, setNotification] = useState<{
-    type: "success" | "error";
-    title: string;
-    message: string;
-  } | null>(null);
 
   const {
     data: users,
@@ -44,7 +39,6 @@ export function UsersTable({ currentUserId, search }: UsersTableProps) {
   });
 
   const updateDraft = (userId: number, nextDraft: Partial<RowDraft>) => {
-    setNotification(null);
     setDrafts((current) => {
       const prev = current[userId] as RowDraft | undefined;
       return {
@@ -63,8 +57,6 @@ export function UsersTable({ currentUserId, search }: UsersTableProps) {
       departmentId: entry.department ? String(entry.department.departmentId) : "",
     };
 
-    setNotification(null);
-
     try {
       const departmentId =
         draft.role === "DEPARTMENT_ADMIN" && draft.departmentId
@@ -73,16 +65,16 @@ export function UsersTable({ currentUserId, search }: UsersTableProps) {
 
       await changeUserRole(entry.userId, draft.role, departmentId);
       await queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
-      setNotification({
-        type: "success",
-        title: "Success",
-        message: `Role updated to ${draft.role} for ${entry.fullName}`,
+      toastQueue.add({
+        variant: "success",
+        title: "Role Updated",
+        description: `Role updated to ${draft.role} for ${entry.fullName}`,
       });
     } catch (err) {
-      setNotification({
-        type: "error",
-        title: "Error",
-        message: err instanceof Error ? err.message : "Failed to update role",
+      toastQueue.add({
+        variant: "error",
+        title: "Update Failed",
+        description: err instanceof Error ? err.message : "Failed to update role",
       });
     }
   };
@@ -119,15 +111,6 @@ export function UsersTable({ currentUserId, search }: UsersTableProps) {
         }}
         meta={tableMeta}
         emptyMessage={search ? "No users match your search." : undefined}
-      />
-      <NotificationDialog
-        open={!!notification}
-        onClose={() => {
-          setNotification(null);
-        }}
-        type={notification?.type ?? "success"}
-        title={notification?.title ?? ""}
-        description={notification?.message ?? ""}
       />
     </>
   );

@@ -7,28 +7,15 @@ import { useDeleteDepartment } from "../../hooks/useAdminDepartmentActions";
 import style from "./SuperAdminDepartmentsPage.module.css";
 import type { AdminDepartment } from "@/api/admin/departments";
 import { Button } from "@/components/common/Button/Button";
-import { NotificationDialog } from "@/components/common/NotificationDialog/NotificationDialog";
+import { toastQueue } from "@/components/common/Toast/Toast";
 import { Footer } from "@/components/layout/Footer/Footer";
 import { Header } from "@/components/layout/Header/Header";
 
 export const SuperAdminDepartmentsPage = () => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [editingDepartment, setEditingDepartment] = useState<AdminDepartment | null>(null);
-  const [notification, setNotification] = useState<{
-    type: "success" | "error";
-    title: string;
-    message: string;
-  } | null>(null);
 
   const deleteMutation = useDeleteDepartment();
-
-  const showSuccess = (message: string) => {
-    setNotification({ type: "success", title: "Success", message });
-  };
-
-  const showError = (message: string) => {
-    setNotification({ type: "error", title: "Error", message });
-  };
 
   return (
     <div className={style.page}>
@@ -58,10 +45,10 @@ export const SuperAdminDepartmentsPage = () => {
             onDelete={(department) => {
               deleteMutation.mutate(department.departmentId, {
                 onSuccess: () => {
-                  showSuccess("Department deleted successfully.");
+                  toastQueue.add({ variant: "success", title: "Department Deleted", description: "Department deleted successfully." });
                 },
                 onError: (err) => {
-                  showError(err instanceof Error ? err.message : "Failed to delete department");
+                  toastQueue.add({ variant: "error", title: "Delete Failed", description: err instanceof Error ? err.message : "Failed to delete department" });
                 },
               });
             }}
@@ -75,10 +62,10 @@ export const SuperAdminDepartmentsPage = () => {
           setAddModalOpen(false);
         }}
         onSuccess={() => {
-          showSuccess("Department added successfully.");
+          toastQueue.add({ variant: "success", title: "Department Added", description: "Department added successfully." });
         }}
         onError={(message) => {
-          showError(message);
+          toastQueue.add({ variant: "error", title: "Add Failed", description: message });
         }}
       />
 
@@ -89,21 +76,11 @@ export const SuperAdminDepartmentsPage = () => {
           setEditingDepartment(null);
         }}
         onSuccess={() => {
-          showSuccess("Department updated successfully.");
+          toastQueue.add({ variant: "success", title: "Department Updated", description: "Department updated successfully." });
         }}
         onError={(message) => {
-          showError(message);
+          toastQueue.add({ variant: "error", title: "Update Failed", description: message });
         }}
-      />
-
-      <NotificationDialog
-        open={!!notification}
-        onClose={() => {
-          setNotification(null);
-        }}
-        type={notification?.type ?? "success"}
-        title={notification?.title ?? ""}
-        description={notification?.message ?? ""}
       />
 
       <Footer />
