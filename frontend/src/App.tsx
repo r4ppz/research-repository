@@ -9,6 +9,8 @@ import { useRoleWatcher } from "@/features/auth/hooks/useRoleWatcher";
 import { LoginPage } from "@/features/auth/LoginPage/LoginPage";
 import { FacultyRequestPage } from "@/features/faculty/FacultyRequestPage/FacultyRequestPage";
 import { LibraryPage } from "@/features/library/LibraryPage/LibraryPage";
+import { NotificationProvider } from "@/features/notifications/context/NotificationContext";
+import { NotificationPage } from "@/features/notifications/NotificationPage/NotificationPage";
 import { StudentRequestPage } from "@/features/student/StudentRequestPage/StudentRequestPage";
 
 export const App = () => {
@@ -17,84 +19,96 @@ export const App = () => {
   return (
     <>
       <AuthRestorer />
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
+      <NotificationProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
 
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute
-              allowedRoles={["STUDENT", "FACULTY", "DEPARTMENT_ADMIN", "SUPER_ADMIN"]}
-            >
-              <LibraryPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/student/requests"
-          element={
-            <ProtectedRoute allowedRoles={["STUDENT"]}>
-              <StudentRequestPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/department-admin/requests"
-          element={
-            <ProtectedRoute allowedRoles={["DEPARTMENT_ADMIN"]}>
-              <AdminRequestsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/faculty/requests"
-          element={
-            <ProtectedRoute allowedRoles={["FACULTY"]}>
-              <FacultyRequestPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/department-admin/research"
-          element={
-            <ProtectedRoute allowedRoles={["DEPARTMENT_ADMIN"]}>
-              <AdminPapersPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/super-admin/requests"
-          element={
-            <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
-              <AdminRequestsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/super-admin/research"
-          element={
-            <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
-              <AdminPapersPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/super-admin/users"
-          element={
-            <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
-              <SuperAdminUsersPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/super-admin/departments"
-          element={
-            <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
-              <SuperAdminDepartmentsPage />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute
+                allowedRoles={["STUDENT", "FACULTY", "DEPARTMENT_ADMIN", "SUPER_ADMIN"]}
+              >
+                <LibraryPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/requests"
+            element={
+              <ProtectedRoute allowedRoles={["STUDENT"]}>
+                <StudentRequestPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/department-admin/requests"
+            element={
+              <ProtectedRoute allowedRoles={["DEPARTMENT_ADMIN"]}>
+                <AdminRequestsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/faculty/requests"
+            element={
+              <ProtectedRoute allowedRoles={["FACULTY"]}>
+                <FacultyRequestPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/department-admin/research"
+            element={
+              <ProtectedRoute allowedRoles={["DEPARTMENT_ADMIN"]}>
+                <AdminPapersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/super-admin/requests"
+            element={
+              <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
+                <AdminRequestsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/super-admin/research"
+            element={
+              <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
+                <AdminPapersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/super-admin/users"
+            element={
+              <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
+                <SuperAdminUsersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/super-admin/departments"
+            element={
+              <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
+                <SuperAdminDepartmentsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute
+                allowedRoles={["STUDENT", "FACULTY", "DEPARTMENT_ADMIN", "SUPER_ADMIN"]}
+              >
+                <NotificationPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </NotificationProvider>
       <div id="modal-root" />
     </>
   );
