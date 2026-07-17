@@ -60,6 +60,8 @@
 .rightWrapper {
   display: flex;
   flex-direction: row;
+  gap: var(--space-sm);
+  align-items: center;
 }
 
 @media (width >= 768px) {
@@ -82,9 +84,11 @@
   }
 }
 
-.profileNLogoutWrapper {
+.headerActions {
   display: flex;
+  flex-shrink: 0;
   gap: var(--space-md);
+  align-items: center;
 }
 
 .logoutButton {
@@ -94,7 +98,12 @@
 @media (width >= 768px) {
   .logoutButton {
     display: inline-flex;
-    padding: var(--space-xs) var(--space-md);
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
   }
 }
 

@@ -10,6 +10,7 @@ import { NavLink } from "@/components/common/NavLink/NavLink";
 import { ProfileButton } from "@/components/common/ProfileButton/ProfileButton";
 import { ProfileModal } from "@/components/common/ProfileModal/ProfileModal";
 import { useAuth } from "@/features/auth/context/useAuth";
+import { NotificationBell } from "@/features/notifications/components/NotificationBell/NotificationBell";
 import type { Role } from "@/types";
 
 const GENERAL_ROLE_LABEL: Record<Role, string> = {
@@ -92,7 +93,8 @@ export const Header = ({ className, ...props }: ComponentProps) => {
               {researchPath && <NavLink to={researchPath}>Research</NavLink>}
             </nav>
 
-            <div className={style.profileNLogoutWrapper}>
+            <div className={style.headerActions}>
+              <NotificationBell />
               <ProfileButton user={user} />
               <ConfirmDialog
                 title="Log out of your account?"

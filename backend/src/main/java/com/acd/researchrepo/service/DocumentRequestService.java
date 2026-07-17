@@ -13,8 +13,10 @@ import com.acd.researchrepo.mapper.DocumentRequestMapper;
 import com.acd.researchrepo.model.DocumentRequest;
 import com.acd.researchrepo.model.RequestStatus;
 import com.acd.researchrepo.model.ResearchPaper;
+import com.acd.researchrepo.model.UserRole;
 import com.acd.researchrepo.repository.DocumentRequestRepository;
 import com.acd.researchrepo.repository.ResearchPaperRepository;
+import com.acd.researchrepo.repository.UserRepository;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.spec.DocumentRequestSpec;
 import com.acd.researchrepo.util.RoleBasedAccess;
@@ -30,14 +32,20 @@ public class DocumentRequestService {
   private final DocumentRequestRepository documentRequestRepository;
   private final ResearchPaperRepository researchPaperRepository;
   private final DocumentRequestMapper documentRequestMapper;
+  private final NotificationService notificationService;
+  private final UserRepository userRepository;
 
   public DocumentRequestService(
       DocumentRequestRepository documentRequestRepository,
       ResearchPaperRepository researchPaperRepository,
-      DocumentRequestMapper documentRequestMapper) {
+      DocumentRequestMapper documentRequestMapper,
+      NotificationService notificationService,
+      UserRepository userRepository) {
     this.documentRequestRepository = documentRequestRepository;
     this.researchPaperRepository = researchPaperRepository;
     this.documentRequestMapper = documentRequestMapper;
+    this.notificationService = notificationService;
+    this.userRepository = userRepository;
   }
 
   public PaginatedResponse<UserDocumentRequestDto> getUserDocumentRequests(
@@ -90,6 +98,20 @@ public class DocumentRequestService {
     newRequest.setStatus(RequestStatus.PENDING);
 
     DocumentRequest savedRequest = documentRequestRepository.save(newRequest);
+
+    List<com.acd.researchrepo.model.User> admins =
+        userRepository.findByDepartmentDepartmentIdAndRole(
+            paper.getDepartment().getDepartmentId(), UserRole.DEPARTMENT_ADMIN);
+    for (com.acd.researchrepo.model.User admin : admins) {
+      notificationService.createAndSend(
+          admin.getUserId(),
+          "New request for \""
+              + paper.getTitle()
+              + "\" from "
+              + userPrincipal.getFullName(),
+          "NEW_REQUEST",
+          savedRequest.getRequestId());
+    }
 
     return CreateRequestResponse.builder().requestId(savedRequest.getRequestId()).build();
   }
@@ -227,6 +249,12 @@ public class DocumentRequestService {
     request.setStatus(RequestStatus.ACCEPTED);
     DocumentRequest savedRequest = documentRequestRepository.save(request);
 
+    notificationService.createAndSend(
+        request.getUser().getUserId(),
+        "Your request for \"" + request.getPaper().getTitle() + "\" has been accepted.",
+        "REQUEST_ACCEPTED",
+        request.getRequestId());
+
     return documentRequestMapper.toAdminDto(savedRequest);
   }
 
@@ -270,6 +298,12 @@ public class DocumentRequestService {
     request.setStatus(RequestStatus.REJECTED);
     request.setRejectionReason(reason);
     DocumentRequest savedRequest = documentRequestRepository.save(request);
+
+    notificationService.createAndSend(
+        request.getUser().getUserId(),
+        "Your request for \"" + request.getPaper().getTitle() + "\" has been rejected.",
+        "REQUEST_REJECTED",
+        request.getRequestId());
 
     return documentRequestMapper.toAdminDto(savedRequest);
   }
