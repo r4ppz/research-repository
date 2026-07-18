@@ -1,6 +1,6 @@
 package com.acd.researchrepo.dto.external.notifications;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,5 +12,5 @@ public class NotificationDto {
   private String type;
   private Integer relatedRequestId;
   private Boolean isRead;
-  private LocalDateTime createdAt;
+  private Instant createdAt;
 }
