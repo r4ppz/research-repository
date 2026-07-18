@@ -8,13 +8,14 @@ import {
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { axiosClient } from "@/api/axiosClient";
-import { markAllRead as markAllReadApi } from "@/api/notifications";
+import { markAllRead as markAllReadApi, markAsRead as markAsReadApi } from "@/api/notifications";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { useNotificationStream } from "@/features/notifications/hooks/useNotificationStream";
 
 interface NotificationContextValue {
   unreadCount: number;
   markAllRead: () => Promise<void>;
+  markAsRead: (notificationId: number, wasUnread: boolean) => Promise<void>;
 }
 
 const NotificationContext = createContext<NotificationContextValue | undefined>(undefined);
@@ -52,8 +53,20 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     void queryClient.invalidateQueries({ queryKey: ["notifications"] });
   }, [queryClient]);
 
+  const markAsRead = useCallback(
+    async (notificationId: number, wasUnread: boolean) => {
+      await markAsReadApi(notificationId);
+      // only decrement count if notification was unread, prevents badge desync
+      if (wasUnread) {
+        setUnreadCount((prev) => Math.max(0, prev - 1));
+      }
+      void queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+    [queryClient],
+  );
+
   return (
-    <NotificationContext.Provider value={{ unreadCount, markAllRead }}>
+    <NotificationContext.Provider value={{ unreadCount, markAllRead, markAsRead }}>
       {children}
     </NotificationContext.Provider>
   );
