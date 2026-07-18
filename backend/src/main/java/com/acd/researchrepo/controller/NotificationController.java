@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,6 +63,15 @@ public class NotificationController {
       @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("PUT /api/notifications/mark-all-read endpoint hit");
     notificationService.markAllRead(principal.getUserId());
+    return ResponseEntity.noContent().build();
+  }
+
+  @PutMapping("/{id}/read")
+  public ResponseEntity<Void> markAsRead(
+      @PathVariable Integer id,
+      @AuthenticationPrincipal CustomUserPrincipal principal) {
+    log.debug("PUT /api/notifications/{}/read endpoint hit", id);
+    notificationService.markAsRead(id, principal.getUserId());
     return ResponseEntity.noContent().build();
   }
 }
