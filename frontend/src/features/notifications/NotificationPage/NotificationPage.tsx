@@ -8,7 +8,7 @@ import { Header } from "@/components/layout/Header/Header";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { NotificationList } from "@/features/notifications/components/NotificationList/NotificationList";
 import { useNotificationContext } from "@/features/notifications/context/NotificationContext";
-import type { Role } from "@/types";
+import type { NotificationDto, Role } from "@/types";
 
 const REQUEST_PATH: Record<Role, string> = {
   STUDENT: "/student/requests",
@@ -19,7 +19,7 @@ const REQUEST_PATH: Record<Role, string> = {
 
 export const NotificationPage = () => {
   const { user } = useAuth();
-  const { markAllRead } = useNotificationContext();
+  const { markAllRead, markAsRead } = useNotificationContext();
   const navigate = useNavigate();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } =
@@ -36,8 +36,9 @@ export const NotificationPage = () => {
   const notifications = data?.pages.flatMap((page) => page.content) ?? [];
   const totalCount = data?.pages[0]?.totalElements ?? 0;
 
-  const handleNotificationClick = (type: string) => {
+  const handleNotificationClick = (notification: NotificationDto) => {
     if (!user) return;
+    markAsRead(notification.notificationId, !notification.isRead);
     navigate(REQUEST_PATH[user.role]);
   };
 
