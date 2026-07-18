@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useCallback, useRef } from "react";
 import style from "./NotificationList.module.css";
 import type { NotificationDto } from "@/types";
+import { useTick } from "../../hooks/useTick";
 
 function renderMessage(message: string): ReactNode {
   const idx = message.lastIndexOf(" from ");
@@ -35,7 +36,7 @@ interface NotificationListProps {
   hasNextPage: boolean;
   totalCount: number;
   onLoadMore: () => void;
-  onNotificationClick: (type: string) => void;
+  onNotificationClick: (notification: NotificationDto) => void;
 }
 
 export const NotificationList = ({
@@ -50,6 +51,7 @@ export const NotificationList = ({
 }: NotificationListProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  useTick(60_000);
 
   const lastItemRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -111,12 +113,12 @@ export const NotificationList = ({
             role="button"
             tabIndex={0}
             onClick={() => {
-              onNotificationClick(notification.type);
+              onNotificationClick(notification);
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                onNotificationClick(notification.type);
+                onNotificationClick(notification);
               }
             }}
           >
