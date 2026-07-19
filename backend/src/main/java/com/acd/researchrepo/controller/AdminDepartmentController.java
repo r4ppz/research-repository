@@ -1,5 +1,6 @@
 package com.acd.researchrepo.controller;
 
+import com.acd.researchrepo.dto.external.common.PaginationRequest;
 import com.acd.researchrepo.dto.external.departments.AdminDepartmentDto;
 import com.acd.researchrepo.dto.external.departments.DepartmentCreateRequest;
 import com.acd.researchrepo.dto.external.departments.DepartmentUpdateRequest;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -38,11 +38,12 @@ public class AdminDepartmentController {
 
   @GetMapping
   public ResponseEntity<PaginatedResponse<AdminDepartmentDto>> getDepartments(
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "20") int size,
+      @Valid PaginationRequest pagination,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("GET /api/admin/departments endpoint hit");
-    return ResponseEntity.ok(departmentService.getAdminDepartments(page, size, principal));
+    return ResponseEntity.ok(
+        departmentService.getAdminDepartments(
+            pagination.getPage(), pagination.getSize(), principal));
   }
 
   @PostMapping

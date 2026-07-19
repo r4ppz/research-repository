@@ -1,13 +1,14 @@
 package com.acd.researchrepo.controller;
 
+import com.acd.researchrepo.dto.external.common.PaginationRequest;
 import com.acd.researchrepo.dto.external.notifications.NotificationDto;
 import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.service.NotificationService;
 import com.acd.researchrepo.service.SseEmitterService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -47,12 +47,12 @@ public class NotificationController {
 
   @GetMapping
   public ResponseEntity<PaginatedResponse<NotificationDto>> getNotifications(
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "20") int size,
+      @Valid PaginationRequest pagination,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("GET /api/notifications endpoint hit");
-    Pageable pageable = PageRequest.of(page, size);
-    return ResponseEntity.ok(notificationService.getNotifications(principal.getUserId(), pageable));
+    return ResponseEntity.ok(
+        notificationService.getNotifications(
+            principal.getUserId(), PageRequest.of(pagination.getPage(), pagination.getSize())));
   }
 
   @GetMapping("/unread-count")
