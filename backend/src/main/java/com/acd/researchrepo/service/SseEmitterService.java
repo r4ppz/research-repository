@@ -1,10 +1,10 @@
 package com.acd.researchrepo.service;
 
 import com.acd.researchrepo.dto.external.notifications.NotificationDto;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  * Failed emitters (timeout, completion, error) are removed individually without affecting other
  * connections for the same user.
  */
+@Slf4j
 @Service
 public class SseEmitterService {
 
@@ -21,7 +22,10 @@ public class SseEmitterService {
 
   public SseEmitter addEmitter(Integer userId) {
     SseEmitter emitter = new SseEmitter(0L);
-    emitters.computeIfAbsent(userId, k -> ConcurrentHashMap.newKeySet()).add(emitter);
+    Set<SseEmitter> userEmitters =
+        emitters.computeIfAbsent(userId, k -> ConcurrentHashMap.newKeySet());
+    userEmitters.add(emitter);
+    log.debug("Added emitter for user {} ({} active)", userId, userEmitters.size());
 
     Runnable cleanup =
         () -> {
@@ -29,6 +33,7 @@ public class SseEmitterService {
               userId,
               (key, set) -> {
                 set.remove(emitter);
+                log.debug("Removed emitter for user {} ({} remaining)", userId, set.size());
                 return set.isEmpty() ? null : set;
               });
         };

@@ -21,8 +21,8 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
  * Real-time notification streaming via SSE and notification management (list, mark read). Users
- * only see their own notifications. A single SSE connection per user is maintained — a second
- * connection replaces the first.
+ * only see their own notifications. Multiple simultaneous SSE connections per user are supported
+ * (e.g., multiple browser tabs) — each tab independently receives events.
  */
 @Slf4j
 @RestController
