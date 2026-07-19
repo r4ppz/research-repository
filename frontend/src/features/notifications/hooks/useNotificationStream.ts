@@ -12,15 +12,18 @@ const BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
 interface UseNotificationStreamOptions {
   onNotification?: () => void;
+  onReconnect?: () => void;
 }
 
 export function useNotificationStream(
-  { onNotification }: UseNotificationStreamOptions = {},
+  { onNotification, onReconnect }: UseNotificationStreamOptions = {},
 ) {
   const { user, logout } = useAuth();
   const abortRef = useRef<AbortController | null>(null);
   const onNotificationRef = useRef(onNotification);
   onNotificationRef.current = onNotification;
+  const onReconnectRef = useRef(onReconnect);
+  onReconnectRef.current = onReconnect;
 
   useEffect(() => {
     if (!user) return;
@@ -83,17 +86,38 @@ export function useNotificationStream(
           },
           onerror() {
             if (cancelled) return;
+            throw new Error("SSE connection closed");
           },
         });
       } catch {
-        // connection aborted or failed
+        // Only retry if this controller is still current (not superseded by a new connect())
+        // and the tab is visible. When hidden, let the visibilitychange handler reconnect.
+        if (
+          !cancelled &&
+          abortRef.current === controller &&
+          document.visibilityState === "visible"
+        ) {
+          setTimeout(() => {
+            if (!cancelled) void connect();
+          }, 3000);
+        }
       }
     };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible" && !cancelled) {
+        void connect();
+        onReconnectRef.current?.();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     void connect();
 
     return () => {
       cancelled = true;
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (abortRef.current != null) abortRef.current.abort();
     };
   }, [user, logout]);

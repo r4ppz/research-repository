@@ -52,6 +52,13 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       setUnreadCount((prev) => prev + 1);
       void queryClient.invalidateQueries({ queryKey: ["notifications"] });
     }, [queryClient]),
+    onReconnect: useCallback(() => {
+      void queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      void axiosClient.get<number>("/api/notifications/unread-count").then(
+        (res) => { setUnreadCount(res.data); },
+        () => { setUnreadCount(0); },
+      );
+    }, [queryClient]),
   });
 
   const markAllRead = useCallback(async () => {
