@@ -13,9 +13,9 @@ import lombok.Data;
 public class PaginationRequest {
 
   @Min(value = 0, message = "Page number cannot be negative")
-  private int page = 0;
+  protected int page = 0;
 
   @Min(value = 1, message = "Page size must be at least 1")
   @Max(value = 100, message = "Page size cannot exceed 100")
-  private int size = 20;
+  protected int size = 20;
 }
