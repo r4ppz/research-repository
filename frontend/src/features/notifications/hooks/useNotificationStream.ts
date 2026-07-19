@@ -35,7 +35,6 @@ export function useNotificationStream(
         const data = await postRefresh();
         setAccessToken(data.accessToken);
         reconnecting = false;
-        if (abortRef.current != null) abortRef.current.abort();
         if (!cancelled) void connect();
       } catch {
         removeAccessToken();
