@@ -34,10 +34,12 @@ export function useNotificationStream(
       try {
         const data = await postRefresh();
         setAccessToken(data.accessToken);
+        reconnecting = false;
         if (abortRef.current != null) abortRef.current.abort();
         if (!cancelled) void connect();
       } catch {
         removeAccessToken();
+        reconnecting = false;
         if (!cancelled) {
           await logout();
         }
@@ -80,10 +82,7 @@ export function useNotificationStream(
             }
           },
           onerror() {
-            if (cancelled || reconnecting) return;
-            setTimeout(() => {
-              if (!cancelled) void connect();
-            }, 3000);
+            if (cancelled) return;
           },
         });
       } catch {
