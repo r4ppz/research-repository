@@ -51,24 +51,33 @@ public class SseEmitterService {
     Set<SseEmitter> userEmitters = emitters.remove(userId);
     if (userEmitters != null) {
       userEmitters.forEach(SseEmitter::complete);
+      log.debug("Removed all emitters for user {}", userId);
     }
   }
 
   /**
-   * Sends a notification event to all active SSE connections for a user. If an emitter is defunct
-   * (throws IOException), it is removed without affecting other connections.
+   * Sends a notification event to all active SSE connections for a user. If an emitter fails, it is
+   * removed individually without affecting other connections for the same user.
    */
   public void sendToUser(Integer userId, NotificationDto dto) {
     Set<SseEmitter> userEmitters = emitters.get(userId);
-    if (userEmitters == null) {
+    if (userEmitters == null || userEmitters.isEmpty()) {
       return;
     }
+
+    log.debug("Sending notification to user {} ({} emitters)", userId, userEmitters.size());
 
     for (SseEmitter emitter : userEmitters) {
       try {
         emitter.send(SseEmitter.event().name("notification").data(dto));
-      } catch (IOException e) {
-        userEmitters.remove(emitter);
+      } catch (Exception e) {
+        log.warn("Removing defunct emitter for user {}: {}", userId, e.getMessage());
+        emitters.computeIfPresent(
+            userId,
+            (key, set) -> {
+              set.remove(emitter);
+              return set.isEmpty() ? null : set;
+            });
       }
     }
   }
