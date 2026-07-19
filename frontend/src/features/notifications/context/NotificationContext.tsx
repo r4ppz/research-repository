@@ -26,18 +26,25 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
 
   useEffect(() => {
+    setUnreadCount(0);
     if (!user) return;
+
+    let cancelled = false;
 
     const fetchCount = async () => {
       try {
         const response = await axiosClient.get<number>("/api/notifications/unread-count");
-        setUnreadCount(response.data);
+        if (!cancelled) setUnreadCount(response.data);
       } catch {
-        // ignore
+        if (!cancelled) setUnreadCount(0);
       }
     };
 
     void fetchCount();
+
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   useNotificationStream({
