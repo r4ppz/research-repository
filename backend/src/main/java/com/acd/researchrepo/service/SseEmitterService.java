@@ -23,12 +23,15 @@ public class SseEmitterService {
     SseEmitter emitter = new SseEmitter(0L);
     emitters.computeIfAbsent(userId, k -> ConcurrentHashMap.newKeySet()).add(emitter);
 
-    Runnable cleanup = () -> {
-      emitters.computeIfPresent(userId, (key, set) -> {
-        set.remove(emitter);
-        return set.isEmpty() ? null : set;
-      });
-    };
+    Runnable cleanup =
+        () -> {
+          emitters.computeIfPresent(
+              userId,
+              (key, set) -> {
+                set.remove(emitter);
+                return set.isEmpty() ? null : set;
+              });
+        };
 
     emitter.onCompletion(cleanup);
     emitter.onTimeout(cleanup);

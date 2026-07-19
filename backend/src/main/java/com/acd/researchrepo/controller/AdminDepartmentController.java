@@ -38,8 +38,7 @@ public class AdminDepartmentController {
 
   @GetMapping
   public ResponseEntity<PaginatedResponse<AdminDepartmentDto>> getDepartments(
-      @Valid PaginationRequest pagination,
-      @AuthenticationPrincipal CustomUserPrincipal principal) {
+      @Valid PaginationRequest pagination, @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("GET /api/admin/departments endpoint hit");
     return ResponseEntity.ok(
         departmentService.getAdminDepartments(

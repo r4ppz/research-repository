@@ -76,9 +76,10 @@ public class NotificationService {
 
   @Transactional
   public void markAsRead(Integer notificationId, Integer userId) {
-    Notification notification = notificationRepository
-        .findById(notificationId)
-        .orElseThrow(() -> new RuntimeException("Notification not found"));
+    Notification notification =
+        notificationRepository
+            .findById(notificationId)
+            .orElseThrow(() -> new RuntimeException("Notification not found"));
 
     // ownership check inline, no custom repo method needed
     if (!notification.getUser().getUserId().equals(userId)) {

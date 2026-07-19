@@ -39,16 +39,14 @@ public class NotificationController {
   }
 
   @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-  public SseEmitter streamNotifications(
-      @AuthenticationPrincipal CustomUserPrincipal principal) {
+  public SseEmitter streamNotifications(@AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("GET /api/notifications/stream endpoint hit for user {}", principal.getUserId());
     return sseEmitterService.addEmitter(principal.getUserId());
   }
 
   @GetMapping
   public ResponseEntity<PaginatedResponse<NotificationDto>> getNotifications(
-      @Valid PaginationRequest pagination,
-      @AuthenticationPrincipal CustomUserPrincipal principal) {
+      @Valid PaginationRequest pagination, @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("GET /api/notifications endpoint hit");
     return ResponseEntity.ok(
         notificationService.getNotifications(
@@ -64,8 +62,7 @@ public class NotificationController {
   }
 
   @PutMapping("/mark-all-read")
-  public ResponseEntity<Void> markAllRead(
-      @AuthenticationPrincipal CustomUserPrincipal principal) {
+  public ResponseEntity<Void> markAllRead(@AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("PUT /api/notifications/mark-all-read endpoint hit");
     notificationService.markAllRead(principal.getUserId());
     return ResponseEntity.noContent().build();
@@ -73,8 +70,7 @@ public class NotificationController {
 
   @PutMapping("/{id}/read")
   public ResponseEntity<Void> markAsRead(
-      @PathVariable Integer id,
-      @AuthenticationPrincipal CustomUserPrincipal principal) {
+      @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("PUT /api/notifications/{}/read endpoint hit", id);
     notificationService.markAsRead(id, principal.getUserId());
     return ResponseEntity.noContent().build();

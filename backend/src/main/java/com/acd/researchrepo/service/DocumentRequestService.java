@@ -113,10 +113,7 @@ public class DocumentRequestService {
     for (com.acd.researchrepo.model.User admin : admins) {
       notificationService.createAndSend(
           admin.getUserId(),
-          "New request for \""
-              + paper.getTitle()
-              + "\" from "
-              + userPrincipal.getFullName(),
+          "New request for \"" + paper.getTitle() + "\" from " + userPrincipal.getFullName(),
           "NEW_REQUEST",
           savedRequest.getRequestId());
     }
