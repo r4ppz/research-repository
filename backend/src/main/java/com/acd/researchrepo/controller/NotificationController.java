@@ -19,6 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+/**
+ * Real-time notification streaming via SSE and notification management (list, mark read). Users
+ * only see their own notifications. A single SSE connection per user is maintained — a second
+ * connection replaces the first.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/notifications")

@@ -10,6 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Persists notifications and pushes them in real-time via SSE. Supports listing, unread count,
+ * marking individual or all notifications as read.
+ */
 @Service
 public class NotificationService {
 
@@ -29,6 +33,9 @@ public class NotificationService {
     this.userRepository = userRepository;
   }
 
+  /**
+   * Creates a notification record and immediately pushes it to the recipient via SSE.
+   */
   @Transactional
   public NotificationDto createAndSend(
       Integer userId, String message, String type, Integer relatedRequestId) {

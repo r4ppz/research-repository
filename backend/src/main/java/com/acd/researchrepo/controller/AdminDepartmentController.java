@@ -21,6 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * SuperAdmin CRUD for departments. Prevents deletion of departments that still have linked
+ * users or research papers.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/admin/departments")

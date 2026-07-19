@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Endpoints for students and faculty to create and delete document access requests. Deleting
+ * is only allowed for requests in PENDING or REJECTED status.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/requests")

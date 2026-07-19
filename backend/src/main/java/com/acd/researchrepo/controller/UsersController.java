@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Endpoints for the currently authenticated user to view their profile and document requests.
+ * Restricted to students and faculty for request-related endpoints.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/users")

@@ -17,6 +17,10 @@ import java.util.Collections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+/**
+ * Handles Google OAuth2 authorization code exchange, ID token verification, and domain
+ * restriction enforcement. In production, only {@code @acdeducation.com} emails are allowed.
+ */
 @Service
 public class GoogleAuthService {
 
@@ -57,6 +61,10 @@ public class GoogleAuthService {
             .build();
   }
 
+  /**
+   * Exchanges a Google authorization code for a token, verifies the ID token, and extracts user
+   * profile data. Enforces email domain restrictions based on the active environment profile.
+   */
   public GoogleUserInfo validateCodeAndGetUserInfo(String authorizationCode) {
     GoogleTokenResponse tokenResponse = exchangeAuthorizationCode(authorizationCode);
     GoogleIdToken.Payload payload = verifyAndExtractPayload(tokenResponse.getIdToken());
@@ -101,6 +109,10 @@ public class GoogleAuthService {
     return idToken.getPayload();
   }
 
+  /**
+   * Restricts login to specific email domains: production requires {@code @acdeducation.com};
+   * development requires any {@code .com} address.
+   */
   private void enforceDomainRestrictions(String email) {
     if ("prod".equalsIgnoreCase(environment)) {
       if (!email.endsWith("acdeducation.com")) {

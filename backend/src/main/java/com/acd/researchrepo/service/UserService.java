@@ -10,6 +10,10 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
+/**
+ * Handles user lookup and auto-provisioning via Google OAuth. The first user whose email matches
+ * {@code app.initial-super-admin-email} is granted SUPER_ADMIN role on first login.
+ */
 @Service
 public class UserService {
 
@@ -21,6 +25,11 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
+  /**
+   * Finds an existing user by email or creates a new one from Google profile data. Existing users
+   * have their name and profile picture updated if changed. New users are assigned a role based on
+   * the initial SUPER_ADMIN bootstrap email configuration.
+   */
   @Transactional
   public User findOrCreateUser(GoogleUserInfo googleInfo) {
     String email = normalizeEmail(googleInfo.getEmail());

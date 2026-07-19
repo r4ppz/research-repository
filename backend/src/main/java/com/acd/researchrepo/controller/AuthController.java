@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Handles Google OAuth2 authentication, token refresh, and logout. All endpoints are public
+ * (no JWT required) — authentication is performed via Google authorization code.
+ */
 @RestController
 @RequestMapping("/api/auth")
 @Slf4j

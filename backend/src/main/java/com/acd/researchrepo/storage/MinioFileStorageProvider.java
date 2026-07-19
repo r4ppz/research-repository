@@ -21,6 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Component
+/**
+ * File storage backed by MinIO (S3-compatible object storage). Activated when {@code
+ * app.storage.provider=minio}. Uses the bucket and credentials configured in {@link
+ * com.acd.researchrepo.environment.AppProperties.Minio}.
+ */
 @ConditionalOnProperty(name = "app.storage.provider", havingValue = "minio")
 public class MinioFileStorageProvider implements FileStorageProvider {
 

@@ -18,6 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Component
+/**
+ * File storage on the local filesystem. The root directory is configured via {@code
+ * app.storage.upload-dir}. Path traversal attacks are prevented by normalizing and verifying
+ * that resolved paths stay within the root.
+ */
 @ConditionalOnProperty(name = "app.storage.provider", havingValue = "local", matchIfMissing = true)
 public class LocalFileStorageProvider implements FileStorageProvider {
 

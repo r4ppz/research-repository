@@ -11,6 +11,11 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
+/**
+ * Converts a validated JWT into an {@link AbstractAuthenticationToken} with a {@link
+ * CustomUserPrincipal}. Reconstructs the {@link com.acd.researchrepo.model.User} object from JWT
+ * claims (including a minimal Department with only the ID set).
+ */
 @Component
 public class CustomJwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 

@@ -13,6 +13,11 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+/**
+ * Servlet filter that generates a unique trace ID for every request, sets it in the MDC for
+ * logging, and returns it as the {@code Research-Repo-Trace-Id} response header. Runs at the
+ * highest precedence to capture all requests before Spring MVC filters.
+ */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE) // runs first before spring MVC
 public class TraceIdFilter implements Filter {

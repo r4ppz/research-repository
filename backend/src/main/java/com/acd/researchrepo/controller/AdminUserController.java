@@ -20,6 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * SuperAdmin user management — list, create users, and change roles. Role changes are logged
+ * in {@link com.acd.researchrepo.model.RoleChangeLog} and revoke the target user's refresh
+ * tokens.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/admin/users")

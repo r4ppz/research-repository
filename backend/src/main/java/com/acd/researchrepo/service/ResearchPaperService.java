@@ -30,6 +30,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Core service for research paper operations — browsing, admin management, file download, and
+ * archival. Role-based access is enforced throughout: students only see non-archived papers,
+ * DEPARTMENT_ADMINs are scoped to their department, and SUPER_ADMINs have full visibility.
+ */
 @Slf4j
 @Service
 public class ResearchPaperService {
@@ -73,9 +78,9 @@ public class ResearchPaperService {
   }
 
   /**
-   * Get papers for admin management with department scoping. DEPARTMENT_ADMIN: only sees papers in
-   * their department (departmentIds param ignored). SUPER_ADMIN: sees all papers, can filter by
-   * departmentIds.
+   * Retrieves paginated papers for the admin panel with role-based department scoping. {@code
+   * DEPARTMENT_ADMIN} is forced to their own department (ignoring any {@code departmentId} filter);
+   * {@code SUPER_ADMIN} can filter by any department or see all.
    */
   public PaginatedResponse<ResearchPaperDto> getAdminPapers(
       ResearchPaperSearchRequest request, CustomUserPrincipal userPrincipal) {
@@ -141,6 +146,10 @@ public class ResearchPaperService {
     return documentRequestService.getUserRequestForPaper(paperId, userPrincipal);
   }
 
+  /**
+   * Archives a research paper. As a side effect, all active (PENDING or ACCEPTED) document
+   * requests for this paper are rejected with reason "Paper archived".
+   */
   @Transactional
   public void archivePaper(Integer id, CustomUserPrincipal principal) {
     ResearchPaper paper = getAndVerifyAdminAccess(id, principal);
@@ -214,6 +223,10 @@ public class ResearchPaperService {
     researchPaperRepository.save(paper);
   }
 
+  /**
+   * Returns the filename (without path) of a research paper file, after verifying the caller has
+   * download access.
+   */
   public String getPaperFileName(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper =
         researchPaperRepository
@@ -226,6 +239,11 @@ public class ResearchPaperService {
     return filePath.substring(filePath.lastIndexOf('/') + 1);
   }
 
+  /**
+   * Downloads the file for a research paper. Access is granted only if the caller has an accepted
+   * document request (students/faculty), belongs to the paper's department (DEPARTMENT_ADMIN), or
+   * is a SUPER_ADMIN.
+   */
   public Resource downloadPaper(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper =
         researchPaperRepository
@@ -237,6 +255,11 @@ public class ResearchPaperService {
     return fileStorageService.loadFile(paper.getFilePath());
   }
 
+  /**
+   * Creates a new research paper with an uploaded file. Files are stored under {@code
+   * {year}/{department_slug}/paper_{timestamp}.{ext}}. DEPARTMENT_ADMINs can only create papers for
+   * their own department.
+   */
   @Transactional
   public ResearchPaperDto createPaper(
       PaperCreateRequest metadata, MultipartFile file, CustomUserPrincipal principal) {
@@ -296,6 +319,10 @@ public class ResearchPaperService {
     return researchPaperMapper.toDto(savedPaper);
   }
 
+  /**
+   * Fetches a paper and verifies the caller has admin access to it. DEPARTMENT_ADMINs can only
+   * access papers in their own department.
+   */
   private ResearchPaper getAndVerifyAdminAccess(Integer id, CustomUserPrincipal principal) {
     if (!RoleBasedAccess.isUserAdmin(principal)) {
       throw new ApiException(ErrorCode.ACCESS_DENIED, "Admin privileges required");
@@ -317,6 +344,11 @@ public class ResearchPaperService {
     return paper;
   }
 
+  /**
+   * Enforces download access rules based on role: SUPER_ADMIN has unrestricted access;
+   * DEPARTMENT_ADMIN can download papers in their department; students and faculty must have an
+   * accepted document request for the paper (archived papers are not available to non-admins).
+   */
   private void validateDownloadAccess(ResearchPaper paper, CustomUserPrincipal principal) {
     if (RoleBasedAccess.isUserSuperAdmin(principal)) {
       return;

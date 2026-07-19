@@ -7,6 +7,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+/**
+ * Manages Server-Sent Event connections for real-time notification delivery. One emitter per user
+ * is maintained — a second connection from the same user replaces the first. Failed emitters
+ * (timeout, completion, error) are automatically cleaned up.
+ */
 @Service
 public class SseEmitterService {
 
@@ -26,6 +31,10 @@ public class SseEmitterService {
     emitters.remove(userId);
   }
 
+  /**
+   * Sends a notification event to a user's SSE connection. If the emitter is defunct (throws
+   * IOException), it is silently removed.
+   */
   public void sendToUser(Integer userId, NotificationDto dto) {
     SseEmitter emitter = emitters.get(userId);
     if (emitter != null) {

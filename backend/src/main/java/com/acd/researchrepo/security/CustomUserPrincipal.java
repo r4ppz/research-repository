@@ -9,6 +9,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+/**
+ * Custom {@link OAuth2User} that wraps the application's {@link User} entity. Provides direct
+ * accessors for userId, email, fullName, role, and departmentId without traversing the User
+ * object. Authorities are derived from the user's role as {@code ROLE_{name}}.
+ */
 public class CustomUserPrincipal implements OAuth2User {
 
   private final User user;

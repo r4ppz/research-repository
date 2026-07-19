@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Endpoints for students and faculty to browse and access research papers. Access to individual
+ * papers requires an accepted document request (enforced in {@link
+ * com.acd.researchrepo.service.ResearchPaperService}). Archived papers are hidden from students.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/papers")

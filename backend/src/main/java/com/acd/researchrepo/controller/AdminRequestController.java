@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Admin endpoints for managing document access requests — list, accept, or reject.
+ * DEPARTMENT_ADMINs are scoped to their department; SUPER_ADMINs see all.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/admin/requests")

@@ -28,6 +28,11 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Admin paper management — CRUD, archive, and unarchive. Paper creation accepts multipart
+ * (metadata JSON + file). DEPARTMENT_ADMINs are scoped to their own department; SUPER_ADMINs
+ * see all.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/admin/papers")

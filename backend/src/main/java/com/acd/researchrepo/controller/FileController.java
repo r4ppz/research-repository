@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Serves research paper file downloads. Supports both download (attachment) and in-browser
+ * preview (inline). Access is guarded by download permission checks in {@link
+ * com.acd.researchrepo.service.ResearchPaperService}.
+ */
 @RestController
 @RequestMapping("/api/files")
 public class FileController {

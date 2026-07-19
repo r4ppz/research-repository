@@ -10,6 +10,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Mediates file operations (save, load, delete) through the active {@link FileStorageProvider}
+ * with built-in validation — file size limits, allowed content types, and magic byte signature
+ * verification (not just Content-Type header).
+ */
 @Slf4j
 @Service
 public class FileStorageService {
