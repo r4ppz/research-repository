@@ -2,10 +2,12 @@ package com.acd.researchrepo.service;
 
 import com.acd.researchrepo.dto.external.notifications.NotificationDto;
 import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
+import com.acd.researchrepo.event.NotificationCreatedEvent;
 import com.acd.researchrepo.mapper.NotificationMapper;
 import com.acd.researchrepo.model.Notification;
 import com.acd.researchrepo.repository.NotificationRepository;
 import com.acd.researchrepo.repository.UserRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,22 +21,24 @@ public class NotificationService {
 
   private final NotificationRepository notificationRepository;
   private final NotificationMapper notificationMapper;
-  private final SseEmitterService sseEmitterService;
+  private final ApplicationEventPublisher eventPublisher;
   private final UserRepository userRepository;
 
   public NotificationService(
       NotificationRepository notificationRepository,
       NotificationMapper notificationMapper,
-      SseEmitterService sseEmitterService,
+      ApplicationEventPublisher eventPublisher,
       UserRepository userRepository) {
     this.notificationRepository = notificationRepository;
     this.notificationMapper = notificationMapper;
-    this.sseEmitterService = sseEmitterService;
+    this.eventPublisher = eventPublisher;
     this.userRepository = userRepository;
   }
 
   /**
-   * Creates a notification record and immediately pushes it to the recipient via SSE.
+   * Creates a notification record and publishes a {@link NotificationCreatedEvent}. The event
+   * listener dispatches the SSE after the enclosing transaction commits, preventing phantom
+   * notifications on rollback.
    */
   @Transactional
   public NotificationDto createAndSend(
@@ -50,7 +54,7 @@ public class NotificationService {
     notification = notificationRepository.save(notification);
     NotificationDto dto = notificationMapper.toDto(notification);
 
-    sseEmitterService.sendToUser(userId, dto);
+    eventPublisher.publishEvent(new NotificationCreatedEvent(userId, dto));
 
     return dto;
   }
