@@ -49,7 +49,8 @@ export function useNotificationStream(
       if (abortRef.current != null) {
         abortRef.current.abort();
       }
-      abortRef.current = new AbortController();
+      const controller = new AbortController();
+      abortRef.current = controller;
 
       const token = getAccessToken();
       if (!token) return;
@@ -58,7 +59,7 @@ export function useNotificationStream(
         await fetchEventSource(`${BASE_URL}/api/notifications/stream`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
-          signal: abortRef.current.signal,
+          signal: controller.signal,
           onopen: async (response) => {
             if (response.status === 401) {
               await handleUnauthorized();
