@@ -3,45 +3,64 @@ package com.acd.researchrepo.service;
 import com.acd.researchrepo.dto.external.notifications.NotificationDto;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
- * Manages Server-Sent Event connections for real-time notification delivery. One emitter per user
- * is maintained — a second connection from the same user replaces the first. Failed emitters
- * (timeout, completion, error) are automatically cleaned up.
+ * Manages Server-Sent Event connections for real-time notification delivery. Maintains a set of
+ * emitters per user to support multiple simultaneous connections (e.g., multiple browser tabs).
+ * Failed emitters (timeout, completion, error) are removed individually without affecting other
+ * connections for the same user.
  */
 @Service
 public class SseEmitterService {
 
-  // one emitter per user — second tab replaces first, use per-connection list if needed
-  private final Map<Integer, SseEmitter> emitters = new ConcurrentHashMap<>();
+  private final Map<Integer, Set<SseEmitter>> emitters = new ConcurrentHashMap<>();
 
   public SseEmitter addEmitter(Integer userId) {
     SseEmitter emitter = new SseEmitter(0L);
-    emitters.put(userId, emitter);
-    emitter.onCompletion(() -> emitters.remove(userId));
-    emitter.onTimeout(() -> emitters.remove(userId));
-    emitter.onError(e -> emitters.remove(userId));
+    emitters.computeIfAbsent(userId, k -> ConcurrentHashMap.newKeySet()).add(emitter);
+
+    Runnable cleanup = () -> {
+      emitters.computeIfPresent(userId, (key, set) -> {
+        set.remove(emitter);
+        return set.isEmpty() ? null : set;
+      });
+    };
+
+    emitter.onCompletion(cleanup);
+    emitter.onTimeout(cleanup);
+    emitter.onError(e -> cleanup.run());
     return emitter;
   }
 
+  /**
+   * Explicitly removes all emitters for a user. Each emitter is completed before removal.
+   */
   public void removeEmitter(Integer userId) {
-    emitters.remove(userId);
+    Set<SseEmitter> userEmitters = emitters.remove(userId);
+    if (userEmitters != null) {
+      userEmitters.forEach(SseEmitter::complete);
+    }
   }
 
   /**
-   * Sends a notification event to a user's SSE connection. If the emitter is defunct (throws
-   * IOException), it is silently removed.
+   * Sends a notification event to all active SSE connections for a user. If an emitter is defunct
+   * (throws IOException), it is removed without affecting other connections.
    */
   public void sendToUser(Integer userId, NotificationDto dto) {
-    SseEmitter emitter = emitters.get(userId);
-    if (emitter != null) {
+    Set<SseEmitter> userEmitters = emitters.get(userId);
+    if (userEmitters == null) {
+      return;
+    }
+
+    for (SseEmitter emitter : userEmitters) {
       try {
         emitter.send(SseEmitter.event().name("notification").data(dto));
       } catch (IOException e) {
-        emitters.remove(userId);
+        userEmitters.remove(emitter);
       }
     }
   }
