@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import style from "./NotificationPage.module.css";
 import { getNotifications } from "@/api/notifications";
 import { Button } from "@/components/common/Button/Button";
+import { toastQueue } from "@/components/common/Toast/Toast";
 import { Footer } from "@/components/layout/Footer/Footer";
 import { Header } from "@/components/layout/Header/Header";
 import { useAuth } from "@/features/auth/context/useAuth";
@@ -53,7 +54,15 @@ export const NotificationPage = () => {
               variant="primary"
               type="button"
               className={style.markAllReadButton}
-              onClick={() => void markAllRead()}
+              onClick={() => {
+                markAllRead().catch(() =>
+                  toastQueue.add({
+                    variant: "error",
+                    title: "Failed",
+                    description: "Failed to mark all notifications as read.",
+                  }),
+                );
+              }}
             >
               Mark all read
             </Button>
