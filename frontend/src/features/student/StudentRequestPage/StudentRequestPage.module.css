@@ -45,6 +45,38 @@
   }
 }
 
+.tabsContainer {
+  display: flex;
+  gap: var(--space-lg);
+  margin: var(--space-lg) 0;
+}
+
+.tabButton {
+  display: flex;
+  flex: 1;
+  gap: var(--space-xs);
+  align-items: center;
+  justify-content: center;
+}
+
+.iconTab {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+
+.uploadButton {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.iconUpload {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+
 .tableSection {
   width: 100%;
 }
