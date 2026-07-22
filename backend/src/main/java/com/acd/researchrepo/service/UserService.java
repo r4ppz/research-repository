@@ -1,7 +1,11 @@
 package com.acd.researchrepo.service;
 
+import com.acd.researchrepo.dto.external.model.UserDto;
 import com.acd.researchrepo.dto.internal.GoogleUserInfo;
 import com.acd.researchrepo.environment.AppProperties;
+import com.acd.researchrepo.exception.ApiException;
+import com.acd.researchrepo.exception.ErrorCode;
+import com.acd.researchrepo.mapper.UserMapper;
 import com.acd.researchrepo.model.User;
 import com.acd.researchrepo.model.UserRole;
 import com.acd.researchrepo.repository.UserRepository;
@@ -19,10 +23,20 @@ public class UserService {
 
   private final AppProperties appProperties;
   private final UserRepository userRepository;
+  private final UserMapper userMapper;
 
-  public UserService(AppProperties appProperties, UserRepository userRepository) {
+  public UserService(
+      AppProperties appProperties, UserRepository userRepository, UserMapper userMapper) {
     this.appProperties = appProperties;
     this.userRepository = userRepository;
+    this.userMapper = userMapper;
+  }
+
+  public UserDto getUserById(Integer userId) {
+    return userRepository
+        .findById(userId)
+        .map(userMapper::toDto)
+        .orElseThrow(() -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "User not found"));
   }
 
   /**

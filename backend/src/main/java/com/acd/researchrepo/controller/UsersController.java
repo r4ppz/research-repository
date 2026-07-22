@@ -6,10 +6,9 @@ import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
 import com.acd.researchrepo.dto.external.requests.DocumentRequestSearchRequest;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
-import com.acd.researchrepo.mapper.UserMapper;
-import com.acd.researchrepo.repository.UserRepository;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.service.DocumentRequestService;
+import com.acd.researchrepo.service.UserService;
 import com.acd.researchrepo.util.RoleBasedAccess;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -28,16 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UsersController {
 
-  private final UserMapper userMapper;
-  private final UserRepository userRepository;
+  private final UserService userService;
   private final DocumentRequestService documentRequestService;
 
   public UsersController(
-      UserMapper userMapper,
-      UserRepository userRepository,
-      DocumentRequestService documentRequestService) {
-    this.userMapper = userMapper;
-    this.userRepository = userRepository;
+      UserService userService, DocumentRequestService documentRequestService) {
+    this.userService = userService;
     this.documentRequestService = documentRequestService;
   }
 
@@ -46,12 +41,7 @@ public class UsersController {
       @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("api/users/me endpoint hit");
 
-    UserDto userDto =
-        userRepository
-            .findById(principal.getUserId())
-            .map(userMapper::toDto)
-            .orElseThrow(() -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "User not found"));
-    return ResponseEntity.ok(userDto);
+    return ResponseEntity.ok(userService.getUserById(principal.getUserId()));
   }
 
   @GetMapping("/me/requests")
