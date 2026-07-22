@@ -105,6 +105,22 @@ public class AdminPaperController {
     return ResponseEntity.noContent().build();
   }
 
+  @PutMapping("/{id}/approve")
+  public ResponseEntity<ResearchPaperDto> approveSubmission(
+      @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal principal) {
+    log.debug("PUT /api/admin/papers/{}/approve endpoint hit", id);
+    ResearchPaperDto response = researchPaperService.approveSubmission(id, principal);
+    return ResponseEntity.ok(response);
+  }
+
+  @PutMapping("/{id}/reject-submission")
+  public ResponseEntity<Void> rejectSubmission(
+      @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal principal) {
+    log.debug("PUT /api/admin/papers/{}/reject-submission endpoint hit", id);
+    researchPaperService.rejectSubmission(id, principal);
+    return ResponseEntity.noContent().build();
+  }
+
   @PutMapping("/{id}/archive")
   public ResponseEntity<Void> archivePaper(
       @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal principal) {
