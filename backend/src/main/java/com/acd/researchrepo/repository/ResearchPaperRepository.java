@@ -36,7 +36,7 @@ public interface ResearchPaperRepository
   @Query(
       "SELECT DISTINCT YEAR(p.submissionDate) FROM ResearchPaper p "
           + "WHERE (:deptId IS NULL OR p.department.departmentId = :deptId) "
-          + "AND (:onlyActive = false OR p.archived = false) "
+          + "AND (:onlyActive = false OR (p.status = 'ACTIVE' AND p.archived = false)) "
           + "ORDER BY YEAR(p.submissionDate) DESC")
   List<Integer> findDistinctYears(
       @Param("deptId") Integer deptId, @Param("onlyActive") boolean onlyActive);
