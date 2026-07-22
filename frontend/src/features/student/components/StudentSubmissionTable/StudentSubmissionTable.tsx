@@ -1,21 +1,44 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { getMySubmissions } from "@/api/paper";
+import { deleteSubmission, getMySubmissions } from "@/api/paper";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { ActionButton, ActionConfirm, TableActions } from "@/components/common/TableActions";
+import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
+import { PaperUploadModal } from "@/features/student/components/PaperUploadModal/PaperUploadModal";
 import type { ResearchPaper } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
-export function StudentSubmissionTable() {
+export const StudentSubmissionTable = () => {
+  const queryClient = useQueryClient();
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(5);
-  const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
+  const [editPaper, setEditPaper] = useState<ResearchPaper | null>(null);
+  const [viewPaper, setViewPaper] = useState<ResearchPaper | null>(null);
 
   const query = useQuery({
     queryKey: ["mySubmissions", { pageIndex, pageSize }],
     queryFn: () => getMySubmissions({ page: pageIndex, size: pageSize }),
-    placeholderData: keepPreviousData,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (paperId: number) => deleteSubmission(paperId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["mySubmissions"] });
+      toastQueue.add({
+        variant: "success",
+        title: "Submission Deleted",
+        description: "Your submission has been deleted.",
+      });
+    },
+    onError: (error: unknown) => {
+      toastQueue.add({
+        variant: "error",
+        title: "Delete Failed",
+        description: getUserErrorMessage(extractApiError(error)),
+      });
+    },
   });
 
   const totalElements = query.data?.totalElements ?? 0;
@@ -42,27 +65,35 @@ export function StudentSubmissionTable() {
     }
   };
 
-  const data = (query.data?.content ?? []).map((paper) => ({
-    ...paper,
-    statusLabel: statusBadge(paper.status),
-  }));
-
   const columns = [
-    { header: "Title", accessorKey: "title" },
+    { header: "Paper Title", accessorKey: "title" },
     { header: "Author", accessorKey: "authorName" },
     { header: "Department", accessorKey: "department.departmentName" },
-    { header: "Status", accessorKey: "statusLabel" },
+    { header: "Request Date", accessorKey: "submissionDate" },
+    {
+      header: "Status",
+      id: "statusDisplay",
+      cell: ({ row }: { row: { original: ResearchPaper } }) => statusBadge(row.original.status),
+    },
     {
       header: "",
       id: "actions",
       cell: ({ row }: { row: { original: ResearchPaper } }) => (
-        <button
-          onClick={() => {
-            setSelectedPaper(row.original);
-          }}
-        >
-          View
-        </button>
+        <TableActions>
+          <ActionButton label="View" onPress={() => setViewPaper(row.original)} />
+          {row.original.status === "PENDING_REVIEW" && (
+            <>
+              <ActionButton label="Edit" onPress={() => setEditPaper(row.original)} />
+              <ActionConfirm
+                label="Delete"
+                confirmTitle="Delete Submission"
+                confirmDescription="Are you sure you want to delete this submission? This action cannot be undone."
+                confirmText="Delete"
+                onConfirm={() => deleteMutation.mutate(row.original.paperId)}
+              />
+            </>
+          )}
+        </TableActions>
       ),
     },
   ];
@@ -72,7 +103,7 @@ export function StudentSubmissionTable() {
       <DataTable
         caption="My Submissions"
         columns={columns}
-        data={data}
+        data={query.data?.content ?? []}
         pageCount={pageCount}
         pagination={{ pageIndex, pageSize }}
         onPaginationChange={(updater) => {
@@ -84,12 +115,23 @@ export function StudentSubmissionTable() {
       />
 
       <ResearchModal
-        isOpen={!!selectedPaper}
-        paper={selectedPaper}
+        isOpen={!!viewPaper}
+        paper={viewPaper}
         onClose={() => {
-          setSelectedPaper(null);
+          setViewPaper(null);
+        }}
+      />
+
+      <PaperUploadModal
+        isOpen={!!editPaper}
+        paper={editPaper}
+        onClose={() => {
+          setEditPaper(null);
+        }}
+        onSuccess={() => {
+          void queryClient.invalidateQueries({ queryKey: ["mySubmissions"] });
         }}
       />
     </>
   );
-}
+};

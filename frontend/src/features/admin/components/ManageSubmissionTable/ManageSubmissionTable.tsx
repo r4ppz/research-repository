@@ -3,6 +3,7 @@ import { useState } from "react";
 import { approveSubmission, getAdminPapers, rejectSubmission } from "@/api/admin/papers";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { ActionButton, ActionConfirm, TableActions } from "@/components/common/TableActions";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
 import type { ResearchPaper } from "@/types";
@@ -17,6 +18,7 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
+  const [pendingId, setPendingId] = useState<number | null>(null);
 
   const query = useQuery({
     queryKey: ["adminPapers", { status: "PENDING_REVIEW", pageIndex, pageSize }],
@@ -27,14 +29,40 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
     mutationFn: (paperId: number) => approveSubmission(paperId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["adminPapers"] });
+      toastQueue.add({
+        variant: "success",
+        title: "Submission Approved",
+        description: "Paper is now live.",
+      });
     },
+    onError: (error: unknown) => {
+      toastQueue.add({
+        variant: "error",
+        title: "Approve Failed",
+        description: getUserErrorMessage(extractApiError(error)),
+      });
+    },
+    onSettled: () => setPendingId(null),
   });
 
   const rejectMutation = useMutation({
     mutationFn: (paperId: number) => rejectSubmission(paperId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["adminPapers"] });
+      toastQueue.add({
+        variant: "success",
+        title: "Submission Rejected",
+        description: "Submission rejected.",
+      });
     },
+    onError: (error: unknown) => {
+      toastQueue.add({
+        variant: "error",
+        title: "Reject Failed",
+        description: getUserErrorMessage(extractApiError(error)),
+      });
+    },
+    onSettled: () => setPendingId(null),
   });
 
   const totalElements = query.data?.totalElements ?? 0;
@@ -62,61 +90,38 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
     {
       header: "",
       id: "actions",
-      cell: ({ row }: { row: { original: ResearchPaper } }) => (
-        <div style={{ display: "flex", gap: "8px" }}>
-          <button
-            onClick={() => {
-              setSelectedPaper(row.original);
-            }}
-          >
-            View
-          </button>
-          <button
-            onClick={() => {
-              rejectMutation.mutate(row.original.paperId, {
-                onSuccess: () => {
-                  toastQueue.add({
-                    variant: "success",
-                    title: "Submission Rejected",
-                    description: "Submission rejected.",
-                  });
-                },
-                onError: (error) => {
-                  toastQueue.add({
-                    variant: "error",
-                    title: "Reject Failed",
-                    description: getUserErrorMessage(extractApiError(error)),
-                  });
-                },
-              });
-            }}
-          >
-            Reject
-          </button>
-          <button
-            onClick={() => {
-              approveMutation.mutate(row.original.paperId, {
-                onSuccess: () => {
-                  toastQueue.add({
-                    variant: "success",
-                    title: "Submission Approved",
-                    description: "Paper is now live.",
-                  });
-                },
-                onError: (error) => {
-                  toastQueue.add({
-                    variant: "error",
-                    title: "Approve Failed",
-                    description: getUserErrorMessage(extractApiError(error)),
-                  });
-                },
-              });
-            }}
-          >
-            Approve
-          </button>
-        </div>
-      ),
+      cell: ({ row }: { row: { original: ResearchPaper } }) => {
+        const id = row.original.paperId;
+        const isLoading = pendingId === id;
+
+        return (
+          <TableActions>
+            <ActionButton label="View" onPress={() => setSelectedPaper(row.original)} />
+            <ActionConfirm
+              label="Reject"
+              isPending={isLoading}
+              confirmTitle="Reject submission?"
+              confirmDescription="Are you sure you want to reject this paper submission?"
+              confirmText="Reject"
+              onConfirm={() => {
+                setPendingId(id);
+                rejectMutation.mutate(id);
+              }}
+            />
+            <ActionConfirm
+              label="Approve"
+              isPending={isLoading}
+              confirmTitle="Approve submission?"
+              confirmDescription="Are you sure you want to approve this paper? It will be made public."
+              confirmText="Approve"
+              onConfirm={() => {
+                setPendingId(id);
+                approveMutation.mutate(id);
+              }}
+            />
+          </TableActions>
+        );
+      },
     },
   ];
 
