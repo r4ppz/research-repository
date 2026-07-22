@@ -321,6 +321,91 @@ public class ResearchPaperService {
     }
   }
 
+  /**
+   * Student updates their own PENDING_REVIEW submission. Can update metadata and optionally
+   * replace the file. Notifications are not re-sent on edit.
+   */
+  @Transactional
+  public ResearchPaperDto updateSubmission(
+      Integer paperId, PaperCreateRequest metadata, MultipartFile file, CustomUserPrincipal principal) {
+
+    ResearchPaper paper = getAndVerifySubmissionOwnership(paperId, principal);
+
+    if (paper.getStatus() != ResearchPaperStatus.PENDING_REVIEW) {
+      throw new ApiException(
+          ErrorCode.INVALID_REQUEST, "Only PENDING_REVIEW submissions can be edited");
+    }
+
+    paper.setTitle(metadata.getTitle());
+    paper.setAuthorName(metadata.getAuthorName());
+    paper.setAbstractText(metadata.getAbstractText());
+    paper.setSubmissionDate(LocalDate.parse(metadata.getSubmissionDate()));
+
+    if (!paper.getDepartment().getDepartmentId().equals(metadata.getDepartmentId())) {
+      var department =
+          departmentRepository
+              .findById(metadata.getDepartmentId())
+              .orElseThrow(
+                  () -> new ApiException(ErrorCode.VALIDATION_ERROR, "Department not found"));
+      paper.setDepartment(department);
+    }
+
+    if (file != null && !file.isEmpty()) {
+      String year = String.valueOf(paper.getSubmissionDate().getYear());
+      String deptSlug =
+          paper.getDepartment().getDepartmentName().toLowerCase().replaceAll("[^a-z0-9]", "_");
+      String originalFilename = file.getOriginalFilename();
+      String extension =
+          originalFilename != null && originalFilename.contains(".")
+              ? originalFilename.substring(originalFilename.lastIndexOf("."))
+              : ".pdf";
+      String filename = "paper_" + System.currentTimeMillis() + extension;
+      String relativePath = String.format("%s/%s/%s", year, deptSlug, filename);
+
+      fileStorageService.deleteFile(paper.getFilePath());
+      fileStorageService.saveFile(file, relativePath);
+      paper.setFilePath(relativePath);
+    }
+
+    ResearchPaper savedPaper = researchPaperRepository.save(paper);
+    return researchPaperMapper.toDto(savedPaper);
+  }
+
+  /**
+   * Student deletes their own PENDING_REVIEW submission. Removes paper + file.
+   */
+  @Transactional
+  public void deleteSubmission(Integer paperId, CustomUserPrincipal principal) {
+    ResearchPaper paper = getAndVerifySubmissionOwnership(paperId, principal);
+
+    if (paper.getStatus() != ResearchPaperStatus.PENDING_REVIEW) {
+      throw new ApiException(
+          ErrorCode.INVALID_REQUEST, "Only PENDING_REVIEW submissions can be deleted");
+    }
+
+    String relativePath = paper.getFilePath();
+    researchPaperRepository.delete(paper);
+    fileStorageService.deleteFile(relativePath);
+  }
+
+  /**
+   * Fetches a paper and verifies the caller is the uploader (student who submitted it).
+   */
+  private ResearchPaper getAndVerifySubmissionOwnership(
+      Integer paperId, CustomUserPrincipal principal) {
+    ResearchPaper paper =
+        researchPaperRepository
+            .findById(paperId)
+            .orElseThrow(() -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Paper not found"));
+
+    if (paper.getUploadedBy() == null
+        || !principal.getUserId().equals(paper.getUploadedBy().getUserId())) {
+      throw new ApiException(ErrorCode.ACCESS_DENIED, "You do not have access to this paper");
+    }
+
+    return paper;
+  }
+
   public PaperUserRequestResponse getUserRequestForPaper(
       Integer paperId, CustomUserPrincipal userPrincipal) {
     return documentRequestService.getUserRequestForPaper(paperId, userPrincipal);
