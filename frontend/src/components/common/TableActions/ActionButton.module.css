@@ -1,11 +1,9 @@
-.actionButtonContainer {
-  display: flex;
-  gap: var(--space-xs);
+.actionButton {
+  font-size: var(--font-size-sm);
 }
 
-.actionButton {
+.iconOnly {
   max-width: 50px;
-  font-size: var(--font-size-sm);
 }
 
 .actionIcon {
@@ -13,4 +11,5 @@
   min-width: var(--icon-size-md);
   height: var(--icon-size-md);
   min-height: var(--icon-size-md);
+  display: block;
 }
