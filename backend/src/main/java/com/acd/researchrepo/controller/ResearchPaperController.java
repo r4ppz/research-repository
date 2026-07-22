@@ -17,9 +17,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -78,6 +80,37 @@ public class ResearchPaperController {
     ResearchPaperDto response = researchPaperService.createSubmission(metadata, file, principal);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
+
+  @PutMapping(value = "/submit/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<ResearchPaperDto> updateSubmission(
+      @PathVariable Integer id,
+      @RequestPart("metadata") String metadataJson,
+      @RequestPart(value = "file", required = false) MultipartFile file,
+      @AuthenticationPrincipal CustomUserPrincipal principal) {
+
+    log.debug("PUT /api/papers/submit/{} endpoint hit", id);
+
+    PaperCreateRequest metadata;
+    try {
+      metadata = objectMapper.readValue(metadataJson, PaperCreateRequest.class);
+    } catch (JsonProcessingException e) {
+      log.warn("Failed to parse submission metadata", e);
+      throw new ApiException(ErrorCode.INVALID_REQUEST, "The metadata part must be valid JSON");
+    }
+
+    ResearchPaperDto response =
+        researchPaperService.updateSubmission(id, metadata, file, principal);
+
+    return ResponseEntity.ok(response);
+  }
+
+  @DeleteMapping("/submit/{id}")
+  public ResponseEntity<Void> deleteSubmission(
+      @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal principal) {
+    log.debug("DELETE /api/papers/submit/{} endpoint hit", id);
+    researchPaperService.deleteSubmission(id, principal);
+    return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/my-submissions")
