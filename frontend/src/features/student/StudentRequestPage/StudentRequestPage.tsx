@@ -23,7 +23,7 @@ export const StudentRequestPage = () => {
           <h1 className={style.titleHeader}>My Activity</h1>
 
           <Button
-            onClick={() => {
+            onPress={() => {
               setIsUploadOpen(true);
             }}
             className={style.uploadButton}
@@ -36,7 +36,7 @@ export const StudentRequestPage = () => {
             <Button
               variant={tab === "requests" ? "primary" : "secondary"}
               className={style.tabButton}
-              onClick={() => {
+              onPress={() => {
                 setTab("requests");
               }}
             >
@@ -47,7 +47,7 @@ export const StudentRequestPage = () => {
             <Button
               variant={tab === "submissions" ? "primary" : "secondary"}
               className={style.tabButton}
-              onClick={() => {
+              onPress={() => {
                 setTab("submissions");
               }}
             >
