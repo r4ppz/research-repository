@@ -40,7 +40,8 @@ export const NotificationPage = () => {
   const handleNotificationClick = (notification: NotificationDto) => {
     if (!user) return;
     markAsRead(notification.notificationId, !notification.isRead);
-    navigate(REQUEST_PATH[user.role]);
+    const tab = notification.relatedEntityType === "RESEARCH_PAPER" ? "?tab=submissions" : "";
+    navigate(`${REQUEST_PATH[user.role]}${tab}`);
   };
 
   return (
