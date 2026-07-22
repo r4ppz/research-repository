@@ -15,7 +15,7 @@ import {
 export function extractApiError(error: unknown): TypedApiError | ApiError {
   // Direct match
   if (isApiError(error)) {
-    return error as TypedApiError;
+    return error;
   }
 
   // Non-Axios Errors
@@ -36,7 +36,7 @@ export function extractApiError(error: unknown): TypedApiError | ApiError {
   const responseData = axiosError.response?.data;
   if (hasApiErrorStructure(responseData)) {
     return new ApiError(
-      responseData.code as ErrorCode,
+      responseData.code,
       responseData.message,
       responseData.details,
       responseData.traceId,

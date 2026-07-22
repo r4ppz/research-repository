@@ -1,12 +1,12 @@
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { useEffect, useRef } from "react";
 import { postRefresh } from "@/api/auth";
-import { useAuth } from "@/features/auth/context/useAuth";
 import {
   getAccessToken,
   removeAccessToken,
   setAccessToken,
 } from "@/features/auth/context/tokenStore";
+import { useAuth } from "@/features/auth/context/useAuth";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
@@ -15,9 +15,10 @@ interface UseNotificationStreamOptions {
   onReconnect?: () => void;
 }
 
-export function useNotificationStream(
-  { onNotification, onReconnect }: UseNotificationStreamOptions = {},
-) {
+export function useNotificationStream({
+  onNotification,
+  onReconnect,
+}: UseNotificationStreamOptions = {}) {
   const { user, logout } = useAuth();
   const abortRef = useRef<AbortController | null>(null);
   const onNotificationRef = useRef(onNotification);

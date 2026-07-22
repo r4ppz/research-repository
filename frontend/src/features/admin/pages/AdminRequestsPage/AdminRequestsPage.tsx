@@ -1,8 +1,8 @@
 import { FileText, Upload } from "lucide-react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { RequestsTable } from "../../components/RequestTable/RequestTable";
 import { ManageSubmissionTable } from "../../components/ManageSubmissionTable/ManageSubmissionTable";
+import { RequestsTable } from "../../components/RequestTable/RequestTable";
 import style from "./AdminRequestsPage.module.css";
 import { Button } from "@/components/common/Button/Button";
 import { Footer } from "@/components/layout/Footer/Footer";
@@ -13,7 +13,8 @@ export const AdminRequestsPage = () => {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const showDepartment = user?.role === "SUPER_ADMIN";
-  const initialTab = searchParams.get("tab") === "submissions" ? "submissions" : "download-requests";
+  const initialTab =
+    searchParams.get("tab") === "submissions" ? "submissions" : "download-requests";
   const [tab, setTab] = useState<"download-requests" | "submissions">(initialTab);
 
   return (

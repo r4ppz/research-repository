@@ -45,10 +45,18 @@ export const SuperAdminDepartmentsPage = () => {
             onDelete={(department) => {
               deleteMutation.mutate(department.departmentId, {
                 onSuccess: () => {
-                  toastQueue.add({ variant: "success", title: "Department Deleted", description: "Department deleted successfully." });
+                  toastQueue.add({
+                    variant: "success",
+                    title: "Department Deleted",
+                    description: "Department deleted successfully.",
+                  });
                 },
                 onError: (err) => {
-                  toastQueue.add({ variant: "error", title: "Delete Failed", description: err instanceof Error ? err.message : "Failed to delete department" });
+                  toastQueue.add({
+                    variant: "error",
+                    title: "Delete Failed",
+                    description: err instanceof Error ? err.message : "Failed to delete department",
+                  });
                 },
               });
             }}
@@ -62,7 +70,11 @@ export const SuperAdminDepartmentsPage = () => {
           setAddModalOpen(false);
         }}
         onSuccess={() => {
-          toastQueue.add({ variant: "success", title: "Department Added", description: "Department added successfully." });
+          toastQueue.add({
+            variant: "success",
+            title: "Department Added",
+            description: "Department added successfully.",
+          });
         }}
         onError={(message) => {
           toastQueue.add({ variant: "error", title: "Add Failed", description: message });
@@ -76,7 +88,11 @@ export const SuperAdminDepartmentsPage = () => {
           setEditingDepartment(null);
         }}
         onSuccess={() => {
-          toastQueue.add({ variant: "success", title: "Department Updated", description: "Department updated successfully." });
+          toastQueue.add({
+            variant: "success",
+            title: "Department Updated",
+            description: "Department updated successfully.",
+          });
         }}
         onError={(message) => {
           toastQueue.add({ variant: "error", title: "Update Failed", description: message });

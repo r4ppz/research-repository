@@ -40,7 +40,7 @@ export const columns = [
   columnHelper.accessor("status", {
     header: "Status",
     cell: (info) => {
-      const status = info.getValue() as "ACCEPTED" | "REJECTED" | "PENDING";
+      const status = info.getValue();
 
       const statusStyles: Record<typeof status, string> = {
         ACCEPTED: style.statusAccepted,

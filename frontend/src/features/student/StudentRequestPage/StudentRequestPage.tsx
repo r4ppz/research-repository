@@ -2,12 +2,12 @@ import { FileText, Upload } from "lucide-react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import style from "./StudentRequestPage.module.css";
-import { PaperUploadModal } from "@/features/student/components/PaperUploadModal/PaperUploadModal";
-import { StudentSubmissionTable } from "@/features/student/components/StudentSubmissionTable/StudentSubmissionTable";
 import { Button } from "@/components/common/Button/Button";
 import { Footer } from "@/components/layout/Footer/Footer";
 import { Header } from "@/components/layout/Header/Header";
 import { MyRequestTable } from "@/features/my-requests/MyRequestTable/MyRequestTable";
+import { PaperUploadModal } from "@/features/student/components/PaperUploadModal/PaperUploadModal";
+import { StudentSubmissionTable } from "@/features/student/components/StudentSubmissionTable/StudentSubmissionTable";
 
 export const StudentRequestPage = () => {
   const [searchParams] = useSearchParams();

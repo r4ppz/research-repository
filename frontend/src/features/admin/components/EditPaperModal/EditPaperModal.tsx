@@ -81,7 +81,11 @@ export const EditPaperModal = ({ isOpen, onClose, paper }: EditPaperModalProps) 
       {
         onSuccess: () => {
           onClose();
-          toastQueue.add({ variant: "success", title: "Paper Updated", description: "Paper updated successfully." });
+          toastQueue.add({
+            variant: "success",
+            title: "Paper Updated",
+            description: "Paper updated successfully.",
+          });
         },
         onError: (error) => {
           toastQueue.add({
@@ -145,7 +149,9 @@ export const EditPaperModal = ({ isOpen, onClose, paper }: EditPaperModalProps) 
                 placeholder="Select Department"
               >
                 {departments?.map((dept) => (
-                  <SelectItem key={dept.departmentId} id={dept.departmentId.toString()}>{dept.departmentName}</SelectItem>
+                  <SelectItem key={dept.departmentId} id={dept.departmentId.toString()}>
+                    {dept.departmentName}
+                  </SelectItem>
                 )) ?? []}
               </Select>
             </div>

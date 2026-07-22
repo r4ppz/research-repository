@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import { ToastRegionProvider } from "@/components/common/Toast/Toast";
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute/ProtectedRoute";
 import { AdminPapersPage } from "@/features/admin/pages/AdminPapersPage/AdminPapersPage";
 import { AdminRequestsPage } from "@/features/admin/pages/AdminRequestsPage/AdminRequestsPage";
@@ -12,7 +13,6 @@ import { LibraryPage } from "@/features/library/LibraryPage/LibraryPage";
 import { NotificationProvider } from "@/features/notifications/context/NotificationContext";
 import { NotificationPage } from "@/features/notifications/NotificationPage/NotificationPage";
 import { StudentRequestPage } from "@/features/student/StudentRequestPage/StudentRequestPage";
-import { ToastRegionProvider } from "@/components/common/Toast/Toast";
 
 export const App = () => {
   useRoleWatcher();

@@ -1,10 +1,5 @@
 import { X } from "lucide-react";
-import {
-  Dialog as AriaDialog,
-  Heading,
-  Modal,
-  ModalOverlay,
-} from "react-aria-components";
+import { Dialog as AriaDialog, Heading, Modal, ModalOverlay } from "react-aria-components";
 import styles from "./Dialog.module.css";
 
 interface DialogProps {
@@ -24,7 +19,11 @@ function Dialog({ open, onOpenChange, children, title }: DialogProps) {
     >
       <Modal className={styles.contentWrapper}>
         <AriaDialog className={styles.dialog}>
-          {title && <Heading slot="title" style={{ display: "none" }}>{title}</Heading>}
+          {title && (
+            <Heading slot="title" style={{ display: "none" }}>
+              {title}
+            </Heading>
+          )}
           {children}
         </AriaDialog>
       </Modal>

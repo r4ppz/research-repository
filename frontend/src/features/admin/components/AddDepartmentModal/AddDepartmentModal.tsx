@@ -54,7 +54,9 @@ export function AddDepartmentModal({
       <DialogContent>
         <DialogClose onClose={onClose} />
         <DialogTitle>Add Department</DialogTitle>
-        <DialogDescription className={styles.hiddenDescription}>Create a new department.</DialogDescription>
+        <DialogDescription className={styles.hiddenDescription}>
+          Create a new department.
+        </DialogDescription>
         <form onSubmit={handleSubmit}>
           <div className={styles.field}>
             <Input

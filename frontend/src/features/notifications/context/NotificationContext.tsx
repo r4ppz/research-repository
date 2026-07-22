@@ -1,12 +1,5 @@
-import {
-  createContext,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { axiosClient } from "@/api/axiosClient";
 import { markAllRead as markAllReadApi, markAsRead as markAsReadApi } from "@/api/notifications";
 import { useAuth } from "@/features/auth/context/useAuth";
@@ -55,8 +48,12 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     onReconnect: useCallback(() => {
       void queryClient.invalidateQueries({ queryKey: ["notifications"] });
       void axiosClient.get<number>("/api/notifications/unread-count").then(
-        (res) => { setUnreadCount(res.data); },
-        () => { setUnreadCount(0); },
+        (res) => {
+          setUnreadCount(res.data);
+        },
+        () => {
+          setUnreadCount(0);
+        },
       );
     }, [queryClient]),
   });

@@ -1,6 +1,6 @@
+import type { CreatePaperMetadata } from "@/api/admin/papers";
 import { axiosClient } from "@/api/axiosClient";
 import type { DocumentRequest, Page, ResearchPaper } from "@/types";
-import type { CreatePaperMetadata } from "@/api/admin/papers";
 
 export interface GetPapersParams {
   search?: string;

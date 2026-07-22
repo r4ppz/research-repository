@@ -1,12 +1,12 @@
-import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAdminPapers, approveSubmission, rejectSubmission } from "@/api/admin/papers";
+import { useState } from "react";
+import { approveSubmission, getAdminPapers, rejectSubmission } from "@/api/admin/papers";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
 import type { ResearchPaper } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
-import { toastQueue } from "@/components/common/Toast/Toast";
 
 interface ManageSubmissionTableProps {
   showDepartment?: boolean;
@@ -20,8 +20,7 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
 
   const query = useQuery({
     queryKey: ["adminPapers", { status: "PENDING_REVIEW", pageIndex, pageSize }],
-    queryFn: () =>
-      getAdminPapers({ status: "PENDING_REVIEW", page: pageIndex, size: pageSize }),
+    queryFn: () => getAdminPapers({ status: "PENDING_REVIEW", page: pageIndex, size: pageSize }),
   });
 
   const approveMutation = useMutation({

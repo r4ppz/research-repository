@@ -1,16 +1,16 @@
 import clsx from "clsx";
 import { usePaperRequest } from "./hook/usePaperRequest";
 import style from "./ResearchModal.module.css";
+import { downloadFile } from "@/api/files";
 import { Button } from "@/components/common/Button/Button";
 import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/common/Dialog/Dialog";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { usePaperById } from "@/features/library/hooks/usePaperById";
 import type { ResearchPaper } from "@/types";
-import { formatDateLong } from "@/util/formatDate";
-import { downloadFile } from "@/api/files";
-import { isUserAdmin, isUserFaculty, isUserStudent } from "@/util/roleBasedAccess";
 import { triggerBrowserDownload } from "@/util/download";
+import { formatDateLong } from "@/util/formatDate";
+import { isUserAdmin, isUserFaculty, isUserStudent } from "@/util/roleBasedAccess";
 
 interface ResearchModalProps {
   isOpen: boolean;
@@ -39,7 +39,7 @@ export const ResearchModal = ({
 
   if (loading) {
     return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogContent
           className={clsx(style.modalLoadingOrError, style.moda)}
           aria-describedby={undefined}

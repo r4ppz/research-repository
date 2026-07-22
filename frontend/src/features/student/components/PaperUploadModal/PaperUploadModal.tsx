@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { SyntheticEvent, useState } from "react";
-import { submitPaper } from "@/api/paper";
 import style from "./PaperUploadModal.module.css";
-import { FileUpload } from "@/features/admin/components/FileUpload/FileUpload";
 import { getDepartments } from "@/api/filter";
+import { submitPaper } from "@/api/paper";
 import { Button } from "@/components/common/Button/Button";
 import {
   Dialog,
@@ -16,7 +16,7 @@ import { Input } from "@/components/common/Input/Input";
 import { Select, SelectItem } from "@/components/common/Select/Select";
 import { Textarea } from "@/components/common/Textarea/Textarea";
 import { toastQueue } from "@/components/common/Toast/Toast";
-import { useMutation } from "@tanstack/react-query";
+import { FileUpload } from "@/features/admin/components/FileUpload/FileUpload";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
 interface PaperUploadModalProps {

@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { useCallback, useRef } from "react";
+import { useTick } from "../../hooks/useTick";
 import style from "./NotificationList.module.css";
 import type { NotificationDto } from "@/types";
-import { useTick } from "../../hooks/useTick";
 
 function renderMessage(message: string): ReactNode {
   const idx = message.lastIndexOf(" from ");

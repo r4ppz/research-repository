@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { getMySubmissions } from "@/api/paper";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
-import { getMySubmissions } from "@/api/paper";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
 import type { ResearchPaper } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";

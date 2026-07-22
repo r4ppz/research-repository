@@ -29,7 +29,11 @@ export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
     onReject: (requestId) => {
       rejectMutation.mutate(requestId, {
         onSuccess: () => {
-          toastQueue.add({ variant: "success", title: "Request Rejected", description: "Request rejected." });
+          toastQueue.add({
+            variant: "success",
+            title: "Request Rejected",
+            description: "Request rejected.",
+          });
         },
         onError: (error) => {
           toastQueue.add({
@@ -43,7 +47,11 @@ export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
     onAccept: (requestId) => {
       acceptMutation.mutate(requestId, {
         onSuccess: () => {
-          toastQueue.add({ variant: "success", title: "Request Accepted", description: "Request accepted." });
+          toastQueue.add({
+            variant: "success",
+            title: "Request Accepted",
+            description: "Request accepted.",
+          });
         },
         onError: (error) => {
           toastQueue.add({
