@@ -56,3 +56,30 @@ export const getMySubmissions = async (
   });
   return response.data;
 };
+
+export const updateSubmission = async (
+  id: number,
+  metadata: CreatePaperMetadata,
+  file?: File | null,
+): Promise<ResearchPaper> => {
+  const formData = new FormData();
+  formData.append("metadata", JSON.stringify(metadata));
+  if (file) {
+    formData.append("file", file);
+  }
+
+  const response = await axiosClient.put<ResearchPaper>(
+    `/api/papers/submit/${id.toString()}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
+  return response.data;
+};
+
+export const deleteSubmission = async (id: number): Promise<void> => {
+  await axiosClient.delete(`/api/papers/submit/${id.toString()}`);
+};
