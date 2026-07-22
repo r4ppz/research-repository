@@ -1,6 +1,7 @@
 package com.acd.researchrepo.spec;
 
 import com.acd.researchrepo.model.ResearchPaper;
+import com.acd.researchrepo.model.ResearchPaperStatus;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
@@ -12,40 +13,36 @@ import org.springframework.data.jpa.domain.Specification;
 public class ResearchPaperSpec {
 
   /**
-   * Builds a JPA Specification for filtering ResearchPaper entities based on search term,
-   * department IDs, years, and archived status.
-   *
-   * @param searchTerm Text to search in title, author, or abstract (case-insensitive).
-   * @param departmentIds List of department IDs to filter by.
-   * @param years List of years to filter submission dates.
-   * @param archived Archived status to filter by.
-   * @return Specification for querying ResearchPaper entities.
+   * Builds a JPA Specification for filtering ResearchPaper entities visible to students — only
+   * ACTIVE status, non-archived papers.
    */
   public static Specification<ResearchPaper> build(
       String searchTerm, List<Integer> departmentIds, List<Integer> years, Boolean archived) {
 
     return (root, query, cb) -> {
       List<Predicate> predicates = new ArrayList<>();
+      predicates.add(cb.equal(root.get("status"), ResearchPaperStatus.ACTIVE));
       addCommonPredicates(root, cb, predicates, searchTerm, departmentIds, years, archived);
       return cb.and(predicates.toArray(new Predicate[0]));
     };
   }
 
   /**
-   * Builds a JPA Specification for admin paper listing with department scoping.
-   *
-   * @param searchTerm Text to search in title, author, or abstract (case-insensitive).
-   * @param departmentIds List of department IDs to filter by (for SUPER_ADMIN multiselect, or
-   *     single-item list for DEPARTMENT_ADMIN scoping).
-   * @param years List of years to filter submission dates.
-   * @param archived Archived status to filter by (null returns both).
-   * @return Specification for querying ResearchPaper entities.
+   * Builds a JPA Specification for admin paper listing with department scoping and optional status
+   * filter.
    */
   public static Specification<ResearchPaper> buildAdmin(
-      String searchTerm, List<Integer> departmentIds, List<Integer> years, Boolean archived) {
+      String searchTerm,
+      List<Integer> departmentIds,
+      List<Integer> years,
+      Boolean archived,
+      String status) {
 
     return (root, query, cb) -> {
       List<Predicate> predicates = new ArrayList<>();
+      if (status != null && !status.isBlank()) {
+        predicates.add(cb.equal(root.get("status"), ResearchPaperStatus.valueOf(status)));
+      }
       addCommonPredicates(root, cb, predicates, searchTerm, departmentIds, years, archived);
       return cb.and(predicates.toArray(new Predicate[0]));
     };
