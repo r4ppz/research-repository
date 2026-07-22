@@ -115,7 +115,8 @@ public class DocumentRequestService {
           admin.getUserId(),
           "New request for \"" + paper.getTitle() + "\" from " + userPrincipal.getFullName(),
           "NEW_REQUEST",
-          savedRequest.getRequestId());
+          savedRequest.getRequestId(),
+          "DOCUMENT_REQUEST");
     }
 
     return CreateRequestResponse.builder().requestId(savedRequest.getRequestId()).build();
@@ -266,7 +267,8 @@ public class DocumentRequestService {
         request.getUser().getUserId(),
         "Your request for \"" + request.getPaper().getTitle() + "\" has been accepted.",
         "REQUEST_ACCEPTED",
-        request.getRequestId());
+        request.getRequestId(),
+        "DOCUMENT_REQUEST");
 
     return documentRequestMapper.toAdminDto(savedRequest);
   }
@@ -320,7 +322,8 @@ public class DocumentRequestService {
         request.getUser().getUserId(),
         "Your request for \"" + request.getPaper().getTitle() + "\" has been rejected.",
         "REQUEST_REJECTED",
-        request.getRequestId());
+        request.getRequestId(),
+        "DOCUMENT_REQUEST");
 
     return documentRequestMapper.toAdminDto(savedRequest);
   }
