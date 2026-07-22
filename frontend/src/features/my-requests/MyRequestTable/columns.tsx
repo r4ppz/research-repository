@@ -1,7 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Download, Trash2 } from "lucide-react";
 import style from "./column.module.css";
-import { Button } from "@/components/common/Button/Button";
+import { ActionButton, TableActions } from "@/components/common/TableActions";
 import type { DocumentRequest } from "@/types";
 import { formatDateShort } from "@/util/formatDate";
 
@@ -64,36 +64,24 @@ export const columns = [
       const isPending = request.status === "PENDING";
 
       return (
-        <div className={style.actionButtonContainer}>
+        <TableActions>
           {(isPending || isAccepted) && (
-            <Button
-              className={style.actionButton}
+            <ActionButton
+              icon={<Download size={16} />}
               isDisabled={isPending}
               isPending={(meta.downloadingIds ?? new Set()).has(request.paper.paperId)}
-              onClick={() => {
-                meta.onDownload(request.paper.paperId);
-              }}
-            >
-              <Download size={16} />
-            </Button>
+              onPress={() => meta.onDownload(request.paper.paperId)}
+            />
           )}
 
-          {isRejected &&
-            (() => {
-              const isRemoving = (meta.removingIds ?? new Set()).has(request.requestId);
-              return (
-                <Button
-                  className={style.actionButton}
-                  onClick={() => {
-                    meta.onRemove(request.requestId);
-                  }}
-                  isPending={isRemoving}
-                >
-                  <Trash2 size={16} />
-                </Button>
-              );
-            })()}
-        </div>
+          {isRejected && (
+            <ActionButton
+              icon={<Trash2 size={16} />}
+              isPending={(meta.removingIds ?? new Set()).has(request.requestId)}
+              onPress={() => meta.onRemove(request.requestId)}
+            />
+          )}
+        </TableActions>
       );
     },
   }),
