@@ -27,6 +27,7 @@ public class ResearchPaperSearchRequest extends PaginationRequest {
           @Max(value = 2100, message = "Year cannot exceed 2100") Integer>
       year;
   private Boolean archived;
+  private String status;
 
   @Pattern(
       regexp = "submissionDate|title|authorName",
