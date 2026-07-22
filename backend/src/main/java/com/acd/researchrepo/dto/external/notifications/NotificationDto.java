@@ -10,7 +10,8 @@ public class NotificationDto {
   private Integer notificationId;
   private String message;
   private String type;
-  private Integer relatedRequestId;
+  private Integer relatedEntityId;
+  private String relatedEntityType;
   private Boolean isRead;
   private Instant createdAt;
 }

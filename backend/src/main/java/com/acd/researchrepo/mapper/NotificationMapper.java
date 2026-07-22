@@ -15,7 +15,8 @@ public class NotificationMapper {
         .notificationId(notification.getNotificationId())
         .message(notification.getMessage())
         .type(notification.getType())
-        .relatedRequestId(notification.getRelatedRequestId())
+        .relatedEntityId(notification.getRelatedEntityId())
+        .relatedEntityType(notification.getRelatedEntityType())
         .isRead(notification.getIsRead())
         .createdAt(notification.getCreatedAt().atZone(ZoneOffset.UTC).toInstant())
         .build();
