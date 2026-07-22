@@ -10,11 +10,15 @@ import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.mapper.ResearchPaperMapper;
 import com.acd.researchrepo.model.DocumentRequest;
+import com.acd.researchrepo.model.Notification;
 import com.acd.researchrepo.model.RequestStatus;
 import com.acd.researchrepo.model.ResearchPaper;
+import com.acd.researchrepo.model.ResearchPaperStatus;
+import com.acd.researchrepo.model.UserRole;
 import com.acd.researchrepo.repository.DepartmentRepository;
 import com.acd.researchrepo.repository.DocumentRequestRepository;
 import com.acd.researchrepo.repository.ResearchPaperRepository;
+import com.acd.researchrepo.repository.UserRepository;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.spec.ResearchPaperSpec;
 import com.acd.researchrepo.util.RoleBasedAccess;
@@ -44,6 +48,8 @@ public class ResearchPaperService {
   private final DocumentRequestService documentRequestService;
   private final FileStorageService fileStorageService;
   private final DepartmentRepository departmentRepository;
+  private final NotificationService notificationService;
+  private final UserRepository userRepository;
 
   public ResearchPaperService(
       ResearchPaperRepository researchPaperRepository,
@@ -51,20 +57,24 @@ public class ResearchPaperService {
       ResearchPaperMapper researchPaperMapper,
       DocumentRequestService documentRequestService,
       FileStorageService fileStorageService,
-      DepartmentRepository departmentRepository) {
+      DepartmentRepository departmentRepository,
+      NotificationService notificationService,
+      UserRepository userRepository) {
     this.researchPaperRepository = researchPaperRepository;
     this.documentRequestRepository = documentRequestRepository;
     this.researchPaperMapper = researchPaperMapper;
     this.documentRequestService = documentRequestService;
     this.fileStorageService = fileStorageService;
     this.departmentRepository = departmentRepository;
+    this.notificationService = notificationService;
+    this.userRepository = userRepository;
   }
 
   public PaginatedResponse<ResearchPaperDto> getPapers(
       ResearchPaperSearchRequest request, CustomUserPrincipal userPrincipal) {
 
     Boolean archived = request.getArchived();
-    if (RoleBasedAccess.isUserStudent(userPrincipal)) {
+    if (!RoleBasedAccess.isUserAdmin(userPrincipal)) {
       archived = false;
     }
 
@@ -112,7 +122,11 @@ public class ResearchPaperService {
 
     Specification<ResearchPaper> spec =
         ResearchPaperSpec.buildAdmin(
-            request.getSearch(), effectiveDepartmentIds, request.getYear(), request.getArchived());
+            request.getSearch(),
+            effectiveDepartmentIds,
+            request.getYear(),
+            request.getArchived(),
+            request.getStatus());
 
     Page<ResearchPaper> paperPage = researchPaperRepository.findAll(spec, request.toPageable());
 
@@ -128,6 +142,18 @@ public class ResearchPaperService {
 
     ResearchPaper paper = paperOpt.get();
 
+    if (paper.getStatus() == ResearchPaperStatus.PENDING_REVIEW
+        && !RoleBasedAccess.isUserAdmin(userPrincipal)
+        && (paper.getUploadedBy() == null
+            || !paper.getUploadedBy().getUserId().equals(userPrincipal.getUserId()))) {
+      throw new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Paper not found");
+    }
+
+    if (paper.getStatus() == ResearchPaperStatus.REJECTED
+        && !RoleBasedAccess.isUserAdmin(userPrincipal)) {
+      throw new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Paper not found");
+    }
+
     if (RoleBasedAccess.isUserStudent(userPrincipal) && paper.getArchived()) {
       throw new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Paper not found");
     }
@@ -137,8 +163,162 @@ public class ResearchPaperService {
 
   public List<Integer> getAvailableYears(CustomUserPrincipal user) {
     Integer deptId = RoleBasedAccess.isUserDepartmentAdmin(user) ? user.getDepartmentId() : null;
-    boolean onlyActive = RoleBasedAccess.isUserStudent(user);
+    boolean onlyActive = !RoleBasedAccess.isUserAdmin(user);
     return researchPaperRepository.findDistinctYears(deptId, onlyActive);
+  }
+
+  /**
+   * Allows a student with an @acdeducation.com email to submit a paper for review. Creates the
+   * paper in PENDING_REVIEW status. Notifies department admins of the chosen department.
+   */
+  @Transactional
+  public ResearchPaperDto createSubmission(
+      PaperCreateRequest metadata, MultipartFile file, CustomUserPrincipal principal) {
+
+    if (!RoleBasedAccess.isUserStudent(principal)) {
+      throw new ApiException(ErrorCode.ACCESS_DENIED, "Only students can submit papers");
+    }
+
+    if (!principal.getEmail().endsWith("@acdeducation.com")) {
+      throw new ApiException(
+          ErrorCode.ACCESS_DENIED, "Only @acdeducation.com emails can submit papers");
+    }
+
+    var department =
+        departmentRepository
+            .findById(metadata.getDepartmentId())
+            .orElseThrow(
+                () -> new ApiException(ErrorCode.VALIDATION_ERROR, "Department not found"));
+
+    ResearchPaper paper = new ResearchPaper();
+    paper.setTitle(metadata.getTitle());
+    paper.setAuthorName(metadata.getAuthorName());
+    paper.setAbstractText(metadata.getAbstractText());
+    paper.setDepartment(department);
+    LocalDate submissionDate = LocalDate.parse(metadata.getSubmissionDate());
+    paper.setSubmissionDate(submissionDate);
+    paper.setArchived(false);
+    paper.setStatus(ResearchPaperStatus.PENDING_REVIEW);
+    paper.setUploadedBy(principal.getUser());
+
+    String year = String.valueOf(submissionDate.getYear());
+    String deptSlug = department.getDepartmentName().toLowerCase().replaceAll("[^a-z0-9]", "_");
+    String originalFilename = file.getOriginalFilename();
+    String extension =
+        originalFilename != null && originalFilename.contains(".")
+            ? originalFilename.substring(originalFilename.lastIndexOf("."))
+            : ".pdf";
+    String filename = "paper_" + System.currentTimeMillis() + extension;
+    String relativePath = String.format("%s/%s/%s", year, deptSlug, filename);
+
+    fileStorageService.saveFile(file, relativePath);
+    paper.setFilePath(relativePath);
+    ResearchPaper savedPaper = researchPaperRepository.save(paper);
+
+    List<com.acd.researchrepo.model.User> admins =
+        userRepository.findByDepartmentDepartmentIdAndRole(
+            department.getDepartmentId(), UserRole.DEPARTMENT_ADMIN);
+    for (com.acd.researchrepo.model.User admin : admins) {
+      notificationService.createAndSend(
+          admin.getUserId(),
+          "New paper submission: \""
+              + paper.getTitle()
+              + "\" by "
+              + principal.getFullName(),
+          "NEW_SUBMISSION",
+          savedPaper.getPaperId(),
+          "RESEARCH_PAPER");
+    }
+
+    return researchPaperMapper.toDto(savedPaper);
+  }
+
+  /**
+   * Returns papers submitted by the current user (PENDING_REVIEW or REJECTED). Only the uploader
+   * can see their own submissions.
+   */
+  public PaginatedResponse<ResearchPaperDto> getMySubmissions(
+      ResearchPaperSearchRequest request, CustomUserPrincipal principal) {
+
+    Boolean archived = RoleBasedAccess.isUserAdmin(principal) ? request.getArchived() : false;
+
+    Specification<ResearchPaper> spec =
+        (root, query, cb) -> {
+          Specification<ResearchPaper> base =
+              ResearchPaperSpec.buildAdmin(
+                  request.getSearch(),
+                  request.getDepartmentId(),
+                  request.getYear(),
+                  archived,
+                  null);
+          return cb.and(
+              base.toPredicate(root, query, cb),
+              cb.equal(root.get("uploadedBy").get("userId"), principal.getUserId()));
+        };
+
+    Page<ResearchPaper> paperPage = researchPaperRepository.findAll(spec, request.toPageable());
+    return PaginatedResponse.fromPage(paperPage, researchPaperMapper::toDto);
+  }
+
+  /**
+   * Admin approves a PENDING_REVIEW paper submission. Sets status to ACTIVE and notifies the
+   * uploader.
+   */
+  @Transactional
+  public ResearchPaperDto approveSubmission(
+      Integer paperId, CustomUserPrincipal principal) {
+
+    ResearchPaper paper = getAndVerifyAdminAccess(paperId, principal);
+
+    if (paper.getStatus() != ResearchPaperStatus.PENDING_REVIEW) {
+      throw new ApiException(
+          ErrorCode.INVALID_REQUEST, "Only PENDING_REVIEW submissions can be approved");
+    }
+
+    paper.setStatus(ResearchPaperStatus.ACTIVE);
+    ResearchPaper savedPaper = researchPaperRepository.save(paper);
+
+    if (paper.getUploadedBy() != null) {
+      notificationService.createAndSend(
+          paper.getUploadedBy().getUserId(),
+          "Your submission \"" + paper.getTitle() + "\" has been approved and is now live.",
+          "SUBMISSION_APPROVED",
+          paper.getPaperId(),
+          "RESEARCH_PAPER");
+    }
+
+    return researchPaperMapper.toDto(savedPaper);
+  }
+
+  /**
+   * Admin rejects a PENDING_REVIEW paper submission. Deletes the paper + file and notifies the
+   * uploader.
+   */
+  @Transactional
+  public void rejectSubmission(Integer paperId, CustomUserPrincipal principal) {
+
+    ResearchPaper paper = getAndVerifyAdminAccess(paperId, principal);
+
+    if (paper.getStatus() != ResearchPaperStatus.PENDING_REVIEW) {
+      throw new ApiException(
+          ErrorCode.INVALID_REQUEST, "Only PENDING_REVIEW submissions can be rejected");
+    }
+
+    Integer uploaderId = paper.getUploadedBy() != null ? paper.getUploadedBy().getUserId() : null;
+    String paperTitle = paper.getTitle();
+    String relativePath = paper.getFilePath();
+
+    researchPaperRepository.delete(paper);
+    fileStorageService.deleteFile(relativePath);
+
+    if (uploaderId != null) {
+      notificationService.createAndSend(
+          uploaderId,
+          "Your submission \"" + paperTitle + "\" has been rejected.",
+          "SUBMISSION_REJECTED",
+          paperId,
+          "RESEARCH_PAPER");
+    }
   }
 
   public PaperUserRequestResponse getUserRequestForPaper(
@@ -294,6 +474,7 @@ public class ResearchPaperService {
     LocalDate submissionDate = LocalDate.parse(metadata.getSubmissionDate());
     paper.setSubmissionDate(submissionDate);
     paper.setArchived(false);
+    paper.setStatus(ResearchPaperStatus.ACTIVE);
 
     // We need a path. Pattern: {year}/{dept_slug}/filename
     String year = String.valueOf(submissionDate.getYear());
