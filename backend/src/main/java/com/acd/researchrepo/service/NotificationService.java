@@ -44,13 +44,18 @@ public class NotificationService {
    */
   @Transactional
   public NotificationDto createAndSend(
-      Integer userId, String message, String type, Integer relatedRequestId) {
+      Integer userId,
+      String message,
+      String type,
+      Integer relatedEntityId,
+      String relatedEntityType) {
 
     Notification notification = new Notification();
     notification.setUser(userRepository.getReferenceById(userId));
     notification.setMessage(message);
     notification.setType(type);
-    notification.setRelatedRequestId(relatedRequestId);
+    notification.setRelatedEntityId(relatedEntityId);
+    notification.setRelatedEntityType(relatedEntityType);
     notification.setIsRead(false);
 
     notification = notificationRepository.save(notification);
