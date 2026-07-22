@@ -9,6 +9,7 @@ export interface GetAdminPapersParams {
   search?: string;
   year?: number;
   archived?: boolean;
+  status?: string;
   sortBy?: string;
   sortOrder?: string;
 }
@@ -79,6 +80,18 @@ export interface UpdatePaperMetadata {
   departmentId: number;
   submissionDate: string;
 }
+
+export const approveSubmission = async (id: number): Promise<ResearchPaper> => {
+  const response = await axiosClient.put<ResearchPaper>(
+    `/api/admin/papers/${id.toString()}/approve`,
+    {},
+  );
+  return response.data;
+};
+
+export const rejectSubmission = async (id: number): Promise<void> => {
+  await axiosClient.put(`/api/admin/papers/${id.toString()}/reject-submission`, {});
+};
 
 export const updatePaper = async (
   id: number,
