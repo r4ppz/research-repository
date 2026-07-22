@@ -3,6 +3,8 @@ package com.acd.researchrepo.service;
 import com.acd.researchrepo.dto.external.notifications.NotificationDto;
 import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
 import com.acd.researchrepo.event.NotificationCreatedEvent;
+import com.acd.researchrepo.exception.ApiException;
+import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.mapper.NotificationMapper;
 import com.acd.researchrepo.model.Notification;
 import com.acd.researchrepo.repository.NotificationRepository;
@@ -79,11 +81,10 @@ public class NotificationService {
     Notification notification =
         notificationRepository
             .findById(notificationId)
-            .orElseThrow(() -> new RuntimeException("Notification not found"));
+            .orElseThrow(() -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Notification not found"));
 
-    // ownership check inline, no custom repo method needed
     if (!notification.getUser().getUserId().equals(userId)) {
-      throw new RuntimeException("Unauthorized");
+      throw new ApiException(ErrorCode.ACCESS_DENIED, "Access denied");
     }
 
     notification.setIsRead(true);
