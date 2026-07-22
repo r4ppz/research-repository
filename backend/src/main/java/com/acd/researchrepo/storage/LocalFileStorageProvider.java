@@ -86,7 +86,13 @@ public class LocalFileStorageProvider implements FileStorageProvider {
   @Override
   public void deleteFile(String subPath) {
     try {
-      Path file = rootLocation.resolve(subPath);
+      Path file = rootLocation.resolve(subPath).normalize();
+
+      if (!file.startsWith(rootLocation)) {
+        throw new ApiException(
+            ErrorCode.INVALID_REQUEST, "Cannot delete file outside current directory");
+      }
+
       Files.deleteIfExists(file);
     } catch (IOException e) {
       log.error("Could not delete file: {}", subPath, e);
