@@ -45,8 +45,11 @@ public class Notification {
   @NotNull
   private String type;
 
-  @Column(name = "related_request_id")
-  private Integer relatedRequestId;
+  @Column(name = "related_entity_id")
+  private Integer relatedEntityId;
+
+  @Column(name = "related_entity_type", length = 50)
+  private String relatedEntityType;
 
   @Column(name = "is_read", nullable = false)
   @NotNull
