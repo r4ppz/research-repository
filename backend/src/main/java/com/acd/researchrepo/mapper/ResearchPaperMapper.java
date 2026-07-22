@@ -8,9 +8,11 @@ import org.springframework.stereotype.Component;
 public class ResearchPaperMapper {
 
   private final DepartmentMapper departmentMapper;
+  private final UserMapper userMapper;
 
-  public ResearchPaperMapper(DepartmentMapper departmentMapper) {
+  public ResearchPaperMapper(DepartmentMapper departmentMapper, UserMapper userMapper) {
     this.departmentMapper = departmentMapper;
+    this.userMapper = userMapper;
   }
 
   public ResearchPaperDto toDto(ResearchPaper paper) {
@@ -26,6 +28,8 @@ public class ResearchPaperMapper {
         .department(departmentMapper.toDto(paper.getDepartment()))
         .submissionDate(paper.getSubmissionDate())
         .filePath(paper.getFilePath())
+        .status(paper.getStatus().name())
+        .uploadedBy(paper.getUploadedBy() != null ? userMapper.toDto(paper.getUploadedBy()) : null)
         .archived(paper.getArchived())
         .archivedAt(paper.getArchivedAt())
         .build();
