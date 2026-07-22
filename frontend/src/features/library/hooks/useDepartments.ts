@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getDepartments } from "@/api/filter";
 import type { Department } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
@@ -10,33 +10,15 @@ interface UseDepartmentsReturn {
 }
 
 export const useDepartments = (): UseDepartmentsReturn => {
-  const [departments, setDepartments] = useState<Department[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchDepartments = async (): Promise<void> => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const result = await getDepartments();
-        setDepartments(result);
-      } catch (err) {
-        const apiError = extractApiError(err);
-        setError(getUserErrorMessage(apiError));
-        setDepartments([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void fetchDepartments();
-  }, []);
+  const query = useQuery({
+    queryKey: ["departments"],
+    queryFn: getDepartments,
+    staleTime: 1000 * 60 * 30,
+  });
 
   return {
-    departments,
-    loading,
-    error,
+    departments: query.data ?? [],
+    loading: query.isLoading,
+    error: query.error ? getUserErrorMessage(extractApiError(query.error)) : null,
   };
 };
