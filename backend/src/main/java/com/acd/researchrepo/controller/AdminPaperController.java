@@ -8,6 +8,7 @@ import com.acd.researchrepo.dto.external.papers.ResearchPaperSearchRequest;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.security.CustomUserPrincipal;
+import com.acd.researchrepo.service.PaperSubmissionService;
 import com.acd.researchrepo.service.ResearchPaperService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,11 +40,15 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminPaperController {
 
   private final ResearchPaperService researchPaperService;
+  private final PaperSubmissionService paperSubmissionService;
   private final ObjectMapper objectMapper;
 
   public AdminPaperController(
-      ResearchPaperService researchPaperService, ObjectMapper objectMapper) {
+      ResearchPaperService researchPaperService,
+      PaperSubmissionService paperSubmissionService,
+      ObjectMapper objectMapper) {
     this.researchPaperService = researchPaperService;
+    this.paperSubmissionService = paperSubmissionService;
     this.objectMapper = objectMapper;
   }
 
@@ -72,7 +77,7 @@ public class AdminPaperController {
     try {
       metadata = objectMapper.readValue(metadataJson, PaperCreateRequest.class);
     } catch (JsonProcessingException e) {
-      log.error("Failed to parse paper metadata", e);
+      log.debug("Failed to parse paper metadata", e);
       throw new ApiException(ErrorCode.INVALID_REQUEST, "The metadata part must be valid JSON");
     }
 
@@ -109,7 +114,7 @@ public class AdminPaperController {
   public ResponseEntity<ResearchPaperDto> approveSubmission(
       @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("PUT /api/admin/papers/{}/approve endpoint hit", id);
-    ResearchPaperDto response = researchPaperService.approveSubmission(id, principal);
+    ResearchPaperDto response = paperSubmissionService.approveSubmission(id, principal);
     return ResponseEntity.ok(response);
   }
 
@@ -117,7 +122,7 @@ public class AdminPaperController {
   public ResponseEntity<Void> rejectSubmission(
       @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("PUT /api/admin/papers/{}/reject-submission endpoint hit", id);
-    researchPaperService.rejectSubmission(id, principal);
+    paperSubmissionService.rejectSubmission(id, principal);
     return ResponseEntity.noContent().build();
   }
 
