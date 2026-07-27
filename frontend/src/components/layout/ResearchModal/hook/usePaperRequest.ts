@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getMyPaperRequest } from "@/api/paper";
 import { createRequest } from "@/api/request";
 import { User } from "@/types/user";
-import { isUserAdmin } from "@/util/roleBasedAccess";
+import { isUserSuperOrDepartmentAdmin } from "@/util/roleBasedAccess";
 
 export function usePaperRequest(paperId: number | null, user: User | null) {
   const queryClient = useQueryClient();
@@ -19,7 +19,7 @@ export function usePaperRequest(paperId: number | null, user: User | null) {
         return false;
       }
     },
-    enabled: !isUserAdmin(user) && paperId !== null,
+    enabled: !isUserSuperOrDepartmentAdmin(user) && paperId !== null,
   });
 
   const mutation = useMutation({
@@ -30,7 +30,7 @@ export function usePaperRequest(paperId: number | null, user: User | null) {
   });
 
   const requestDocument = () => {
-    if (isUserAdmin(user) || requestExists || mutation.isPending || !paperId) {
+    if (isUserSuperOrDepartmentAdmin(user) || requestExists || mutation.isPending || !paperId) {
       return;
     }
     mutation.mutate({ paperId });

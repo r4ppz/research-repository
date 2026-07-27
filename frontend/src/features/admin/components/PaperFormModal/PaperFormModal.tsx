@@ -18,6 +18,7 @@ import { Textarea } from "@/components/common/Textarea/Textarea";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
+import { isUserDepartmentAdmin, isUserSuperAdmin } from "@/util/roleBasedAccess";
 
 interface PaperFormModalProps {
   isOpen: boolean;
@@ -36,7 +37,7 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
 
   // Auto-set department for Department Admin
   useEffect(() => {
-    if (isOpen && user?.role === "DEPARTMENT_ADMIN" && user.department) {
+    if (isOpen && isUserDepartmentAdmin(user) && user.department) {
       setDepartmentId(user.department.departmentId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,14 +97,14 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
     setAuthorName("");
     setAbstractText("");
     // Only reset department if user is Super Admin
-    if (user?.role === "SUPER_ADMIN") {
+    if (isUserSuperAdmin(user)) {
       setDepartmentId("");
     }
     setSubmissionDate("");
     setFile(null);
   };
 
-  const isDepartmentDisabled = user?.role === "DEPARTMENT_ADMIN";
+  const isDepartmentDisabled = isUserDepartmentAdmin(user);
 
   return (
     <Dialog

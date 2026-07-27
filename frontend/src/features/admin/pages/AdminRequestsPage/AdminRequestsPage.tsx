@@ -8,11 +8,12 @@ import { Button } from "@/components/common/Button/Button";
 import { Footer } from "@/components/layout/Footer/Footer";
 import { Header } from "@/components/layout/Header/Header";
 import { useAuth } from "@/features/auth/context/useAuth";
+import { isUserSuperAdmin } from "@/util/roleBasedAccess";
 
 export const AdminRequestsPage = () => {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
-  const showDepartment = user?.role === "SUPER_ADMIN";
+  const showDepartment = isUserSuperAdmin(user);
   const initialTab =
     searchParams.get("tab") === "submissions" ? "submissions" : "download-requests";
   const [tab, setTab] = useState<"download-requests" | "submissions">(initialTab);

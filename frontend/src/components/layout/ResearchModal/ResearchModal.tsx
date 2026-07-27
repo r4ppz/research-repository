@@ -10,7 +10,7 @@ import { usePaperById } from "@/features/library/hooks/usePaperById";
 import type { ResearchPaper } from "@/types";
 import { triggerBrowserDownload } from "@/util/download";
 import { formatDateLong } from "@/util/formatDate";
-import { isUserAdmin, isUserFaculty, isUserStudent } from "@/util/roleBasedAccess";
+import { isUserFaculty, isUserStudent, isUserSuperOrDepartmentAdmin } from "@/util/roleBasedAccess";
 
 interface ResearchModalProps {
   isOpen: boolean;
@@ -117,7 +117,7 @@ export const ResearchModal = ({
               {requestExists ? "Request Submitted" : "Request Document"}
             </Button>
           )}
-        {isUserAdmin(user) && (
+        {isUserSuperOrDepartmentAdmin(user) && (
           <Button onPress={handleDownload} variant="primary">
             Download
           </Button>

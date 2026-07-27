@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/Footer/Footer";
 import { Header } from "@/components/layout/Header/Header";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { useDebounce } from "@/hooks/useDebounce";
+import { isUserSuperAdmin } from "@/util/roleBasedAccess";
 
 export const AdminPapersPage = () => {
   const { user } = useAuth();
@@ -35,7 +36,7 @@ export const AdminPapersPage = () => {
   };
 
   const isArchived = tab === "archived";
-  const showDepartment = user?.role === "SUPER_ADMIN";
+  const showDepartment = isUserSuperAdmin(user);
 
   return (
     <div className={style.page}>

@@ -19,6 +19,7 @@ import { toastQueue } from "@/components/common/Toast/Toast";
 import { useAuth } from "@/features/auth/context/useAuth";
 import type { ResearchPaper } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
+import { isUserDepartmentAdmin } from "@/util/roleBasedAccess";
 
 interface EditPaperModalProps {
   isOpen: boolean;
@@ -34,7 +35,7 @@ export const EditPaperModal = ({ isOpen, onClose, paper }: EditPaperModalProps) 
   const [departmentId, setDepartmentId] = useState<number | "">("");
   const [submissionDate, setSubmissionDate] = useState("");
 
-  const isDepartmentDisabled = user?.role === "DEPARTMENT_ADMIN";
+  const isDepartmentDisabled = isUserDepartmentAdmin(user);
 
   // Sync state when paper changes or modal opens
   // Defer state updates to the next tick to avoid synchronous setState calls
