@@ -17,7 +17,7 @@ import { Select, SelectItem } from "@/components/common/Select/Select";
 import { Textarea } from "@/components/common/Textarea/Textarea";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { FileUpload } from "@/features/admin/components/FileUpload/FileUpload";
-import type { CreatePaperMetadata } from "@/api/admin/papers";
+import type { PaperMetadata } from "@/api/admin/papers";
 import type { ResearchPaper } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
@@ -66,7 +66,7 @@ export const PaperUploadModal = ({ isOpen, onClose, onSuccess, paper }: PaperUpl
   });
 
   const createMutation = useMutation({
-    mutationFn: ({ metadata, file }: { metadata: CreatePaperMetadata; file: File }) =>
+    mutationFn: ({ metadata, file }: { metadata: PaperMetadata; file: File }) =>
       submitPaper(metadata, file),
   });
 
@@ -77,7 +77,7 @@ export const PaperUploadModal = ({ isOpen, onClose, onSuccess, paper }: PaperUpl
       file,
     }: {
       id: number;
-      metadata: CreatePaperMetadata;
+      metadata: PaperMetadata;
       file?: File | null;
     }) => updateSubmission(id, metadata, file),
   });
@@ -91,7 +91,7 @@ export const PaperUploadModal = ({ isOpen, onClose, onSuccess, paper }: PaperUpl
       return;
     }
 
-    const metadata: CreatePaperMetadata = {
+    const metadata: PaperMetadata = {
       title: form.title,
       authorName: form.authorName,
       abstractText: form.abstractText,

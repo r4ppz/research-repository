@@ -1,4 +1,4 @@
-import type { CreatePaperMetadata } from "@/api/admin/papers";
+import type { PaperMetadata } from "@/api/admin/papers";
 import { axiosClient } from "@/api/axiosClient";
 import type { DocumentRequest, Page, ResearchPaper } from "@/types";
 
@@ -32,15 +32,12 @@ export const getMyPaperRequest = async (paperId: number): Promise<DocumentReques
   return response.data;
 };
 
-export const submitPaper = async (
-  metadata: CreatePaperMetadata,
-  file: File,
-): Promise<ResearchPaper> => {
+export const submitPaper = async (metadata: PaperMetadata, file: File): Promise<ResearchPaper> => {
   const formData = new FormData();
   formData.append("metadata", JSON.stringify(metadata));
   formData.append("file", file);
 
-  const response = await axiosClient.post<ResearchPaper>("/api/papers/submit", formData, {
+  const response = await axiosClient.post<ResearchPaper>("/api/submissions", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -51,7 +48,7 @@ export const submitPaper = async (
 export const getMySubmissions = async (
   params: GetPapersParams = {},
 ): Promise<Page<ResearchPaper>> => {
-  const response = await axiosClient.get<Page<ResearchPaper>>("/api/papers/my-submissions", {
+  const response = await axiosClient.get<Page<ResearchPaper>>("/api/submissions", {
     params,
   });
   return response.data;
@@ -59,7 +56,7 @@ export const getMySubmissions = async (
 
 export const updateSubmission = async (
   id: number,
-  metadata: CreatePaperMetadata,
+  metadata: PaperMetadata,
   file?: File | null,
 ): Promise<ResearchPaper> => {
   const formData = new FormData();
@@ -69,7 +66,7 @@ export const updateSubmission = async (
   }
 
   const response = await axiosClient.put<ResearchPaper>(
-    `/api/papers/submit/${id.toString()}`,
+    `/api/submissions/${id.toString()}`,
     formData,
     {
       headers: {
@@ -81,5 +78,5 @@ export const updateSubmission = async (
 };
 
 export const deleteSubmission = async (id: number): Promise<void> => {
-  await axiosClient.delete(`/api/papers/submit/${id.toString()}`);
+  await axiosClient.delete(`/api/submissions/${id.toString()}`);
 };
