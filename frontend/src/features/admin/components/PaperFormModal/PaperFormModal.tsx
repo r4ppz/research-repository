@@ -37,7 +37,7 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
 
   // Auto-set department for Department Admin
   useEffect(() => {
-    if (isOpen && isUserDepartmentAdmin(user) && user.department) {
+    if (isOpen && user && isUserDepartmentAdmin(user) && user.department) {
       setDepartmentId(user.department.departmentId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
