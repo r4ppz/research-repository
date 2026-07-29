@@ -105,9 +105,7 @@ export const ResearchModal = ({
           <p className={style.abstractText}>{paper.abstractText}</p>
         </div>
 
-        {(isUserStudent(user) || isUserFaculty(user)) &&
-          !paper.archived &&
-          !!paper.uploadedBy && paper.uploadedBy.userId !== user?.userId && (
+        {(isUserStudent(user) || isUserFaculty(user)) && !paper.archived && (
             <Button
               onPress={requestDocument}
               isDisabled={requestExists}

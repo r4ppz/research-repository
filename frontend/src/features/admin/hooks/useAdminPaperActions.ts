@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   archivePaper,
   createPaper,
-  type PaperMetadata,
   deletePaper,
+  type PaperMetadata,
   unarchivePaper,
   updatePaper,
 } from "@/api/admin/papers";

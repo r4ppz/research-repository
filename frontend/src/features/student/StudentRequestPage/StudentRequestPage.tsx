@@ -20,17 +20,24 @@ export const StudentRequestPage = () => {
       <Header />
       <main className={style.main}>
         <div className={style.mainContainer}>
-          <h1 className={style.titleHeader}>My Activity</h1>
+          <div className={style.headerSection}>
+            <div>
+              <h1 className={style.titleHeader}>My Activity</h1>
+              <p className={style.subtitle}>
+                View your document requests and manage your paper submissions.
+              </p>
+            </div>
 
-          <Button
-            onPress={() => {
-              setIsUploadOpen(true);
-            }}
-            className={style.uploadButton}
-          >
-            <Upload className={style.iconUpload} />
-            Upload Paper
-          </Button>
+            <Button
+              onPress={() => {
+                setIsUploadOpen(true);
+              }}
+              className={style.uploadButton}
+            >
+              <Upload className={style.iconUpload} />
+              Submit Paper
+            </Button>
+          </div>
 
           <div className={style.tabsContainer}>
             <Button

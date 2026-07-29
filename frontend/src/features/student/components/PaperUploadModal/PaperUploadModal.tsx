@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { SyntheticEvent, useState } from "react";
 import style from "./PaperUploadModal.module.css";
+import type { PaperMetadata } from "@/api/admin/papers";
 import { getDepartments } from "@/api/filter";
 import { submitPaper, updateSubmission } from "@/api/paper";
 import { Button } from "@/components/common/Button/Button";
@@ -17,7 +18,6 @@ import { Select, SelectItem } from "@/components/common/Select/Select";
 import { Textarea } from "@/components/common/Textarea/Textarea";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { FileUpload } from "@/features/admin/components/FileUpload/FileUpload";
-import type { PaperMetadata } from "@/api/admin/papers";
 import type { ResearchPaper } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
