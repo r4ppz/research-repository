@@ -4,12 +4,14 @@ import { Button } from "@/components/common/Button/Button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/common/Dialog/Dialog";
 
 interface ConfirmDialogProps {
-  trigger: ReactNode;
+  trigger?: ReactNode;
   title: string;
   description: string;
   onConfirm: () => void | Promise<void>;
   confirmText?: string;
   cancelText?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function ConfirmDialog({
@@ -19,24 +21,40 @@ export function ConfirmDialog({
   onConfirm,
   confirmText = "Confirm",
   cancelText = "Cancel",
+  open,
+  onOpenChange,
 }: ConfirmDialogProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  const isControlled = open !== undefined;
+  const isOpen = isControlled ? open : internalOpen;
+
+  const handleOpenChange = (next: boolean) => {
+    if (isControlled) {
+      onOpenChange?.(next);
+    } else {
+      setInternalOpen(next);
+    }
+  };
 
   const handleConfirm = () => {
     void onConfirm();
-    setOpen(false);
+    handleOpenChange(false);
   };
+
+  const triggerElement =
+    trigger && isValidElement(trigger)
+      ? cloneElement(trigger as ReactElement<{ onClick?: () => void }>, {
+          onClick: () => {
+            handleOpenChange(true);
+          },
+        })
+      : trigger;
 
   return (
     <>
-      {isValidElement(trigger)
-        ? cloneElement(trigger as ReactElement<{ onClick?: () => void }>, {
-            onClick: () => {
-              setOpen(true);
-            },
-          })
-        : trigger}
-      <Dialog open={open} onOpenChange={setOpen} title={title}>
+      {!isControlled && triggerElement}
+      <Dialog open={isOpen} onOpenChange={handleOpenChange} title={title}>
         <DialogContent className={styles.content}>
           <DialogTitle className={styles.title}>{title}</DialogTitle>
           <p className={styles.description}>{description}</p>
@@ -44,7 +62,7 @@ export function ConfirmDialog({
             <Button
               variant="secondary"
               onPress={() => {
-                setOpen(false);
+                handleOpenChange(false);
               }}
             >
               {cancelText}
