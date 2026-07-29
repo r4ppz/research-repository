@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { getColumns, type TableMeta } from "./columns";
 import { approveSubmission, getAdminPapers, rejectSubmission } from "@/api/admin/papers";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
-import { ActionButton, ActionConfirm, TableActions } from "@/components/common/TableActions";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
 import type { ResearchPaper } from "@/types";
@@ -19,6 +20,10 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
   const [pageSize, setPageSize] = useState(5);
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
   const [pendingId, setPendingId] = useState<number | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{
+    type: "approve" | "reject";
+    paperId: number;
+  } | null>(null);
 
   const query = useQuery({
     queryKey: ["adminPapers", { status: "PENDING_REVIEW", pageIndex, pageSize }],
@@ -42,7 +47,9 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
         description: getUserErrorMessage(extractApiError(error)),
       });
     },
-    onSettled: () => setPendingId(null),
+    onSettled: () => {
+      setPendingId(null);
+    },
   });
 
   const rejectMutation = useMutation({
@@ -62,7 +69,9 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
         description: getUserErrorMessage(extractApiError(error)),
       });
     },
-    onSettled: () => setPendingId(null),
+    onSettled: () => {
+      setPendingId(null);
+    },
   });
 
   const totalElements = query.data?.totalElements ?? 0;
@@ -76,61 +85,36 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
     return <p>Failed to load: {getUserErrorMessage(extractApiError(query.error))}</p>;
   }
 
-  const data = (query.data?.content ?? []).map((paper) => ({
-    ...paper,
-    submittedBy: paper.uploadedBy?.fullName ?? "Unknown",
-  }));
+  const handleConfirm = () => {
+    if (!confirmAction) return;
+    setPendingId(confirmAction.paperId);
+    if (confirmAction.type === "approve") {
+      approveMutation.mutate(confirmAction.paperId);
+    } else {
+      rejectMutation.mutate(confirmAction.paperId);
+    }
+    setConfirmAction(null);
+  };
 
-  const baseColumns = [
-    { header: "Paper Title", accessorKey: "title" },
-    { header: "Author", accessorKey: "authorName" },
-    { header: "Submitted By", accessorKey: "submittedBy" },
-    ...(showDepartment ? [{ header: "Department", accessorKey: "department.departmentName" }] : []),
-    { header: "Date Submitted", accessorKey: "submissionDate" },
-    {
-      header: "",
-      id: "actions",
-      cell: ({ row }: { row: { original: ResearchPaper } }) => {
-        const id = row.original.paperId;
-        const isLoading = pendingId === id;
-
-        return (
-          <TableActions>
-            <ActionButton label="View" onPress={() => setSelectedPaper(row.original)} />
-            <ActionConfirm
-              label="Reject"
-              isPending={isLoading}
-              confirmTitle="Reject submission?"
-              confirmDescription="Are you sure you want to reject this paper submission?"
-              confirmText="Reject"
-              onConfirm={() => {
-                setPendingId(id);
-                rejectMutation.mutate(id);
-              }}
-            />
-            <ActionConfirm
-              label="Approve"
-              isPending={isLoading}
-              confirmTitle="Approve submission?"
-              confirmDescription="Are you sure you want to approve this paper? It will be made public."
-              confirmText="Approve"
-              onConfirm={() => {
-                setPendingId(id);
-                approveMutation.mutate(id);
-              }}
-            />
-          </TableActions>
-        );
-      },
+  const tableMeta: TableMeta = {
+    onView: (paper) => {
+      setSelectedPaper(paper);
     },
-  ];
+    onApprove: (paperId) => {
+      setConfirmAction({ type: "approve", paperId });
+    },
+    onReject: (paperId) => {
+      setConfirmAction({ type: "reject", paperId });
+    },
+    pendingId,
+  };
 
   return (
     <>
       <DataTable
         caption="Paper Submissions"
-        columns={baseColumns}
-        data={data}
+        columns={getColumns(showDepartment)}
+        data={query.data?.content ?? []}
         pageCount={pageCount}
         pagination={{ pageIndex, pageSize }}
         onPaginationChange={(updater) => {
@@ -139,6 +123,7 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
           setPageIndex(nextState.pageIndex);
           setPageSize(nextState.pageSize);
         }}
+        meta={tableMeta}
       />
 
       <ResearchModal
@@ -147,6 +132,21 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
         onClose={() => {
           setSelectedPaper(null);
         }}
+      />
+
+      <ConfirmDialog
+        open={!!confirmAction}
+        onOpenChange={(open) => {
+          if (!open) setConfirmAction(null);
+        }}
+        title={confirmAction?.type === "approve" ? "Approve submission?" : "Reject submission?"}
+        description={
+          confirmAction?.type === "approve"
+            ? "Are you sure you want to approve this paper? It will be made public."
+            : "Are you sure you want to reject this paper submission?"
+        }
+        confirmText={confirmAction?.type === "approve" ? "Approve" : "Reject"}
+        onConfirm={handleConfirm}
       />
     </>
   );
