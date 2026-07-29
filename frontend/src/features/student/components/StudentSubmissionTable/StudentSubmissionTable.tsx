@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { columns, type TableMeta } from "./columns";
 import { deleteSubmission, getMySubmissions } from "@/api/paper";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
-import { ActionButton, ActionConfirm, TableActions } from "@/components/common/TableActions";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
 import { PaperUploadModal } from "@/features/student/components/PaperUploadModal/PaperUploadModal";
@@ -16,6 +17,10 @@ export const StudentSubmissionTable = () => {
   const [pageSize, setPageSize] = useState(5);
   const [editPaper, setEditPaper] = useState<ResearchPaper | null>(null);
   const [viewPaper, setViewPaper] = useState<ResearchPaper | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{
+    type: "delete";
+    paperId: number;
+  } | null>(null);
 
   const query = useQuery({
     queryKey: ["mySubmissions", { pageIndex, pageSize }],
@@ -52,51 +57,23 @@ export const StudentSubmissionTable = () => {
     return <p>Failed to load: {getUserErrorMessage(extractApiError(query.error))}</p>;
   }
 
-  const statusBadge = (status?: string) => {
-    switch (status) {
-      case "PENDING_REVIEW":
-        return "Pending Review";
-      case "REJECTED":
-        return "Rejected";
-      case "ACTIVE":
-        return "Approved";
-      default:
-        return status ?? "Unknown";
-    }
+  const handleConfirm = () => {
+    if (!confirmAction) return;
+    deleteMutation.mutate(confirmAction.paperId);
+    setConfirmAction(null);
   };
 
-  const columns = [
-    { header: "Paper Title", accessorKey: "title" },
-    { header: "Author", accessorKey: "authorName" },
-    { header: "Department", accessorKey: "department.departmentName" },
-    { header: "Request Date", accessorKey: "submissionDate" },
-    {
-      header: "Status",
-      id: "statusDisplay",
-      cell: ({ row }: { row: { original: ResearchPaper } }) => statusBadge(row.original.status),
+  const tableMeta: TableMeta = {
+    onView: (paper) => {
+      setViewPaper(paper);
     },
-    {
-      header: "",
-      id: "actions",
-      cell: ({ row }: { row: { original: ResearchPaper } }) => (
-        <TableActions>
-          <ActionButton label="View" onPress={() => setViewPaper(row.original)} />
-          {row.original.status === "PENDING_REVIEW" && (
-            <>
-              <ActionButton label="Edit" onPress={() => setEditPaper(row.original)} />
-              <ActionConfirm
-                label="Delete"
-                confirmTitle="Delete Submission"
-                confirmDescription="Are you sure you want to delete this submission? This action cannot be undone."
-                confirmText="Delete"
-                onConfirm={() => deleteMutation.mutate(row.original.paperId)}
-              />
-            </>
-          )}
-        </TableActions>
-      ),
+    onEdit: (paper) => {
+      setEditPaper(paper);
     },
-  ];
+    onDelete: (paperId) => {
+      setConfirmAction({ type: "delete", paperId });
+    },
+  };
 
   return (
     <>
@@ -112,6 +89,7 @@ export const StudentSubmissionTable = () => {
           setPageIndex(nextState.pageIndex);
           setPageSize(nextState.pageSize);
         }}
+        meta={tableMeta}
       />
 
       <ResearchModal
@@ -131,6 +109,17 @@ export const StudentSubmissionTable = () => {
         onSuccess={() => {
           void queryClient.invalidateQueries({ queryKey: ["mySubmissions"] });
         }}
+      />
+
+      <ConfirmDialog
+        open={!!confirmAction}
+        onOpenChange={(open) => {
+          if (!open) setConfirmAction(null);
+        }}
+        title="Delete Submission"
+        description="Are you sure you want to delete this submission? This action cannot be undone."
+        confirmText="Delete"
+        onConfirm={handleConfirm}
       />
     </>
   );
