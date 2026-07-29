@@ -309,6 +309,7 @@ public class ResearchPaperService {
     paper.setSubmissionDate(submissionDate);
     paper.setArchived(false);
     paper.setStatus(ResearchPaperStatus.ACTIVE);
+    paper.setUploadedBy(principal.getUser());
 
     // We need a path. Pattern: {year}/{dept_slug}/filename
     String year = String.valueOf(submissionDate.getYear());
