@@ -1,23 +1,17 @@
 import clsx from "clsx";
 import { type ReactNode } from "react";
-import styles from "./ActionButton.module.css";
+import styles from "./TableButton.module.css";
 import { Button } from "@/components/common/Button/Button";
 
-interface ActionButtonProps {
+interface TableButtonProps {
   icon?: ReactNode;
   label?: string;
   isPending?: boolean;
   isDisabled?: boolean;
-  onPress?: () => void;
+  onPress: () => void;
 }
 
-export const ActionButton = ({
-  icon,
-  label,
-  isPending,
-  isDisabled,
-  onPress,
-}: ActionButtonProps) => (
+export const TableButton = ({ icon, label, isPending, isDisabled, onPress }: TableButtonProps) => (
   <Button
     variant="secondary"
     className={clsx(styles.actionButton, !label && icon && styles.iconOnly)}
