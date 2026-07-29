@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Archive, Edit, Eye, RotateCcw, Trash2 } from "lucide-react";
-import { ActionButton, ActionConfirm, TableActions } from "@/components/common/TableActions";
+import { TableActions, TableButton } from "@/components/common/TableActions";
 import type { ResearchPaper } from "@/types";
 import { formatDateShort } from "@/util/formatDate";
 
@@ -43,21 +43,29 @@ const actionsActiveColumn = columnHelper.display({
 
     return (
       <TableActions>
-        <ActionButton icon={<Eye />} onPress={() => meta.onView(paper)} />
-        <ActionButton icon={<Edit />} onPress={() => meta.onEdit(paper)} />
-        <ActionConfirm
-          icon={<Archive />}
-          confirmTitle="Archive paper?"
-          confirmDescription="Are you sure you want to archive this paper? It will be moved to archived papers."
-          confirmText="Archive"
-          onConfirm={() => meta.onArchive(paper.paperId)}
+        <TableButton
+          icon={<Eye />}
+          onPress={() => {
+            meta.onView(paper);
+          }}
         />
-        <ActionConfirm
+        <TableButton
+          icon={<Edit />}
+          onPress={() => {
+            meta.onEdit(paper);
+          }}
+        />
+        <TableButton
+          icon={<Archive />}
+          onPress={() => {
+            meta.onArchive(paper.paperId);
+          }}
+        />
+        <TableButton
           icon={<Trash2 />}
-          confirmTitle="Delete paper?"
-          confirmDescription="Are you sure you want to permanently delete this paper? This action cannot be undone."
-          confirmText="Delete"
-          onConfirm={() => meta.onDelete(paper.paperId)}
+          onPress={() => {
+            meta.onDelete(paper.paperId);
+          }}
         />
       </TableActions>
     );
@@ -73,21 +81,29 @@ const actionsArchivedColumn = columnHelper.display({
 
     return (
       <TableActions>
-        <ActionButton icon={<Eye />} onPress={() => meta.onView(paper)} />
-        <ActionButton icon={<Edit />} onPress={() => meta.onEdit(paper)} />
-        <ActionConfirm
-          icon={<RotateCcw />}
-          confirmTitle="Restore paper?"
-          confirmDescription="Are you sure you want to restore this paper to active papers?"
-          confirmText="Restore"
-          onConfirm={() => meta.onRestore(paper.paperId)}
+        <TableButton
+          icon={<Eye />}
+          onPress={() => {
+            meta.onView(paper);
+          }}
         />
-        <ActionConfirm
+        <TableButton
+          icon={<Edit />}
+          onPress={() => {
+            meta.onEdit(paper);
+          }}
+        />
+        <TableButton
+          icon={<RotateCcw />}
+          onPress={() => {
+            meta.onRestore(paper.paperId);
+          }}
+        />
+        <TableButton
           icon={<Trash2 />}
-          confirmTitle="Delete paper?"
-          confirmDescription="Are you sure you want to permanently delete this paper? This action cannot be undone."
-          confirmText="Delete"
-          onConfirm={() => meta.onDelete(paper.paperId)}
+          onPress={() => {
+            meta.onDelete(paper.paperId);
+          }}
         />
       </TableActions>
     );

@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Check, Eye, X } from "lucide-react";
-import { ActionButton, ActionConfirm, TableActions } from "@/components/common/TableActions";
+import { TableActions, TableButton } from "@/components/common/TableActions";
 import type { DocumentRequest, ResearchPaper } from "@/types";
 import { formatDateShort } from "@/util/formatDate";
 
@@ -46,22 +46,25 @@ const actionsColumn = columnHelper.display({
 
     return (
       <TableActions>
-        <ActionButton icon={<Eye />} onPress={() => meta.onView(row.original.paper)} />
-        <ActionConfirm
+        <TableButton
+          icon={<Eye />}
+          onPress={() => {
+            meta.onView(row.original.paper);
+          }}
+        />
+        <TableButton
           icon={<X />}
           isPending={isLoading}
-          confirmTitle="Reject document request?"
-          confirmDescription="Are you sure you want to reject this document request? This action cannot be undone."
-          confirmText="Reject"
-          onConfirm={() => meta.onReject(requestId)}
+          onPress={() => {
+            meta.onReject(requestId);
+          }}
         />
-        <ActionConfirm
+        <TableButton
           icon={<Check />}
           isPending={isLoading}
-          confirmTitle="Accept document request?"
-          confirmDescription="Are you sure you want to accept this document request? The requester will be granted access."
-          confirmText="Accept"
-          onConfirm={() => meta.onAccept(requestId)}
+          onPress={() => {
+            meta.onAccept(requestId);
+          }}
         />
       </TableActions>
     );

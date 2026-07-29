@@ -1,7 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Download, Trash2 } from "lucide-react";
 import style from "./column.module.css";
-import { ActionButton, TableActions } from "@/components/common/TableActions";
+import { TableActions, TableButton } from "@/components/common/TableActions";
 import type { DocumentRequest } from "@/types";
 import { formatDateShort } from "@/util/formatDate";
 
@@ -66,19 +66,23 @@ export const columns = [
       return (
         <TableActions>
           {(isPending || isAccepted) && (
-            <ActionButton
+            <TableButton
               icon={<Download size={16} />}
               isDisabled={isPending}
               isPending={(meta.downloadingIds ?? new Set()).has(request.paper.paperId)}
-              onPress={() => meta.onDownload(request.paper.paperId)}
+              onPress={() => {
+                meta.onDownload(request.paper.paperId);
+              }}
             />
           )}
 
           {isRejected && (
-            <ActionButton
+            <TableButton
               icon={<Trash2 size={16} />}
               isPending={(meta.removingIds ?? new Set()).has(request.requestId)}
-              onPress={() => meta.onRemove(request.requestId)}
+              onPress={() => {
+                meta.onRemove(request.requestId);
+              }}
             />
           )}
         </TableActions>

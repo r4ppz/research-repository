@@ -1,7 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Edit, Trash2 } from "lucide-react";
 import type { AdminDepartment } from "@/api/admin/departments";
-import { ActionButton, ActionConfirm, TableActions } from "@/components/common/TableActions";
+import { TableActions, TableButton } from "@/components/common/TableActions";
 
 export interface TableMeta {
   onEdit: (department: AdminDepartment) => void;
@@ -39,13 +39,17 @@ const actionsColumn = columnHelper.display({
 
     return (
       <TableActions>
-        <ActionButton icon={<Edit />} onPress={() => meta.onEdit(department)} />
-        <ActionConfirm
+        <TableButton
+          icon={<Edit />}
+          onPress={() => {
+            meta.onEdit(department);
+          }}
+        />
+        <TableButton
           icon={<Trash2 />}
-          confirmTitle="Delete department?"
-          confirmDescription={`Are you sure you want to delete "${department.departmentName}"? This action cannot be undone.`}
-          confirmText="Delete"
-          onConfirm={() => meta.onDelete(department)}
+          onPress={() => {
+            meta.onDelete(department);
+          }}
         />
       </TableActions>
     );
