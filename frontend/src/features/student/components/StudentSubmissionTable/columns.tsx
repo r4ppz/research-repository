@@ -1,5 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Edit, Eye, Trash2 } from "lucide-react";
+import style from "./column.module.css";
 import { TableActions, TableButton } from "@/components/common/TableActions";
 import type { ResearchPaper } from "@/types";
 
@@ -28,28 +29,33 @@ const submissionDateColumn = columnHelper.accessor("submissionDate", {
   header: "Request Date",
 });
 
-const statusBadge = (status?: string) => {
-  switch (status) {
-    case "PENDING_REVIEW":
-      return "Pending Review";
-    case "REJECTED":
-      return "Rejected";
-    case "ACTIVE":
-      return "Approved";
-    default:
-      return status ?? "Unknown";
-  }
+const statusCell = (status?: string) => {
+  const statusStyles: Record<string, string> = {
+    ACTIVE: style.statusActive,
+    REJECTED: style.statusRejected,
+    PENDING_REVIEW: style.statusPendingReview,
+  };
+
+  const labels: Record<string, string> = {
+    ACTIVE: "Approved",
+    REJECTED: "Rejected",
+    PENDING_REVIEW: "Pending Review",
+  };
+
+  const s = status ?? "Unknown";
+
+  return <span className={`${style.status} ${statusStyles[s] ?? ""}`}>{labels[s] ?? s}</span>;
 };
 
 const statusColumn = columnHelper.display({
   id: "statusDisplay",
   header: "Status",
-  cell: ({ row }) => statusBadge(row.original.status),
+  cell: ({ row }) => statusCell(row.original.status),
 });
 
 const actionsColumn = columnHelper.display({
   id: "actions",
-  header: "",
+  header: "Actions",
   cell: ({ row, table }) => {
     const meta = table.options.meta as TableMeta;
     const paper = row.original;
