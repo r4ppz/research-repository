@@ -1,7 +1,8 @@
 import clsx from "clsx";
+import { File } from "lucide-react";
 import { usePaperRequest } from "./hook/usePaperRequest";
 import style from "./ResearchModal.module.css";
-import { downloadFile } from "@/api/files";
+import { downloadFile, viewFileInTab } from "@/api/files";
 import { Button } from "@/components/common/Button/Button";
 import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/common/Dialog/Dialog";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
@@ -69,6 +70,12 @@ export const ResearchModal = ({
 
   const formattedDate = formatDateLong(paper.submissionDate);
   const department = paper.department.departmentName;
+  const fileName = paper.filePath?.split("/").pop() ?? "paper.pdf";
+
+  const handleView = () => {
+    if (!paper?.paperId) return;
+    void viewFileInTab(paper.paperId);
+  };
 
   const handleDownload = () => {
     if (!paper?.paperId) return;
@@ -105,16 +112,39 @@ export const ResearchModal = ({
           <p className={style.abstractText}>{paper.abstractText}</p>
         </div>
 
-        {(isUserStudent(user) || isUserFaculty(user)) && !paper.archived && (
-            <Button
-              onPress={requestDocument}
-              isDisabled={requestExists}
-              isPending={isRequestLoading}
-              variant="primary"
-            >
-              {requestExists ? "Request Submitted" : "Request Document"}
-            </Button>
-          )}
+        {isUserSuperOrDepartmentAdmin(user) && (
+          <div
+            className={style.fileCard}
+            onClick={handleView}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleView();
+              }
+            }}
+            role="button"
+            tabIndex={0}
+          >
+            <div className={style.fileCardIcon}>
+              <File />
+            </div>
+            <div className={style.fileCardInfo}>
+              <p className={style.fileCardName}>{fileName}</p>
+            </div>
+            <span className={style.fileCardHint}>Click to view</span>
+          </div>
+        )}
+
+        {(isUserStudent(user) || isUserFaculty(user)) && !paper.archived && paper.status === "ACTIVE" && paper.uploadedBy?.userId !== user?.userId && (
+          <Button
+            onPress={requestDocument}
+            isDisabled={requestExists}
+            isPending={isRequestLoading}
+            variant="primary"
+          >
+            {requestExists ? "Request Submitted" : "Request Document"}
+          </Button>
+        )}
         {isUserSuperOrDepartmentAdmin(user) && (
           <Button onPress={handleDownload} variant="primary">
             Download

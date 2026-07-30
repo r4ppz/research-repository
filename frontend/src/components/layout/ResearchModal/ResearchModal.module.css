@@ -135,3 +135,63 @@
     font-size: var(--font-size-md);
   }
 }
+
+.fileCard {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: center;
+  padding: var(--space-lg) var(--space-xl);
+  cursor: pointer;
+  background: var(--color-surface);
+  border: 0.5px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  transition: var(--transition-elevation);
+}
+
+.fileCard:hover {
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-hover);
+}
+
+.fileCardIcon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--color-gray-100);
+  border-radius: var(--radius-lg);
+}
+
+.fileCardIcon > svg {
+  width: var(--icon-size-xl);
+  height: var(--icon-size-xl);
+  color: var(--color-brand-500);
+}
+
+.fileCardInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.fileCardName {
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fileCardMeta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.fileCardHint {
+  flex-shrink: 0;
+  align-self: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}

@@ -1,5 +1,19 @@
 import { axiosClient } from "@/api/axiosClient";
 
+export const viewFileInTab = async (paperId: number): Promise<void> => {
+  const tab = window.open("", "_blank");
+  if (!tab) return;
+
+  const response = await axiosClient.get(`/api/files/${String(paperId)}`, {
+    params: { view: true },
+    responseType: "blob",
+  });
+
+  const url = URL.createObjectURL(response.data as Blob);
+  tab.location.href = url;
+  setTimeout(() => URL.revokeObjectURL(url), 60_000);
+};
+
 export const downloadFile = async (
   paperId: number,
   view = false,
