@@ -34,6 +34,7 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
     mutationFn: (paperId: number) => approveSubmission(paperId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["adminPapers"] });
+      void queryClient.invalidateQueries({ queryKey: ["papers"] });
       toastQueue.add({
         variant: "success",
         title: "Submission Approved",
@@ -56,6 +57,7 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
     mutationFn: (paperId: number) => rejectSubmission(paperId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["adminPapers"] });
+      void queryClient.invalidateQueries({ queryKey: ["papers"] });
       toastQueue.add({
         variant: "success",
         title: "Submission Rejected",

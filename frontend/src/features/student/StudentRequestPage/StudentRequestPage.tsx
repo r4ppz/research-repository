@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { FileText, Upload } from "lucide-react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -10,6 +11,7 @@ import { PaperUploadModal } from "@/features/student/components/PaperUploadModal
 import { StudentSubmissionTable } from "@/features/student/components/StudentSubmissionTable/StudentSubmissionTable";
 
 export const StudentRequestPage = () => {
+  const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
   const initialTab = searchParams.get("tab") === "submissions" ? "submissions" : "requests";
   const [tab, setTab] = useState<"requests" | "submissions">(initialTab);
@@ -73,6 +75,9 @@ export const StudentRequestPage = () => {
         isOpen={isUploadOpen}
         onClose={() => {
           setIsUploadOpen(false);
+        }}
+        onSuccess={() => {
+          void queryClient.invalidateQueries({ queryKey: ["mySubmissions"] });
         }}
       />
 
