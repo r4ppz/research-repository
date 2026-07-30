@@ -1,7 +1,7 @@
 import style from "./FacultyRequestPage.module.css";
 import { Footer } from "@/components/layout/Footer/Footer";
 import { Header } from "@/components/layout/Header/Header";
-import { MyRequestTable } from "@/features/my-requests/MyRequestTable/MyRequestTable";
+import { FacultyRequestTable } from "@/features/faculty/components/FacultyRequestTable/FacultyRequestTable";
 
 export const FacultyRequestPage = () => {
   return (
@@ -10,7 +10,7 @@ export const FacultyRequestPage = () => {
       <main className={style.main}>
         <div className={style.mainContainer}>
           <section className={style.tableSection}>
-            <MyRequestTable />
+            <FacultyRequestTable />
           </section>
         </div>
       </main>

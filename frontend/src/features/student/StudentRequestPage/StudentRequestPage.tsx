@@ -6,7 +6,7 @@ import style from "./StudentRequestPage.module.css";
 import { Button } from "@/components/common/Button/Button";
 import { Footer } from "@/components/layout/Footer/Footer";
 import { Header } from "@/components/layout/Header/Header";
-import { MyRequestTable } from "@/features/my-requests/MyRequestTable/MyRequestTable";
+import { StudentRequestTable } from "@/features/student/components/StudentRequestTable/StudentRequestTable";
 import { PaperUploadModal } from "@/features/student/components/PaperUploadModal/PaperUploadModal";
 import { StudentSubmissionTable } from "@/features/student/components/StudentSubmissionTable/StudentSubmissionTable";
 
@@ -66,7 +66,7 @@ export const StudentRequestPage = () => {
           </div>
 
           <section className={style.tableSection}>
-            {tab === "requests" ? <MyRequestTable /> : <StudentSubmissionTable />}
+            {tab === "requests" ? <StudentRequestTable /> : <StudentSubmissionTable />}
           </section>
         </div>
       </main>
