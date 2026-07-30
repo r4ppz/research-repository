@@ -1,14 +1,18 @@
+import { Search } from "lucide-react";
 import { useState } from "react";
-import { useAdminRequests } from "../../hooks/useAdminDocumentRequest";
+import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import { useAcceptRequest, useRejectRequest } from "../../hooks/useAdminRequestMutations";
 import { columns, columnsWithoutDepartment, type TableMeta } from "./columns";
+import { getAdminRequests } from "@/api/admin/requests";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
 import { DataTable } from "@/components/common/DataTable/DataTable";
+import { Input } from "@/components/common/Input/Input";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
 import type { ResearchPaper } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
+import requestTableStyle from "./RequestTable.module.css";
 
 interface RequestsTableProps {
   showDepartment?: boolean;
@@ -21,8 +25,8 @@ export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
     requestId: number;
   } | null>(null);
 
-  const { data, pageIndex, pageSize, pageCount, setPageIndex, setPageSize, isLoading, error } =
-    useAdminRequests({ status: "PENDING" });
+  const { data, pageCount, pageIndex, pageSize, setPageIndex, setPageSize, isLoading, error, searchQuery, handleSearchChange } =
+    usePaginatedSearch("adminRequests", getAdminRequests, { status: "PENDING" });
 
   const acceptMutation = useAcceptRequest();
   const rejectMutation = useRejectRequest();
@@ -90,6 +94,15 @@ export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
 
   return (
     <>
+      <div className={requestTableStyle.searchWrapper}>
+        <Input
+          icon={Search}
+          type="search"
+          placeholder="Search by title, author, or requester..."
+          value={searchQuery}
+          onChange={(e) => handleSearchChange(e.target.value)}
+        />
+      </div>
       <DataTable
         caption="Document Requests"
         columns={tableColumns}
@@ -103,6 +116,7 @@ export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
           setPageSize(nextState.pageSize);
         }}
         meta={tableMeta}
+        emptyMessage={searchQuery ? "No requests match your search." : undefined}
       />
 
       <ResearchModal
