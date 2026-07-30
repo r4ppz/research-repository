@@ -11,7 +11,9 @@ export const viewFileInTab = async (paperId: number): Promise<void> => {
 
   const url = URL.createObjectURL(response.data as Blob);
   tab.location.href = url;
-  setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+  }, 60_000);
 };
 
 export const downloadFile = async (
