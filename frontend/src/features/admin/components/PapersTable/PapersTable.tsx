@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Search } from "lucide-react";
 import {
   useArchivePaper,
   useDeletePaper,
   useUnarchivePaper,
 } from "../../hooks/useAdminPaperActions";
-import { useAdminPapers } from "../../hooks/useAdminPapers";
+import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import { EditPaperModal } from "../EditPaperModal/EditPaperModal";
 import {
   columnsActive,
@@ -13,8 +14,11 @@ import {
   columnsArchivedWithoutDepartment,
   type TableMeta,
 } from "./columns";
+import papersTableStyle from "./PapersTable.module.css";
+import { getAdminPapers } from "@/api/admin/papers";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
 import { DataTable } from "@/components/common/DataTable/DataTable";
+import { Input } from "@/components/common/Input/Input";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
@@ -23,10 +27,9 @@ import type { ResearchPaper } from "@/types";
 interface PapersTableProps {
   archived: boolean;
   showDepartment?: boolean;
-  search?: string;
 }
 
-export function PapersTable({ archived, showDepartment = true, search }: PapersTableProps) {
+export function PapersTable({ archived, showDepartment = true }: PapersTableProps) {
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
   const [editingPaper, setEditingPaper] = useState<ResearchPaper | null>(null);
   const [confirmAction, setConfirmAction] = useState<{
@@ -34,15 +37,8 @@ export function PapersTable({ archived, showDepartment = true, search }: PapersT
     paperId: number;
   } | null>(null);
 
-  const { data, pageIndex, pageSize, pageCount, setPageIndex, setPageSize, isLoading, error } =
-    useAdminPapers({
-      archived,
-      search,
-    });
-
-  useEffect(() => {
-    setPageIndex(0);
-  }, [search, setPageIndex]);
+  const { data, pageCount, pageIndex, pageSize, setPageIndex, setPageSize, isLoading, error, searchQuery, handleSearchChange } =
+    usePaginatedSearch("adminPapers", getAdminPapers, { archived });
 
   const archiveMutation = useArchivePaper();
   const unarchiveMutation = useUnarchivePaper();
@@ -109,7 +105,6 @@ export function PapersTable({ archived, showDepartment = true, search }: PapersT
     },
   };
 
-  // Select the appropriate columns based on archived and showDepartment
   const getColumns = () => {
     if (archived) {
       return showDepartment ? columnsArchived : columnsArchivedWithoutDepartment;
@@ -129,6 +124,15 @@ export function PapersTable({ archived, showDepartment = true, search }: PapersT
 
   return (
     <>
+      <div className={papersTableStyle.searchWrapper}>
+        <Input
+          icon={Search}
+          type="search"
+          placeholder="Search by title, author, or abstract..."
+          value={searchQuery}
+          onChange={(e) => handleSearchChange(e.target.value)}
+        />
+      </div>
       <DataTable
         caption={archived ? "Archived Papers" : "Active Papers"}
         columns={getColumns()}
@@ -142,7 +146,7 @@ export function PapersTable({ archived, showDepartment = true, search }: PapersT
           setPageSize(nextState.pageSize);
         }}
         meta={tableMeta}
-        emptyMessage={search ? "No papers match your search." : undefined}
+        emptyMessage={searchQuery ? "No papers match your search." : undefined}
       />
 
       <ResearchModal
