@@ -15,7 +15,7 @@ const departmentNameColumn = columnHelper.accessor("departmentName", {
   cell: (info) => info.getValue(),
 });
 
-const narrowFitMeta = { className: "narrowFit" } satisfies Record<string, unknown>;
+const narrowFitMeta = { className: "narrowFit" };
 
 const paperCountColumn = columnHelper.accessor("paperCount", {
   header: "Papers",
