@@ -36,12 +36,12 @@ public class ResearchPaperSpec {
       List<Integer> departmentIds,
       List<Integer> years,
       Boolean archived,
-      String status) {
+      ResearchPaperStatus status) {
 
     return (root, query, cb) -> {
       List<Predicate> predicates = new ArrayList<>();
-      if (status != null && !status.isBlank()) {
-        predicates.add(cb.equal(root.get("status"), ResearchPaperStatus.valueOf(status)));
+      if (status != null) {
+        predicates.add(cb.equal(root.get("status"), status));
       }
       addCommonPredicates(root, cb, predicates, searchTerm, departmentIds, years, archived);
       return cb.and(predicates.toArray(new Predicate[0]));

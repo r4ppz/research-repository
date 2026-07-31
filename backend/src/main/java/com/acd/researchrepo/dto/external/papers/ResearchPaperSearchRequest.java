@@ -1,6 +1,7 @@
 package com.acd.researchrepo.dto.external.papers;
 
 import com.acd.researchrepo.dto.external.common.PaginationRequest;
+import com.acd.researchrepo.model.ResearchPaperStatus;
 import com.acd.researchrepo.util.enums.ResearchPaperSortField;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -27,7 +28,7 @@ public class ResearchPaperSearchRequest extends PaginationRequest {
           @Max(value = 2100, message = "Year cannot exceed 2100") Integer>
       year;
   private Boolean archived;
-  private String status;
+  private ResearchPaperStatus status;
 
   @Pattern(
       regexp = "submissionDate|title|authorName",
