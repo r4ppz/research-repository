@@ -1,12 +1,16 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Search } from "lucide-react";
 import { useState } from "react";
 import { getColumns, type TableMeta } from "./columns";
+import styles from "./ManageSubmissionTable.module.css";
 import { approveSubmission, getAdminPapers, rejectSubmission } from "@/api/admin/papers";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
 import { DataTable } from "@/components/common/DataTable/DataTable";
+import { Input } from "@/components/common/Input/Input";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
+import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import type { ResearchPaper } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
@@ -16,8 +20,6 @@ interface ManageSubmissionTableProps {
 
 export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissionTableProps) {
   const queryClient = useQueryClient();
-  const [pageIndex, setPageIndex] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
   const [pendingId, setPendingId] = useState<number | null>(null);
   const [confirmAction, setConfirmAction] = useState<{
@@ -25,10 +27,18 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
     paperId: number;
   } | null>(null);
 
-  const query = useQuery({
-    queryKey: ["adminPapers", { status: "PENDING_REVIEW", pageIndex, pageSize }],
-    queryFn: () => getAdminPapers({ status: "PENDING_REVIEW", page: pageIndex, size: pageSize }),
-  });
+  const {
+    data,
+    pageIndex,
+    pageSize,
+    pageCount,
+    isLoading,
+    error,
+    searchQuery,
+    handleSearchChange,
+    setPageIndex,
+    setPageSize,
+  } = usePaginatedSearch("adminPapers", getAdminPapers, { status: "PENDING_REVIEW" });
 
   const approveMutation = useMutation({
     mutationFn: (paperId: number) => approveSubmission(paperId),
@@ -76,15 +86,12 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
     },
   });
 
-  const totalElements = query.data?.totalElements ?? 0;
-  const pageCount = query.data?.totalPages ?? Math.ceil(totalElements / pageSize);
-
-  if (query.isLoading) {
+  if (isLoading && data.length === 0) {
     return <LoadingSpinner message="Loading submissions..." />;
   }
 
-  if (query.error) {
-    return <p>Failed to load: {getUserErrorMessage(extractApiError(query.error))}</p>;
+  if (error) {
+    return <p>Failed to load: {error}</p>;
   }
 
   const handleConfirm = () => {
@@ -113,10 +120,21 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
 
   return (
     <>
+      <div className={styles.searchWrapper}>
+        <Input
+          icon={Search}
+          type="search"
+          placeholder="Search by title, author, or abstract..."
+          value={searchQuery}
+          onChange={(e) => {
+            handleSearchChange(e.target.value);
+          }}
+        />
+      </div>
       <DataTable
         caption="Paper Submissions"
         columns={getColumns(showDepartment)}
-        data={query.data?.content ?? []}
+        data={data}
         pageCount={pageCount}
         pagination={{ pageIndex, pageSize }}
         onPaginationChange={(updater) => {
@@ -126,6 +144,7 @@ export function ManageSubmissionTable({ showDepartment = true }: ManageSubmissio
           setPageSize(nextState.pageSize);
         }}
         meta={tableMeta}
+        emptyMessage={searchQuery ? "No submissions match your search." : undefined}
       />
 
       <ResearchModal
