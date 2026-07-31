@@ -130,7 +130,9 @@ export function PapersTable({ archived, showDepartment = true }: PapersTableProp
           type="search"
           placeholder="Search by title, author, or abstract..."
           value={searchQuery}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={(e) => {
+            handleSearchChange(e.target.value);
+          }}
         />
       </div>
       <DataTable

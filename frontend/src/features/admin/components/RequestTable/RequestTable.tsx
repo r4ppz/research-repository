@@ -100,7 +100,9 @@ export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
           type="search"
           placeholder="Search by title, author, or requester..."
           value={searchQuery}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={(e) => {
+            handleSearchChange(e.target.value);
+          }}
         />
       </div>
       <DataTable

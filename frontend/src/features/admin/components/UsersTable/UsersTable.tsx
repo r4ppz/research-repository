@@ -103,7 +103,9 @@ export function UsersTable({ currentUserId }: UsersTableProps) {
           type="search"
           placeholder="Search by email or name..."
           value={searchQuery}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={(e) => {
+            handleSearchChange(e.target.value);
+          }}
         />
       </div>
       <DataTable

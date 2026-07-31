@@ -73,13 +73,13 @@ export const ResearchModal = ({
   const fileName = paper.filePath?.split("/").pop() ?? "paper.pdf";
 
   const handleView = () => {
-    if (!paper?.paperId) return;
+    if (!paper.paperId) return;
     void viewFileInTab(paper.paperId);
   };
 
   const handleDownload = () => {
-    if (!paper?.paperId) return;
-    downloadFile(paper.paperId).then(({ blob, filename }) => {
+    if (!paper.paperId) return;
+    void downloadFile(paper.paperId).then(({ blob, filename }) => {
       triggerBrowserDownload(blob, filename);
     });
   };

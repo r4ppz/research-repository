@@ -93,7 +93,9 @@ export function FacultyRequestTable() {
           type="search"
           placeholder="Search by title, author, or department..."
           value={searchQuery}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={(e) => {
+            handleSearchChange(e.target.value);
+          }}
         />
       </div>
       <DataTable
