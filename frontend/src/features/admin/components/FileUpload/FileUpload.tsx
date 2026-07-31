@@ -63,7 +63,8 @@ export const FileUpload = ({
     e.stopPropagation();
     setIsDragOver(false);
 
-    const file = e.dataTransfer.files?.[0];
+    const file = e.dataTransfer.files[0];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (file) {
       onChange(file);
     }

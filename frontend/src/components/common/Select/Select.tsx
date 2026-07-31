@@ -42,6 +42,7 @@ export function Select<T extends object>({
         <FieldError>{errorMessage}</FieldError>
 
         <Popover className={styles.popover} offset={4}>
+          {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
           {(label || props["aria-label"]) && (
             <Heading slot="title" style={{ display: "none" }}>
               {label ?? props["aria-label"]}
