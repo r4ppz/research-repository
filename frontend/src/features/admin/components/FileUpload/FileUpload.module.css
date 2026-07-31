@@ -95,6 +95,6 @@
 }
 
 .isDragOver .fileInputLabel {
-  border-color: var(--color-primary);
   background-color: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  border-color: var(--color-primary);
 }
