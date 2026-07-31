@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
-import { SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import style from "./PaperUploadModal.module.css";
 import type { PaperMetadata } from "@/api/admin/papers";
 import { getDepartments } from "@/api/filter";
@@ -54,11 +54,13 @@ const paperToState = (paper?: ResearchPaper | null) => {
 export const PaperUploadModal = ({ isOpen, onClose, onSuccess, paper }: PaperUploadModalProps) => {
   const isEditing = !!paper;
   const [form, setForm] = useState(() => paperToState(paper));
+  const [prevPaper, setPrevPaper] = useState(paper);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  useEffect(() => {
+  if (prevPaper !== paper) {
+    setPrevPaper(paper);
     setForm(paperToState(paper));
-  }, [paper]);
+  }
 
   const handleFormChange = (field: string) => (value: string | number | File | null) => {
     setForm((prev) => ({ ...prev, [field]: value }));

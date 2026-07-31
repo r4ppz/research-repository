@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { useCreatePaper } from "../../hooks/useAdminPaperActions";
 import { FileUpload } from "../FileUpload/FileUpload";
 import style from "./PaperFormModal.module.css";
@@ -34,14 +34,6 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
   const [submissionDate, setSubmissionDate] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
-
-  // Auto-set department for Department Admin
-  useEffect(() => {
-    if (isOpen && user && isUserDepartmentAdmin(user) && user.department) {
-      setDepartmentId(user.department.departmentId);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
 
   const { data: departments } = useQuery({
     queryKey: ["departments"],
@@ -110,7 +102,11 @@ export const PaperFormModal = ({ isOpen, onClose }: PaperFormModalProps) => {
     <Dialog
       open={isOpen}
       onOpenChange={(open) => {
-        if (!open) {
+        if (open) {
+          if (user && isUserDepartmentAdmin(user) && user.department) {
+            setDepartmentId(user.department.departmentId);
+          }
+        } else {
           resetForm();
           onClose();
         }

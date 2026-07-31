@@ -17,9 +17,14 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [unreadCount, setUnreadCount] = useState(0);
   const { user } = useAuth();
+  const [prevUser, setPrevUser] = useState(user);
+
+  if (prevUser !== user) {
+    setPrevUser(user);
+    setUnreadCount(0);
+  }
 
   useEffect(() => {
-    setUnreadCount(0);
     if (!user) return;
 
     let cancelled = false;

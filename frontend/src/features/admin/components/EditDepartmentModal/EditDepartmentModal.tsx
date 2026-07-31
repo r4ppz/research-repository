@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useUpdateDepartment } from "../../hooks/useAdminDepartmentActions";
 import styles from "./EditDepartmentModal.module.css";
 import type { AdminDepartment } from "@/api/admin/departments";
@@ -27,14 +27,14 @@ export function EditDepartmentModal({
   onSuccess,
   onError,
 }: EditDepartmentModalProps) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(department?.departmentName ?? "");
+  const [prevDepartment, setPrevDepartment] = useState(department);
   const updateMutation = useUpdateDepartment();
 
-  useEffect(() => {
-    if (department) {
-      setName(department.departmentName);
-    }
-  }, [department]);
+  if (department !== prevDepartment) {
+    setPrevDepartment(department);
+    setName(department?.departmentName ?? "");
+  }
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
