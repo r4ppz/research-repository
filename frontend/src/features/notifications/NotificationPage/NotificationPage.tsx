@@ -39,9 +39,15 @@ export const NotificationPage = () => {
 
   const handleNotificationClick = (notification: NotificationDto) => {
     if (!user) return;
-    markAsRead(notification.notificationId, !notification.isRead);
+    void markAsRead(notification.notificationId, !notification.isRead).catch(() =>
+      toastQueue.add({
+        variant: "error",
+        title: "Failed",
+        description: "Failed to mark notification as read.",
+      }),
+    );
     const tab = notification.relatedEntityType === "RESEARCH_PAPER" ? "?tab=submissions" : "";
-    navigate(`${REQUEST_PATH[user.role]}${tab}`);
+    void navigate(`${REQUEST_PATH[user.role]}${tab}`);
   };
 
   return (
