@@ -22,9 +22,11 @@ export function useNotificationStream({
   const { user, logout } = useAuth();
   const abortRef = useRef<AbortController | null>(null);
   const onNotificationRef = useRef(onNotification);
-  onNotificationRef.current = onNotification;
   const onReconnectRef = useRef(onReconnect);
-  onReconnectRef.current = onReconnect;
+  useEffect(() => {
+    onNotificationRef.current = onNotification;
+    onReconnectRef.current = onReconnect;
+  }, [onNotification, onReconnect]);
 
   useEffect(() => {
     if (!user) return;
@@ -39,10 +41,12 @@ export function useNotificationStream({
         const data = await postRefresh();
         setAccessToken(data.accessToken);
         reconnecting = false;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (!cancelled) void connect();
       } catch {
         removeAccessToken();
         reconnecting = false;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (!cancelled) {
           await logout();
         }
@@ -70,13 +74,13 @@ export function useNotificationStream({
               return;
             }
             if (response.status !== 200) {
-              throw new Error(`Unexpected status: ${response.status}`);
+              throw new Error(`Unexpected status: ${String(response.status)}`);
             }
           },
           onmessage(event) {
             if (event.event === "notification" && event.data) {
               try {
-                const data = JSON.parse(event.data);
+                const data = JSON.parse(event.data) as { notificationId?: number } | null;
                 if (data?.notificationId != null) {
                   onNotificationRef.current?.();
                 }
