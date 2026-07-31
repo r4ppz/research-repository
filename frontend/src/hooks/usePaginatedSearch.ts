@@ -15,7 +15,7 @@ export function usePaginatedSearch<T>(
   filters: Record<string, unknown> = {},
   options: { pageSize?: number; debounceMs?: number } = {},
 ) {
-  const { pageSize: defaultPageSize = 5, debounceMs = 500 } = options;
+  const { pageSize: defaultPageSize = 10, debounceMs = 500 } = options;
 
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery, debounceMs);
