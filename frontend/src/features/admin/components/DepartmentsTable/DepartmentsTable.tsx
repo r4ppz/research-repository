@@ -1,8 +1,9 @@
-import { useAdminDepartments } from "../../hooks/useAdminDepartments";
 import { columns, type TableMeta } from "./columns";
 import type { AdminDepartment } from "@/api/admin/departments";
+import { getAdminDepartments } from "@/api/admin/departments";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 
 interface DepartmentsTableProps {
   onEdit: (department: AdminDepartment) => void;
@@ -19,7 +20,7 @@ export function DepartmentsTable({ onEdit, onDelete }: DepartmentsTableProps) {
     pageSize,
     setPageIndex,
     setPageSize,
-  } = useAdminDepartments();
+  } = usePaginatedSearch("adminDepartments", getAdminDepartments);
 
   const tableMeta: TableMeta = {
     onEdit,
