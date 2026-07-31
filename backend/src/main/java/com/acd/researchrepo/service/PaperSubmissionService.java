@@ -101,10 +101,7 @@ public class PaperSubmissionService {
     for (com.acd.researchrepo.model.User admin : admins) {
       notificationService.createAndSend(
           admin.getUserId(),
-          "New paper submission: \""
-              + paper.getTitle()
-              + "\" by "
-              + principal.getFullName(),
+          "New paper submission: \"" + paper.getTitle() + "\" by " + principal.getFullName(),
           "NEW_SUBMISSION",
           savedPaper.getPaperId(),
           "RESEARCH_PAPER");
@@ -176,9 +173,14 @@ public class PaperSubmissionService {
       String filename = "paper_" + System.currentTimeMillis() + extension;
       String relativePath = String.format("%s/%s/%s", year, deptSlug, filename);
 
-      fileStorageService.deleteFile(paper.getFilePath());
+      String oldPath = paper.getFilePath();
       fileStorageService.saveFile(file, relativePath);
       paper.setFilePath(relativePath);
+      try {
+        fileStorageService.deleteFile(oldPath);
+      } catch (Exception e) {
+        log.warn("Failed to delete old file after replacement: {}", oldPath, e);
+      }
     }
 
     ResearchPaper savedPaper = researchPaperRepository.save(paper);
@@ -276,8 +278,7 @@ public class PaperSubmissionService {
 
     if (RoleBasedAccess.isUserDepartmentAdmin(principal)) {
       Integer userDeptId = principal.getDepartmentId();
-      if (userDeptId == null
-          || !userDeptId.equals(paper.getDepartment().getDepartmentId())) {
+      if (userDeptId == null || !userDeptId.equals(paper.getDepartment().getDepartmentId())) {
         throw new ApiException(
             ErrorCode.ACCESS_DENIED, "You do not have permission to manage this paper");
       }
