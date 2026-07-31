@@ -1,20 +1,22 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Search } from "lucide-react";
 import { useState } from "react";
 import { columns, type TableMeta } from "./columns";
+import styles from "./StudentSubmissionTable.module.css";
 import { deleteSubmission, getMySubmissions } from "@/api/paper";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
 import { DataTable } from "@/components/common/DataTable/DataTable";
+import { Input } from "@/components/common/Input/Input";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
 import { PaperUploadModal } from "@/features/student/components/PaperUploadModal/PaperUploadModal";
+import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import type { ResearchPaper } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
 export const StudentSubmissionTable = () => {
   const queryClient = useQueryClient();
-  const [pageIndex, setPageIndex] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
   const [editPaper, setEditPaper] = useState<ResearchPaper | null>(null);
   const [viewPaper, setViewPaper] = useState<ResearchPaper | null>(null);
   const [confirmAction, setConfirmAction] = useState<{
@@ -22,10 +24,18 @@ export const StudentSubmissionTable = () => {
     paperId: number;
   } | null>(null);
 
-  const query = useQuery({
-    queryKey: ["mySubmissions", { pageIndex, pageSize }],
-    queryFn: () => getMySubmissions({ page: pageIndex, size: pageSize }),
-  });
+  const {
+    data,
+    pageIndex,
+    pageSize,
+    pageCount,
+    isLoading,
+    error,
+    searchQuery,
+    handleSearchChange,
+    setPageIndex,
+    setPageSize,
+  } = usePaginatedSearch("mySubmissions", getMySubmissions);
 
   const deleteMutation = useMutation({
     mutationFn: (paperId: number) => deleteSubmission(paperId),
@@ -46,15 +56,12 @@ export const StudentSubmissionTable = () => {
     },
   });
 
-  const totalElements = query.data?.totalElements ?? 0;
-  const pageCount = query.data?.totalPages ?? Math.ceil(totalElements / pageSize);
-
-  if (query.isLoading) {
+  if (isLoading && data.length === 0) {
     return <LoadingSpinner message="Loading your submissions..." />;
   }
 
-  if (query.error) {
-    return <p>Failed to load: {getUserErrorMessage(extractApiError(query.error))}</p>;
+  if (error) {
+    return <p>Failed to load: {error}</p>;
   }
 
   const handleConfirm = () => {
@@ -77,10 +84,21 @@ export const StudentSubmissionTable = () => {
 
   return (
     <>
+      <div className={styles.searchWrapper}>
+        <Input
+          icon={Search}
+          type="search"
+          placeholder="Search by title, author, or abstract..."
+          value={searchQuery}
+          onChange={(e) => {
+            handleSearchChange(e.target.value);
+          }}
+        />
+      </div>
       <DataTable
         caption="My Submissions"
         columns={columns}
-        data={query.data?.content ?? []}
+        data={data}
         pageCount={pageCount}
         pagination={{ pageIndex, pageSize }}
         onPaginationChange={(updater) => {
@@ -90,6 +108,7 @@ export const StudentSubmissionTable = () => {
           setPageSize(nextState.pageSize);
         }}
         meta={tableMeta}
+        emptyMessage={searchQuery ? "No submissions match your search." : undefined}
       />
 
       <ResearchModal
