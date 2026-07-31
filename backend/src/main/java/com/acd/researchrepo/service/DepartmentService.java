@@ -26,6 +26,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+/**
+ * Manages departments — available (filter) listing for all users, and full CRUD for SUPER_ADMINs.
+ */
 @Service
 public class DepartmentService {
 
@@ -114,6 +117,9 @@ public class DepartmentService {
     return toAdminDto(departmentRepository.save(department));
   }
 
+  /**
+   * Deletes a department. Fails if any research papers or users are still linked to it.
+   */
   public void deleteDepartment(Integer id, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
     Department department =

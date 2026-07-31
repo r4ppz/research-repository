@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getYears } from "@/api/filter";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
@@ -9,33 +9,18 @@ interface UseYearsReturn {
 }
 
 export const useYears = (): UseYearsReturn => {
-  const [years, setYears] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchYears = async (): Promise<void> => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const result = await getYears();
-        setYears(result.map(String));
-      } catch (err) {
-        const apiError = extractApiError(err);
-        setError(getUserErrorMessage(apiError));
-        setYears([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void fetchYears();
-  }, []);
+  const query = useQuery({
+    queryKey: ["years"],
+    queryFn: async () => {
+      const result = await getYears();
+      return result.map(String);
+    },
+    staleTime: 1000 * 60 * 30,
+  });
 
   return {
-    years,
-    loading,
-    error,
+    years: query.data ?? [],
+    loading: query.isLoading,
+    error: query.error ? getUserErrorMessage(extractApiError(query.error)) : null,
   };
 };

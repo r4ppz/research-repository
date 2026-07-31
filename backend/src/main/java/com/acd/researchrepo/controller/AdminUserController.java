@@ -1,5 +1,6 @@
 package com.acd.researchrepo.controller;
 
+import com.acd.researchrepo.dto.external.common.PaginationRequest;
 import com.acd.researchrepo.dto.external.model.UserDto;
 import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
 import com.acd.researchrepo.dto.external.requests.ChangeRoleRequest;
@@ -20,6 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * SuperAdmin user management — list, create users, and change roles. Role changes are logged
+ * in {@link com.acd.researchrepo.model.RoleChangeLog} and revoke the target user's refresh
+ * tokens.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/admin/users")
@@ -33,14 +39,14 @@ public class AdminUserController {
 
   @GetMapping
   public ResponseEntity<PaginatedResponse<UserDto>> getUsers(
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "20") int size,
+      @Valid PaginationRequest pagination,
       @RequestParam(required = false) String search,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
 
     log.debug("GET /api/admin/users endpoint hit");
 
-    return ResponseEntity.ok(adminUserService.listUsers(page, size, search, principal));
+    return ResponseEntity.ok(
+        adminUserService.listUsers(pagination.getPage(), pagination.getSize(), search, principal));
   }
 
   @PostMapping

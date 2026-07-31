@@ -110,6 +110,7 @@ export const LibraryPage = () => {
           setIsModalOpen(false);
         }}
       />
+
       <Footer />
     </div>
   );

@@ -2,11 +2,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   archivePaper,
   createPaper,
-  type CreatePaperMetadata,
   deletePaper,
+  type PaperMetadata,
   unarchivePaper,
   updatePaper,
-  type UpdatePaperMetadata,
 } from "@/api/admin/papers";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
 
@@ -14,7 +13,7 @@ export function useUpdatePaper() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, metadata }: { id: number; metadata: UpdatePaperMetadata }) =>
+    mutationFn: ({ id, metadata }: { id: number; metadata: PaperMetadata }) =>
       updatePaper(id, metadata),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["adminPapers"] });
@@ -30,7 +29,7 @@ export function useCreatePaper() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ metadata, file }: { metadata: CreatePaperMetadata; file: File }) =>
+    mutationFn: ({ metadata, file }: { metadata: PaperMetadata; file: File }) =>
       createPaper(metadata, file),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["adminPapers"] });

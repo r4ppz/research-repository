@@ -1,13 +1,13 @@
-import { useState } from "react";
 import { X } from "lucide-react";
+import { useState } from "react";
 import {
+  Button,
+  Text,
   UNSTABLE_Toast as Toast,
   UNSTABLE_ToastContent as ToastContent,
+  type ToastProps,
   UNSTABLE_ToastQueue as ToastQueue,
   UNSTABLE_ToastRegion as ToastRegion,
-  type ToastProps,
-  Text,
-  Button,
 } from "react-aria-components/Toast";
 import styles from "./Toast.module.css";
 
@@ -39,7 +39,7 @@ function AppToast({ toast }: ToastProps<ToastData>) {
       toast={toast}
       className={`${styles.toast} ${variantClass} ${isExiting ? styles.exiting : ""}`}
       onAnimationEnd={() => {
-        if (isExiting) toast.onClose();
+        if (isExiting) toast.onClose?.();
       }}
     >
       <ToastContent className={styles.content}>
@@ -53,7 +53,9 @@ function AppToast({ toast }: ToastProps<ToastData>) {
         )}
       </ToastContent>
       <Button
-        onPress={() => setIsExiting(true)}
+        onPress={() => {
+          setIsExiting(true);
+        }}
         className={styles.closeButton}
         aria-label="Close"
       >

@@ -21,6 +21,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Seeds the database with sample research papers and their PDF files. Only active with the
+ * {@code seed} profile. Idempotent — skips papers whose title already exists. Generates minimal
+ * valid PDFs programmatically (no external file dependencies).
+ */
 @Slf4j
 @Component
 @Profile("seed")

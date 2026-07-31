@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Search } from "lucide-react";
 import {
   useArchivePaper,
   useDeletePaper,
   useUnarchivePaper,
 } from "../../hooks/useAdminPaperActions";
-import { useAdminPapers } from "../../hooks/useAdminPapers";
+import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import { EditPaperModal } from "../EditPaperModal/EditPaperModal";
 import {
   columnsActive,
@@ -13,7 +14,11 @@ import {
   columnsArchivedWithoutDepartment,
   type TableMeta,
 } from "./columns";
+import papersTableStyle from "./PapersTable.module.css";
+import { getAdminPapers } from "@/api/admin/papers";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
 import { DataTable } from "@/components/common/DataTable/DataTable";
+import { Input } from "@/components/common/Input/Input";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
@@ -22,26 +27,65 @@ import type { ResearchPaper } from "@/types";
 interface PapersTableProps {
   archived: boolean;
   showDepartment?: boolean;
-  search?: string;
 }
 
-export function PapersTable({ archived, showDepartment = true, search }: PapersTableProps) {
+export function PapersTable({ archived, showDepartment = true }: PapersTableProps) {
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
   const [editingPaper, setEditingPaper] = useState<ResearchPaper | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{
+    type: "archive" | "restore" | "delete";
+    paperId: number;
+  } | null>(null);
 
-  const { data, pageIndex, pageSize, pageCount, setPageIndex, setPageSize, isLoading, error } =
-    useAdminPapers({
-      archived,
-      search,
-    });
-
-  useEffect(() => {
-    setPageIndex(0);
-  }, [search, setPageIndex]);
+  const { data, pageCount, pageIndex, pageSize, setPageIndex, setPageSize, isLoading, error, searchQuery, handleSearchChange } =
+    usePaginatedSearch("adminPapers", getAdminPapers, { archived });
 
   const archiveMutation = useArchivePaper();
   const unarchiveMutation = useUnarchivePaper();
   const deleteMutation = useDeletePaper();
+
+  const handleConfirm = () => {
+    if (!confirmAction) return;
+    const { type, paperId } = confirmAction;
+
+    const toastSuccess = (title: string, description: string) => {
+      toastQueue.add({ variant: "success", title, description });
+    };
+    const toastError = (title: string, description: string) => {
+      toastQueue.add({ variant: "error", title, description });
+    };
+
+    if (type === "archive") {
+      archiveMutation.mutate(paperId, {
+        onSuccess: () => {
+          toastSuccess("Paper Archived", "Paper archived.");
+        },
+        onError: () => {
+          toastError("Archive Failed", "Failed to archive paper.");
+        },
+      });
+    } else if (type === "restore") {
+      unarchiveMutation.mutate(paperId, {
+        onSuccess: () => {
+          toastSuccess("Paper Restored", "Paper restored.");
+        },
+        onError: () => {
+          toastError("Restore Failed", "Failed to restore paper.");
+        },
+      });
+    } else {
+      deleteMutation.mutate(paperId, {
+        onSuccess: () => {
+          toastSuccess("Paper Deleted", "Paper deleted.");
+        },
+        onError: () => {
+          toastError("Delete Failed", "Failed to delete paper.");
+        },
+      });
+    }
+
+    setConfirmAction(null);
+  };
 
   const tableMeta: TableMeta = {
     onView: (paper) => {
@@ -51,38 +95,16 @@ export function PapersTable({ archived, showDepartment = true, search }: PapersT
       setEditingPaper(paper);
     },
     onArchive: (paperId) => {
-      archiveMutation.mutate(paperId, {
-        onSuccess: () => {
-          toastQueue.add({ variant: "success", title: "Paper Archived", description: "Paper archived." });
-        },
-        onError: () => {
-          toastQueue.add({ variant: "error", title: "Archive Failed", description: "Failed to archive paper." });
-        },
-      });
+      setConfirmAction({ type: "archive", paperId });
     },
     onRestore: (paperId) => {
-      unarchiveMutation.mutate(paperId, {
-        onSuccess: () => {
-          toastQueue.add({ variant: "success", title: "Paper Restored", description: "Paper restored." });
-        },
-        onError: () => {
-          toastQueue.add({ variant: "error", title: "Restore Failed", description: "Failed to restore paper." });
-        },
-      });
+      setConfirmAction({ type: "restore", paperId });
     },
     onDelete: (paperId) => {
-      deleteMutation.mutate(paperId, {
-        onSuccess: () => {
-          toastQueue.add({ variant: "success", title: "Paper Deleted", description: "Paper deleted." });
-        },
-        onError: () => {
-          toastQueue.add({ variant: "error", title: "Delete Failed", description: "Failed to delete paper." });
-        },
-      });
+      setConfirmAction({ type: "delete", paperId });
     },
   };
 
-  // Select the appropriate columns based on archived and showDepartment
   const getColumns = () => {
     if (archived) {
       return showDepartment ? columnsArchived : columnsArchivedWithoutDepartment;
@@ -102,6 +124,15 @@ export function PapersTable({ archived, showDepartment = true, search }: PapersT
 
   return (
     <>
+      <div className={papersTableStyle.searchWrapper}>
+        <Input
+          icon={Search}
+          type="search"
+          placeholder="Search by title, author, or abstract..."
+          value={searchQuery}
+          onChange={(e) => handleSearchChange(e.target.value)}
+        />
+      </div>
       <DataTable
         caption={archived ? "Archived Papers" : "Active Papers"}
         columns={getColumns()}
@@ -115,7 +146,7 @@ export function PapersTable({ archived, showDepartment = true, search }: PapersT
           setPageSize(nextState.pageSize);
         }}
         meta={tableMeta}
-        emptyMessage={search ? "No papers match your search." : undefined}
+        emptyMessage={searchQuery ? "No papers match your search." : undefined}
       />
 
       <ResearchModal
@@ -132,6 +163,35 @@ export function PapersTable({ archived, showDepartment = true, search }: PapersT
         onClose={() => {
           setEditingPaper(null);
         }}
+      />
+
+      <ConfirmDialog
+        open={!!confirmAction}
+        onOpenChange={(open) => {
+          if (!open) setConfirmAction(null);
+        }}
+        title={
+          confirmAction?.type === "delete"
+            ? "Delete paper?"
+            : confirmAction?.type === "archive"
+              ? "Archive paper?"
+              : "Restore paper?"
+        }
+        description={
+          confirmAction?.type === "delete"
+            ? "Are you sure you want to permanently delete this paper? This action cannot be undone."
+            : confirmAction?.type === "archive"
+              ? "Are you sure you want to archive this paper? It will be moved to archived papers."
+              : "Are you sure you want to restore this paper to active papers?"
+        }
+        confirmText={
+          confirmAction?.type === "delete"
+            ? "Delete"
+            : confirmAction?.type === "archive"
+              ? "Archive"
+              : "Restore"
+        }
+        onConfirm={handleConfirm}
       />
     </>
   );

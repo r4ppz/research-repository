@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,6 +47,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
       HttpStatusCode status,
       WebRequest request) {
 
+    return buildValidationErrorResponse(exception, request);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleBindException(
+      BindException exception, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+    return buildValidationErrorResponse(exception, request);
+  }
+
+  private ResponseEntity<Object> buildValidationErrorResponse(
+      BindException exception, WebRequest request) {
     String traceId = MDC.get("traceId");
 
     List<ErrorResponse.FieldError> fieldErrors =

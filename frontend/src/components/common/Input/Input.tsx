@@ -4,15 +4,7 @@ import { Input as AriaInput } from "react-aria-components";
 import style from "./Input.module.css";
 
 type InputType =
-  | "text"
-  | "password"
-  | "email"
-  | "number"
-  | "search"
-  | "url"
-  | "tel"
-  | "date"
-  | "datetime-local";
+  "text" | "password" | "email" | "number" | "search" | "url" | "tel" | "date" | "datetime-local";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: InputType;

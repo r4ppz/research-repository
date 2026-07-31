@@ -2,6 +2,7 @@ package com.acd.researchrepo.mapper;
 
 import com.acd.researchrepo.dto.external.notifications.NotificationDto;
 import com.acd.researchrepo.model.Notification;
+import java.time.ZoneOffset;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,9 +15,10 @@ public class NotificationMapper {
         .notificationId(notification.getNotificationId())
         .message(notification.getMessage())
         .type(notification.getType())
-        .relatedRequestId(notification.getRelatedRequestId())
+        .relatedEntityId(notification.getRelatedEntityId())
+        .relatedEntityType(notification.getRelatedEntityType())
         .isRead(notification.getIsRead())
-        .createdAt(notification.getCreatedAt())
+        .createdAt(notification.getCreatedAt().atZone(ZoneOffset.UTC).toInstant())
         .build();
   }
 }

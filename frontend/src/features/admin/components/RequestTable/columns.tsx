@@ -1,8 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Check, Eye, X } from "lucide-react";
-import style from "../tableActionStyles.module.css";
-import { Button } from "@/components/common/Button/Button";
-import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
+import { TableActions, TableButton } from "@/components/common/TableActions";
 import type { DocumentRequest, ResearchPaper } from "@/types";
 import { formatDateShort } from "@/util/formatDate";
 
@@ -44,54 +42,35 @@ const actionsColumn = columnHelper.display({
   cell: ({ row, table }) => {
     const meta = table.options.meta as TableMeta;
     const requestId = row.original.requestId;
-    const isAccepting = meta.pendingAcceptId === requestId;
-    const isRejecting = meta.pendingRejectId === requestId;
+    const isLoading = meta.pendingAcceptId === requestId || meta.pendingRejectId === requestId;
 
     return (
-      <div className={style.actionButtonContainer}>
-        <Button
-          className={style.actionButton}
-          onClick={() => {
+      <TableActions>
+        <TableButton
+          icon={<Eye />}
+          onPress={() => {
             meta.onView(row.original.paper);
           }}
-        >
-          <Eye className={style.actionIcon} />
-        </Button>
-        <ConfirmDialog
-          title="Reject document request?"
-          description="Are you sure you want to reject this document request? This action cannot be undone."
-          confirmText="Reject"
-          cancelText="Cancel"
-          onConfirm={() => {
+        />
+        <TableButton
+          icon={<X />}
+          isPending={isLoading}
+          onPress={() => {
             meta.onReject(requestId);
           }}
-          trigger={
-            <Button className={style.actionButton} isPending={isRejecting || isAccepting}>
-              <X className={style.actionIcon} />
-            </Button>
-          }
         />
-
-        <ConfirmDialog
-          title="Accept document request?"
-          description="Are you sure you want to accept this document request? The requester will be granted access."
-          confirmText="Accept"
-          cancelText="Cancel"
-          onConfirm={() => {
+        <TableButton
+          icon={<Check />}
+          isPending={isLoading}
+          onPress={() => {
             meta.onAccept(requestId);
           }}
-          trigger={
-            <Button className={style.actionButton} isPending={isAccepting || isRejecting}>
-              <Check className={style.actionIcon} />
-            </Button>
-          }
         />
-      </div>
+      </TableActions>
     );
   },
 });
 
-// Columns with department (for Super Admin)
 export const columns = [
   studentNameColumn,
   paperTitleColumn,
@@ -100,7 +79,6 @@ export const columns = [
   actionsColumn,
 ];
 
-// Columns without department (for Department Admin)
 export const columnsWithoutDepartment = [
   studentNameColumn,
   paperTitleColumn,

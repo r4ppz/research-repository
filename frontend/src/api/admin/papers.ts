@@ -9,6 +9,7 @@ export interface GetAdminPapersParams {
   search?: string;
   year?: number;
   archived?: boolean;
+  status?: string;
   sortBy?: string;
   sortOrder?: string;
 }
@@ -44,7 +45,7 @@ export const unarchivePaper = async (id: number): Promise<ArchiveResponse> => {
   return response.data;
 };
 
-export interface CreatePaperMetadata {
+export interface PaperMetadata {
   title: string;
   authorName: string;
   abstractText: string;
@@ -52,10 +53,7 @@ export interface CreatePaperMetadata {
   submissionDate: string;
 }
 
-export const createPaper = async (
-  metadata: CreatePaperMetadata,
-  file: File,
-): Promise<ResearchPaper> => {
+export const createPaper = async (metadata: PaperMetadata, file: File): Promise<ResearchPaper> => {
   const formData = new FormData();
   formData.append("metadata", JSON.stringify(metadata));
   formData.append("file", file);
@@ -72,18 +70,19 @@ export const deletePaper = async (id: number): Promise<void> => {
   await axiosClient.delete(`/api/admin/papers/${id.toString()}`);
 };
 
-export interface UpdatePaperMetadata {
-  title: string;
-  authorName: string;
-  abstractText: string;
-  departmentId: number;
-  submissionDate: string;
-}
+export const approveSubmission = async (id: number): Promise<ResearchPaper> => {
+  const response = await axiosClient.put<ResearchPaper>(
+    `/api/admin/papers/${id.toString()}/approve`,
+    {},
+  );
+  return response.data;
+};
 
-export const updatePaper = async (
-  id: number,
-  metadata: UpdatePaperMetadata,
-): Promise<ResearchPaper> => {
+export const rejectSubmission = async (id: number): Promise<void> => {
+  await axiosClient.put(`/api/admin/papers/${id.toString()}/reject-submission`, {});
+};
+
+export const updatePaper = async (id: number, metadata: PaperMetadata): Promise<ResearchPaper> => {
   const response = await axiosClient.put<ResearchPaper>(
     `/api/admin/papers/${id.toString()}`,
     metadata,

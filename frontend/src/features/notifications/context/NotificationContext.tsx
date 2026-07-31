@@ -1,20 +1,14 @@
-import {
-  createContext,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { axiosClient } from "@/api/axiosClient";
-import { markAllRead as markAllReadApi } from "@/api/notifications";
+import { markAllRead as markAllReadApi, markAsRead as markAsReadApi } from "@/api/notifications";
 import { useAuth } from "@/features/auth/context/useAuth";
 import { useNotificationStream } from "@/features/notifications/hooks/useNotificationStream";
 
 interface NotificationContextValue {
   unreadCount: number;
   markAllRead: () => Promise<void>;
+  markAsRead: (notificationId: number, wasUnread: boolean) => Promise<void>;
 }
 
 const NotificationContext = createContext<NotificationContextValue | undefined>(undefined);
@@ -25,24 +19,42 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
 
   useEffect(() => {
+    setUnreadCount(0);
     if (!user) return;
+
+    let cancelled = false;
 
     const fetchCount = async () => {
       try {
         const response = await axiosClient.get<number>("/api/notifications/unread-count");
-        setUnreadCount(response.data);
+        if (!cancelled) setUnreadCount(response.data);
       } catch {
-        // ignore
+        if (!cancelled) setUnreadCount(0);
       }
     };
 
     void fetchCount();
+
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   useNotificationStream({
     onNotification: useCallback(() => {
       setUnreadCount((prev) => prev + 1);
       void queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    }, [queryClient]),
+    onReconnect: useCallback(() => {
+      void queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      void axiosClient.get<number>("/api/notifications/unread-count").then(
+        (res) => {
+          setUnreadCount(res.data);
+        },
+        () => {
+          setUnreadCount(0);
+        },
+      );
     }, [queryClient]),
   });
 
@@ -52,8 +64,20 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     void queryClient.invalidateQueries({ queryKey: ["notifications"] });
   }, [queryClient]);
 
+  const markAsRead = useCallback(
+    async (notificationId: number, wasUnread: boolean) => {
+      await markAsReadApi(notificationId);
+      // only decrement count if notification was unread, prevents badge desync
+      if (wasUnread) {
+        setUnreadCount((prev) => Math.max(0, prev - 1));
+      }
+      void queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+    [queryClient],
+  );
+
   return (
-    <NotificationContext.Provider value={{ unreadCount, markAllRead }}>
+    <NotificationContext.Provider value={{ unreadCount, markAllRead, markAsRead }}>
       {children}
     </NotificationContext.Provider>
   );

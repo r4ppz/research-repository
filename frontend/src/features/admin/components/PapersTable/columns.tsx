@@ -1,8 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Archive, Edit, Eye, RotateCcw, Trash2 } from "lucide-react";
-import style from "../tableActionStyles.module.css";
-import { Button } from "@/components/common/Button/Button";
-import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
+import { TableActions, TableButton } from "@/components/common/TableActions";
 import type { ResearchPaper } from "@/types";
 import { formatDateShort } from "@/util/formatDate";
 
@@ -36,7 +34,6 @@ const submissionDateColumn = columnHelper.accessor("submissionDate", {
   cell: (info) => formatDateShort(info.getValue()),
 });
 
-// Actions column for Active Papers (View + Archive)
 const actionsActiveColumn = columnHelper.display({
   id: "actions",
   header: "Action",
@@ -45,57 +42,36 @@ const actionsActiveColumn = columnHelper.display({
     const paper = row.original;
 
     return (
-      <div className={style.actionButtonContainer}>
-        <Button
-          className={style.actionButton}
-          onClick={() => {
+      <TableActions>
+        <TableButton
+          icon={<Eye />}
+          onPress={() => {
             meta.onView(paper);
           }}
-        >
-          <Eye className={style.actionIcon} />
-        </Button>
-        <Button
-          className={style.actionButton}
-          onClick={() => {
+        />
+        <TableButton
+          icon={<Edit />}
+          onPress={() => {
             meta.onEdit(paper);
           }}
-        >
-          <Edit className={style.actionIcon} />
-        </Button>
-        <ConfirmDialog
-          title="Archive paper?"
-          description="Are you sure you want to archive this paper? It will be moved to archived papers."
-          confirmText="Archive"
-          cancelText="Cancel"
-          onConfirm={() => {
+        />
+        <TableButton
+          icon={<Archive />}
+          onPress={() => {
             meta.onArchive(paper.paperId);
           }}
-          trigger={
-            <Button className={style.actionButton}>
-              <Archive className={style.actionIcon} />
-            </Button>
-          }
         />
-        <ConfirmDialog
-          title="Delete paper?"
-          description="Are you sure you want to permanently delete this paper? This action cannot be undone."
-          confirmText="Delete"
-          cancelText="Cancel"
-          onConfirm={() => {
+        <TableButton
+          icon={<Trash2 />}
+          onPress={() => {
             meta.onDelete(paper.paperId);
           }}
-          trigger={
-            <Button className={style.actionButton}>
-              <Trash2 className={style.actionIcon} />
-            </Button>
-          }
         />
-      </div>
+      </TableActions>
     );
   },
 });
 
-// Actions column for Archived Papers (View + Restore)
 const actionsArchivedColumn = columnHelper.display({
   id: "actions",
   header: "Action",
@@ -104,52 +80,32 @@ const actionsArchivedColumn = columnHelper.display({
     const paper = row.original;
 
     return (
-      <div className={style.actionButtonContainer}>
-        <Button
-          className={style.actionButton}
-          onClick={() => {
+      <TableActions>
+        <TableButton
+          icon={<Eye />}
+          onPress={() => {
             meta.onView(paper);
           }}
-        >
-          <Eye className={style.actionIcon} />
-        </Button>
-        <Button
-          className={style.actionButton}
-          onClick={() => {
+        />
+        <TableButton
+          icon={<Edit />}
+          onPress={() => {
             meta.onEdit(paper);
           }}
-        >
-          <Edit className={style.actionIcon} />
-        </Button>
-        <ConfirmDialog
-          title="Restore paper?"
-          description="Are you sure you want to restore this paper to active papers?"
-          confirmText="Restore"
-          cancelText="Cancel"
-          onConfirm={() => {
+        />
+        <TableButton
+          icon={<RotateCcw />}
+          onPress={() => {
             meta.onRestore(paper.paperId);
           }}
-          trigger={
-            <Button className={style.actionButton}>
-              <RotateCcw className={style.actionIcon} />
-            </Button>
-          }
         />
-        <ConfirmDialog
-          title="Delete paper?"
-          description="Are you sure you want to permanently delete this paper? This action cannot be undone."
-          confirmText="Delete"
-          cancelText="Cancel"
-          onConfirm={() => {
+        <TableButton
+          icon={<Trash2 />}
+          onPress={() => {
             meta.onDelete(paper.paperId);
           }}
-          trigger={
-            <Button className={style.actionButton}>
-              <Trash2 className={style.actionIcon} />
-            </Button>
-          }
         />
-      </div>
+      </TableActions>
     );
   },
 });

@@ -27,6 +27,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Manages document access requests — creation by students/faculty, and acceptance/rejection by
+ * admins. Notifications are sent to relevant users on state transitions.
+ */
 @Service
 public class DocumentRequestService {
   private final DocumentRequestRepository documentRequestRepository;
@@ -65,6 +69,10 @@ public class DocumentRequestService {
     return PaginatedResponse.fromPage(requestPage, documentRequestMapper::toDto);
   }
 
+  /**
+   * Creates a new document access request. Prevents duplicate active requests for the same paper
+   * and sends notifications to all DEPARTMENT_ADMINs in the paper's department.
+   */
   @Transactional
   public CreateRequestResponse createRequest(
       CreateRequestRequest requestDto, CustomUserPrincipal userPrincipal) {
@@ -105,17 +113,19 @@ public class DocumentRequestService {
     for (com.acd.researchrepo.model.User admin : admins) {
       notificationService.createAndSend(
           admin.getUserId(),
-          "New request for \""
-              + paper.getTitle()
-              + "\" from "
-              + userPrincipal.getFullName(),
+          "New request for \"" + paper.getTitle() + "\" from " + userPrincipal.getFullName(),
           "NEW_REQUEST",
-          savedRequest.getRequestId());
+          savedRequest.getRequestId(),
+          "DOCUMENT_REQUEST");
     }
 
     return CreateRequestResponse.builder().requestId(savedRequest.getRequestId()).build();
   }
 
+  /**
+   * Deletes a document request. Only allowed if the request belongs to the caller and is in
+   * PENDING or REJECTED status.
+   */
   @Transactional
   public void deleteRequest(Integer requestId, CustomUserPrincipal userPrincipal) {
     if (!RoleBasedAccess.isUserStudentOrFaculty(userPrincipal)) {
@@ -210,6 +220,10 @@ public class DocumentRequestService {
     return null;
   }
 
+  /**
+   * Accepts a PENDING document request. DEPARTMENT_ADMINs can only accept requests for papers in
+   * their own department. Sends a notification to the requesting user.
+   */
   @Transactional
   public AdminRequestResponse acceptRequest(Integer requestId, CustomUserPrincipal userPrincipal) {
     // Authorization: must be admin
@@ -253,11 +267,16 @@ public class DocumentRequestService {
         request.getUser().getUserId(),
         "Your request for \"" + request.getPaper().getTitle() + "\" has been accepted.",
         "REQUEST_ACCEPTED",
-        request.getRequestId());
+        request.getRequestId(),
+        "DOCUMENT_REQUEST");
 
     return documentRequestMapper.toAdminDto(savedRequest);
   }
 
+  /**
+   * Rejects a document request (any non-terminal status). DEPARTMENT_ADMINs can only reject
+   * requests for papers in their own department. Sends a notification to the requesting user.
+   */
   @Transactional
   public AdminRequestResponse rejectRequest(
       Integer requestId, String reason, CustomUserPrincipal userPrincipal) {
@@ -303,7 +322,8 @@ public class DocumentRequestService {
         request.getUser().getUserId(),
         "Your request for \"" + request.getPaper().getTitle() + "\" has been rejected.",
         "REQUEST_REJECTED",
-        request.getRequestId());
+        request.getRequestId(),
+        "DOCUMENT_REQUEST");
 
     return documentRequestMapper.toAdminDto(savedRequest);
   }

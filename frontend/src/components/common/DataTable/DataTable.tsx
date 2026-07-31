@@ -87,7 +87,7 @@ export function DataTable<TData extends RowData>({
             table.getRowModel().rows.map((row) => (
               <tr className={style.tableRow} key={row.id}>
                 {row.getVisibleCells().map((cell) => {
-                  const colMeta = cell.column.columnDef.meta as { className?: string } | undefined;
+                  const colMeta = cell.column.columnDef.meta;
                   return (
                     <td
                       className={clsx(style.tableData, style.tableBodyData, colMeta?.className)}

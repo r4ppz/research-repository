@@ -66,7 +66,9 @@ export function EditDepartmentModal({
       <DialogContent>
         <DialogClose onClose={onClose} />
         <DialogTitle>Edit Department</DialogTitle>
-        <DialogDescription className={styles.hiddenDescription}>Edit the department name.</DialogDescription>
+        <DialogDescription className={styles.hiddenDescription}>
+          Edit the department name.
+        </DialogDescription>
         <form onSubmit={handleSubmit}>
           <div className={styles.field}>
             <Input

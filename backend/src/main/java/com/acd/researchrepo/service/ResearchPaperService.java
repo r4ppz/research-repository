@@ -12,6 +12,7 @@ import com.acd.researchrepo.mapper.ResearchPaperMapper;
 import com.acd.researchrepo.model.DocumentRequest;
 import com.acd.researchrepo.model.RequestStatus;
 import com.acd.researchrepo.model.ResearchPaper;
+import com.acd.researchrepo.model.ResearchPaperStatus;
 import com.acd.researchrepo.repository.DepartmentRepository;
 import com.acd.researchrepo.repository.DocumentRequestRepository;
 import com.acd.researchrepo.repository.ResearchPaperRepository;
@@ -30,6 +31,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Core service for research paper operations — browsing, admin management, file download, and
+ * archival. Role-based access is enforced throughout: students only see non-archived papers,
+ * DEPARTMENT_ADMINs are scoped to their department, and SUPER_ADMINs have full visibility.
+ */
 @Slf4j
 @Service
 public class ResearchPaperService {
@@ -59,7 +65,7 @@ public class ResearchPaperService {
       ResearchPaperSearchRequest request, CustomUserPrincipal userPrincipal) {
 
     Boolean archived = request.getArchived();
-    if (RoleBasedAccess.isUserStudent(userPrincipal)) {
+    if (!RoleBasedAccess.isUserAdmin(userPrincipal)) {
       archived = false;
     }
 
@@ -73,9 +79,9 @@ public class ResearchPaperService {
   }
 
   /**
-   * Get papers for admin management with department scoping. DEPARTMENT_ADMIN: only sees papers in
-   * their department (departmentIds param ignored). SUPER_ADMIN: sees all papers, can filter by
-   * departmentIds.
+   * Retrieves paginated papers for the admin panel with role-based department scoping. {@code
+   * DEPARTMENT_ADMIN} is forced to their own department (ignoring any {@code departmentId} filter);
+   * {@code SUPER_ADMIN} can filter by any department or see all.
    */
   public PaginatedResponse<ResearchPaperDto> getAdminPapers(
       ResearchPaperSearchRequest request, CustomUserPrincipal userPrincipal) {
@@ -107,7 +113,11 @@ public class ResearchPaperService {
 
     Specification<ResearchPaper> spec =
         ResearchPaperSpec.buildAdmin(
-            request.getSearch(), effectiveDepartmentIds, request.getYear(), request.getArchived());
+            request.getSearch(),
+            effectiveDepartmentIds,
+            request.getYear(),
+            request.getArchived(),
+            request.getStatus());
 
     Page<ResearchPaper> paperPage = researchPaperRepository.findAll(spec, request.toPageable());
 
@@ -123,6 +133,18 @@ public class ResearchPaperService {
 
     ResearchPaper paper = paperOpt.get();
 
+    if (paper.getStatus() == ResearchPaperStatus.PENDING_REVIEW
+        && !RoleBasedAccess.isUserAdmin(userPrincipal)
+        && (paper.getUploadedBy() == null
+            || !paper.getUploadedBy().getUserId().equals(userPrincipal.getUserId()))) {
+      throw new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Paper not found");
+    }
+
+    if (paper.getStatus() == ResearchPaperStatus.REJECTED
+        && !RoleBasedAccess.isUserAdmin(userPrincipal)) {
+      throw new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Paper not found");
+    }
+
     if (RoleBasedAccess.isUserStudent(userPrincipal) && paper.getArchived()) {
       throw new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Paper not found");
     }
@@ -132,7 +154,7 @@ public class ResearchPaperService {
 
   public List<Integer> getAvailableYears(CustomUserPrincipal user) {
     Integer deptId = RoleBasedAccess.isUserDepartmentAdmin(user) ? user.getDepartmentId() : null;
-    boolean onlyActive = RoleBasedAccess.isUserStudent(user);
+    boolean onlyActive = !RoleBasedAccess.isUserAdmin(user);
     return researchPaperRepository.findDistinctYears(deptId, onlyActive);
   }
 
@@ -141,6 +163,10 @@ public class ResearchPaperService {
     return documentRequestService.getUserRequestForPaper(paperId, userPrincipal);
   }
 
+  /**
+   * Archives a research paper. As a side effect, all active (PENDING or ACCEPTED) document
+   * requests for this paper are rejected with reason "Paper archived".
+   */
   @Transactional
   public void archivePaper(Integer id, CustomUserPrincipal principal) {
     ResearchPaper paper = getAndVerifyAdminAccess(id, principal);
@@ -214,6 +240,10 @@ public class ResearchPaperService {
     researchPaperRepository.save(paper);
   }
 
+  /**
+   * Returns the filename (without path) of a research paper file, after verifying the caller has
+   * download access.
+   */
   public String getPaperFileName(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper =
         researchPaperRepository
@@ -226,6 +256,11 @@ public class ResearchPaperService {
     return filePath.substring(filePath.lastIndexOf('/') + 1);
   }
 
+  /**
+   * Downloads the file for a research paper. Access is granted only if the caller has an accepted
+   * document request (students/faculty), belongs to the paper's department (DEPARTMENT_ADMIN), or
+   * is a SUPER_ADMIN.
+   */
   public Resource downloadPaper(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper =
         researchPaperRepository
@@ -237,6 +272,11 @@ public class ResearchPaperService {
     return fileStorageService.loadFile(paper.getFilePath());
   }
 
+  /**
+   * Creates a new research paper with an uploaded file. Files are stored under {@code
+   * {year}/{department_slug}/paper_{timestamp}.{ext}}. DEPARTMENT_ADMINs can only create papers for
+   * their own department.
+   */
   @Transactional
   public ResearchPaperDto createPaper(
       PaperCreateRequest metadata, MultipartFile file, CustomUserPrincipal principal) {
@@ -260,9 +300,6 @@ public class ResearchPaperService {
             .orElseThrow(
                 () -> new ApiException(ErrorCode.VALIDATION_ERROR, "Department not found"));
 
-    // Create Entity (temporary, need to save to get ID for file path if we want
-    // paper_{id})
-    // Alternatively, use a UUID or timestamp for uniqueness before DB save
     ResearchPaper paper = new ResearchPaper();
     paper.setTitle(metadata.getTitle());
     paper.setAuthorName(metadata.getAuthorName());
@@ -271,6 +308,8 @@ public class ResearchPaperService {
     LocalDate submissionDate = LocalDate.parse(metadata.getSubmissionDate());
     paper.setSubmissionDate(submissionDate);
     paper.setArchived(false);
+    paper.setStatus(ResearchPaperStatus.ACTIVE);
+    paper.setUploadedBy(principal.getUser());
 
     // We need a path. Pattern: {year}/{dept_slug}/filename
     String year = String.valueOf(submissionDate.getYear());
@@ -281,8 +320,6 @@ public class ResearchPaperService {
             ? originalFilename.substring(originalFilename.lastIndexOf("."))
             : ".pdf";
 
-    // To avoid collisions and because we don't have the ID yet, use timestamp +
-    // random
     String filename = "paper_" + System.currentTimeMillis() + extension;
     String relativePath = String.format("%s/%s/%s", year, deptSlug, filename);
 
@@ -296,6 +333,10 @@ public class ResearchPaperService {
     return researchPaperMapper.toDto(savedPaper);
   }
 
+  /**
+   * Fetches a paper and verifies the caller has admin access to it. DEPARTMENT_ADMINs can only
+   * access papers in their own department.
+   */
   private ResearchPaper getAndVerifyAdminAccess(Integer id, CustomUserPrincipal principal) {
     if (!RoleBasedAccess.isUserAdmin(principal)) {
       throw new ApiException(ErrorCode.ACCESS_DENIED, "Admin privileges required");
@@ -317,6 +358,11 @@ public class ResearchPaperService {
     return paper;
   }
 
+  /**
+   * Enforces download access rules based on role: SUPER_ADMIN has unrestricted access;
+   * DEPARTMENT_ADMIN can download papers in their department; students and faculty must have an
+   * accepted document request for the paper (archived papers are not available to non-admins).
+   */
   private void validateDownloadAccess(ResearchPaper paper, CustomUserPrincipal principal) {
     if (RoleBasedAccess.isUserSuperAdmin(principal)) {
       return;

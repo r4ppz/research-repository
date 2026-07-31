@@ -18,6 +18,10 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
+/**
+ * Ensures the configured MinIO bucket exists when the application starts. Only active when {@code
+ * app.storage.provider=minio}.
+ */
 @ConditionalOnProperty(name = "app.storage.provider", havingValue = "minio")
 public class BucketInitRunner {
 

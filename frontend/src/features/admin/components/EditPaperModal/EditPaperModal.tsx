@@ -19,6 +19,7 @@ import { toastQueue } from "@/components/common/Toast/Toast";
 import { useAuth } from "@/features/auth/context/useAuth";
 import type { ResearchPaper } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
+import { isUserDepartmentAdmin } from "@/util/roleBasedAccess";
 
 interface EditPaperModalProps {
   isOpen: boolean;
@@ -34,7 +35,7 @@ export const EditPaperModal = ({ isOpen, onClose, paper }: EditPaperModalProps) 
   const [departmentId, setDepartmentId] = useState<number | "">("");
   const [submissionDate, setSubmissionDate] = useState("");
 
-  const isDepartmentDisabled = user?.role === "DEPARTMENT_ADMIN";
+  const isDepartmentDisabled = isUserDepartmentAdmin(user);
 
   // Sync state when paper changes or modal opens
   // Defer state updates to the next tick to avoid synchronous setState calls
@@ -81,7 +82,11 @@ export const EditPaperModal = ({ isOpen, onClose, paper }: EditPaperModalProps) 
       {
         onSuccess: () => {
           onClose();
-          toastQueue.add({ variant: "success", title: "Paper Updated", description: "Paper updated successfully." });
+          toastQueue.add({
+            variant: "success",
+            title: "Paper Updated",
+            description: "Paper updated successfully.",
+          });
         },
         onError: (error) => {
           toastQueue.add({
@@ -145,7 +150,9 @@ export const EditPaperModal = ({ isOpen, onClose, paper }: EditPaperModalProps) 
                 placeholder="Select Department"
               >
                 {departments?.map((dept) => (
-                  <SelectItem key={dept.departmentId} id={dept.departmentId.toString()}>{dept.departmentName}</SelectItem>
+                  <SelectItem key={dept.departmentId} id={dept.departmentId.toString()}>
+                    {dept.departmentName}
+                  </SelectItem>
                 )) ?? []}
               </Select>
             </div>

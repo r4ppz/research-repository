@@ -1,12 +1,6 @@
 import axios, { type AxiosError } from "axios";
 
-import {
-  ApiError,
-  type ErrorCode,
-  hasApiErrorStructure,
-  isApiError,
-  type TypedApiError,
-} from "@/types/api";
+import { ApiError, hasApiErrorStructure, isApiError, type TypedApiError } from "@/types/api";
 
 /**
  * Extracts and normalizes API error from various error types
@@ -15,7 +9,7 @@ import {
 export function extractApiError(error: unknown): TypedApiError | ApiError {
   // Direct match
   if (isApiError(error)) {
-    return error as TypedApiError;
+    return error;
   }
 
   // Non-Axios Errors
@@ -36,7 +30,7 @@ export function extractApiError(error: unknown): TypedApiError | ApiError {
   const responseData = axiosError.response?.data;
   if (hasApiErrorStructure(responseData)) {
     return new ApiError(
-      responseData.code as ErrorCode,
+      responseData.code,
       responseData.message,
       responseData.details,
       responseData.traceId,

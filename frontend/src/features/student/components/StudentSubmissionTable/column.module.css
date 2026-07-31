@@ -1,0 +1,15 @@
+.status {
+  font-weight: var(--font-weight-semibold);
+}
+
+.statusActive {
+  color: var(--color-green-500);
+}
+
+.statusRejected {
+  color: var(--color-red-500);
+}
+
+.statusPendingReview {
+  color: var(--color-yellow-500);
+}

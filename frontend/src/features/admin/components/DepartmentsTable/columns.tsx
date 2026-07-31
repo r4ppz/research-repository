@@ -1,9 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Edit, Trash2 } from "lucide-react";
-import style from "../tableActionStyles.module.css";
 import type { AdminDepartment } from "@/api/admin/departments";
-import { Button } from "@/components/common/Button/Button";
-import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
+import { TableActions, TableButton } from "@/components/common/TableActions";
 
 export interface TableMeta {
   onEdit: (department: AdminDepartment) => void;
@@ -17,7 +15,7 @@ const departmentNameColumn = columnHelper.accessor("departmentName", {
   cell: (info) => info.getValue(),
 });
 
-const narrowFitMeta = { className: "narrowFit" } satisfies Record<string, unknown>;
+const narrowFitMeta = { className: "narrowFit" };
 
 const paperCountColumn = columnHelper.accessor("paperCount", {
   header: "Papers",
@@ -40,30 +38,20 @@ const actionsColumn = columnHelper.display({
     const department = row.original;
 
     return (
-      <div className={style.actionButtonContainer}>
-        <Button
-          className={style.actionButton}
-          onClick={() => {
+      <TableActions>
+        <TableButton
+          icon={<Edit />}
+          onPress={() => {
             meta.onEdit(department);
           }}
-        >
-          <Edit className={style.actionIcon} />
-        </Button>
-        <ConfirmDialog
-          title="Delete department?"
-          description={`Are you sure you want to delete "${department.departmentName}"? This action cannot be undone.`}
-          confirmText="Delete"
-          cancelText="Cancel"
-          onConfirm={() => {
+        />
+        <TableButton
+          icon={<Trash2 />}
+          onPress={() => {
             meta.onDelete(department);
           }}
-          trigger={
-            <Button className={style.actionButton}>
-              <Trash2 className={style.actionIcon} />
-            </Button>
-          }
         />
-      </div>
+      </TableActions>
     );
   },
 });

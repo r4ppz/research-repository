@@ -21,6 +21,7 @@ export interface DepartmentUpdateRequest {
 export const getAdminDepartments = async (params?: {
   page?: number;
   size?: number;
+  search?: string;
 }): Promise<Page<AdminDepartment>> => {
   const response = await axiosClient.get<Page<AdminDepartment>>("/api/admin/departments", {
     params,

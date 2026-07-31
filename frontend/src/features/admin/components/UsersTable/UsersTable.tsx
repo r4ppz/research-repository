@@ -1,20 +1,22 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { useAdminUsers } from "../../hooks/useAdminUsers";
+import { Search } from "lucide-react";
+import { useState } from "react";
+import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import { columns, type RowDraft, type TableMeta } from "./columns";
-import { changeUserRole } from "@/api/admin/users";
+import { changeUserRole, getAdminUsers } from "@/api/admin/users";
 import { getDepartments } from "@/api/filter";
 import { DataTable } from "@/components/common/DataTable/DataTable";
+import { Input } from "@/components/common/Input/Input";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import type { User } from "@/types";
+import usersTableStyle from "./UsersTable.module.css";
 
 interface UsersTableProps {
   currentUserId: number | undefined;
-  search?: string;
 }
 
-export function UsersTable({ currentUserId, search }: UsersTableProps) {
+export function UsersTable({ currentUserId }: UsersTableProps) {
   const queryClient = useQueryClient();
   const [drafts, setDrafts] = useState<Record<number, RowDraft>>({});
 
@@ -27,11 +29,9 @@ export function UsersTable({ currentUserId, search }: UsersTableProps) {
     pageSize,
     setPageIndex,
     setPageSize,
-  } = useAdminUsers({ search });
-
-  useEffect(() => {
-    setPageIndex(0);
-  }, [search, setPageIndex]);
+    searchQuery,
+    handleSearchChange,
+  } = usePaginatedSearch("adminUsers", getAdminUsers);
 
   const departmentsQuery = useQuery({
     queryKey: ["departments"],
@@ -97,6 +97,15 @@ export function UsersTable({ currentUserId, search }: UsersTableProps) {
 
   return (
     <>
+      <div className={usersTableStyle.searchWrapper}>
+        <Input
+          icon={Search}
+          type="search"
+          placeholder="Search by email or name..."
+          value={searchQuery}
+          onChange={(e) => handleSearchChange(e.target.value)}
+        />
+      </div>
       <DataTable
         caption="Users"
         columns={columns}
@@ -110,7 +119,7 @@ export function UsersTable({ currentUserId, search }: UsersTableProps) {
           setPageSize(nextState.pageSize);
         }}
         meta={tableMeta}
-        emptyMessage={search ? "No users match your search." : undefined}
+        emptyMessage={searchQuery ? "No users match your search." : undefined}
       />
     </>
   );

@@ -25,6 +25,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+/**
+ * SuperAdmin-only service for user management. All public methods enforce SUPER_ADMIN access.
+ * Role changes are logged and invalidate the target user's refresh tokens.
+ */
 @Service
 public class AdminUserService {
 
@@ -61,6 +65,11 @@ public class AdminUserService {
     return PaginatedResponse.fromPage(userRepository.findAll(pageable), userMapper::toDto);
   }
 
+  /**
+   * Changes a user's role and optionally their department. Logs the change to {@link
+   * RoleChangeLog} and revokes all of the target user's refresh tokens, forcing re-authentication.
+   * A user cannot change their own role.
+   */
   @Transactional
   public UserDto changeRole(
       Integer targetUserId, ChangeRoleRequest request, CustomUserPrincipal principal) {
@@ -115,6 +124,10 @@ public class AdminUserService {
     return userMapper.toDto(savedUser);
   }
 
+  /**
+   * Creates a new user with the specified role. DEPARTMENT_ADMIN requires a departmentId. The
+   * user's display name is derived from the email local-part.
+   */
   @Transactional
   public UserDto createUser(CreateUserRequest request, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);

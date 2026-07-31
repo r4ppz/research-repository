@@ -18,6 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Component
+/**
+ * File storage on the local filesystem. The root directory is configured via {@code
+ * app.storage.upload-dir}. Path traversal attacks are prevented by normalizing and verifying
+ * that resolved paths stay within the root.
+ */
 @ConditionalOnProperty(name = "app.storage.provider", havingValue = "local", matchIfMissing = true)
 public class LocalFileStorageProvider implements FileStorageProvider {
 
@@ -81,7 +86,13 @@ public class LocalFileStorageProvider implements FileStorageProvider {
   @Override
   public void deleteFile(String subPath) {
     try {
-      Path file = rootLocation.resolve(subPath);
+      Path file = rootLocation.resolve(subPath).normalize();
+
+      if (!file.startsWith(rootLocation)) {
+        throw new ApiException(
+            ErrorCode.INVALID_REQUEST, "Cannot delete file outside current directory");
+      }
+
       Files.deleteIfExists(file);
     } catch (IOException e) {
       log.error("Could not delete file: {}", subPath, e);

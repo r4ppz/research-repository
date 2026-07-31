@@ -1,30 +1,25 @@
+import { Search } from "lucide-react";
 import { useState } from "react";
-import { useUserRequests } from "../hooks/useUserRequests";
 import { columns, type TableMeta } from "./columns";
 import { downloadFile } from "@/api/files";
+import { getUserRequests } from "@/api/users";
 import { deleteRequest } from "@/api/request";
 import { DataTable } from "@/components/common/DataTable/DataTable";
+import { Input } from "@/components/common/Input/Input";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
+import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import { triggerBrowserDownload } from "@/util/download";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
+import styles from "./StudentRequestTable.module.css";
 
-export function MyRequestTable() {
+export function StudentRequestTable() {
   const [removalError, setRemovalError] = useState<string | null>(null);
   const [removingIds, setRemovingIds] = useState<Set<number>>(new Set());
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [downloadingIds, setDownloadingIds] = useState<Set<number>>(new Set());
 
-  const {
-    data,
-    pageIndex,
-    pageSize,
-    pageCount,
-    setPageIndex,
-    setPageSize,
-    isLoading,
-    error,
-    refresh,
-  } = useUserRequests();
+  const { data, pageIndex, pageSize, pageCount, setPageIndex, setPageSize, isLoading, error, searchQuery, handleSearchChange, refresh } =
+    usePaginatedSearch("studentRequests", getUserRequests);
 
   const tableMeta: TableMeta = {
     onDownload: (paperId: number) => {
@@ -91,19 +86,31 @@ export function MyRequestTable() {
   }
 
   return (
-    <DataTable
-      caption="My Research Requests"
-      columns={columns}
-      data={data}
-      pageCount={pageCount}
-      pagination={{ pageIndex, pageSize }}
-      onPaginationChange={(updater) => {
-        const nextState =
-          typeof updater === "function" ? updater({ pageIndex, pageSize }) : updater;
-        setPageIndex(nextState.pageIndex);
-        setPageSize(nextState.pageSize);
-      }}
-      meta={{ ...tableMeta, removingIds, downloadingIds }}
-    />
+    <>
+      <div className={styles.searchWrapper}>
+        <Input
+          icon={Search}
+          type="search"
+          placeholder="Search by title, author, or department..."
+          value={searchQuery}
+          onChange={(e) => handleSearchChange(e.target.value)}
+        />
+      </div>
+      <DataTable
+        caption="My Research Requests"
+        columns={columns}
+        data={data}
+        pageCount={pageCount}
+        pagination={{ pageIndex, pageSize }}
+        onPaginationChange={(updater) => {
+          const nextState =
+            typeof updater === "function" ? updater({ pageIndex, pageSize }) : updater;
+          setPageIndex(nextState.pageIndex);
+          setPageSize(nextState.pageSize);
+        }}
+        meta={{ ...tableMeta, removingIds, downloadingIds }}
+        emptyMessage={searchQuery ? "No requests match your search." : undefined}
+      />
+    </>
   );
 }

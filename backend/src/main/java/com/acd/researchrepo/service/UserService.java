@@ -1,7 +1,11 @@
 package com.acd.researchrepo.service;
 
+import com.acd.researchrepo.dto.external.model.UserDto;
 import com.acd.researchrepo.dto.internal.GoogleUserInfo;
 import com.acd.researchrepo.environment.AppProperties;
+import com.acd.researchrepo.exception.ApiException;
+import com.acd.researchrepo.exception.ErrorCode;
+import com.acd.researchrepo.mapper.UserMapper;
 import com.acd.researchrepo.model.User;
 import com.acd.researchrepo.model.UserRole;
 import com.acd.researchrepo.repository.UserRepository;
@@ -10,17 +14,36 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
+/**
+ * Handles user lookup and auto-provisioning via Google OAuth. The first user whose email matches
+ * {@code app.initial-super-admin-email} is granted SUPER_ADMIN role on first login.
+ */
 @Service
 public class UserService {
 
   private final AppProperties appProperties;
   private final UserRepository userRepository;
+  private final UserMapper userMapper;
 
-  public UserService(AppProperties appProperties, UserRepository userRepository) {
+  public UserService(
+      AppProperties appProperties, UserRepository userRepository, UserMapper userMapper) {
     this.appProperties = appProperties;
     this.userRepository = userRepository;
+    this.userMapper = userMapper;
   }
 
+  public UserDto getUserById(Integer userId) {
+    return userRepository
+        .findById(userId)
+        .map(userMapper::toDto)
+        .orElseThrow(() -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "User not found"));
+  }
+
+  /**
+   * Finds an existing user by email or creates a new one from Google profile data. Existing users
+   * have their name and profile picture updated if changed. New users are assigned a role based on
+   * the initial SUPER_ADMIN bootstrap email configuration.
+   */
   @Transactional
   public User findOrCreateUser(GoogleUserInfo googleInfo) {
     String email = normalizeEmail(googleInfo.getEmail());

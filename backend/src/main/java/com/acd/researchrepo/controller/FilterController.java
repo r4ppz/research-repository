@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Provides filter options (years and departments) for the paper browsing UI. Only departments
+ * with at least one research paper are returned.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/filters")

@@ -11,9 +11,10 @@ export default defineConfig({
     }),
   ],
   preview: {
-    allowedHosts: true, // for testing
+    allowedHosts: true, // for testing (change this in prod to actual domain)
   },
   server: {
+    allowedHosts: true, //for testing tunneling with cloudflare tunnel
     proxy: {
       "/api": {
         target: "http://localhost:8080",

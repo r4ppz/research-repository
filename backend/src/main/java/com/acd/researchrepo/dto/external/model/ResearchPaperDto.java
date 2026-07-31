@@ -15,6 +15,8 @@ public class ResearchPaperDto {
   private DepartmentDto department;
   private LocalDate submissionDate;
   private String filePath;
+  private String status;
+  private UserDto uploadedBy;
   private Boolean archived;
   private LocalDateTime archivedAt;
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -64,6 +66,15 @@ public class ResearchPaper {
   @Column(name = "submission_date", nullable = false)
   @NotNull
   private LocalDate submissionDate;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false, length = 50)
+  @NotNull
+  private ResearchPaperStatus status = ResearchPaperStatus.ACTIVE;
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "uploaded_by")
+  private User uploadedBy;
 
   @Column(name = "archived", nullable = false)
   @NotNull

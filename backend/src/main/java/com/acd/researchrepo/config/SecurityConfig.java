@@ -34,6 +34,13 @@ public class SecurityConfig {
   private final List<String> allowedOrigins;
   private final String jwtSecret;
 
+  /**
+   * Creates the security configuration from application settings and authentication components.
+   *
+   * @param appProperties application security and CORS settings
+   * @param customJwtAuthConverter converts JWT claims into authenticated principals
+   * @param restAuthenticationEntryPoint handles authentication failures
+   */
   public SecurityConfig(
       AppProperties appProperties,
       CustomJwtAuthConverter customJwtAuthConverter,
@@ -52,14 +59,20 @@ public class SecurityConfig {
     return NimbusJwtDecoder.withSecretKey(key).macAlgorithm(MacAlgorithm.HS512).build();
   }
 
+  /**
+   * Configures and builds the stateless JWT security filter chain.
+   *
+   * @param http the HTTP security configuration
+   * @return the configured security filter chain
+   * @throws Exception if the security configuration cannot be built
+   */
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .csrf(csrf -> csrf.disable())
         .sessionManagement(sessionManagement())
         .oauth2ResourceServer(oauth2ResourceServer())
-        .exceptionHandling(
-            ex -> ex.authenticationEntryPoint(restAuthenticationEntryPoint))
+        .exceptionHandling(ex -> ex.authenticationEntryPoint(restAuthenticationEntryPoint))
         .authorizeHttpRequests(authorizeHttpRequests());
     return http.build();
   }

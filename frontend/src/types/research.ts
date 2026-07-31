@@ -2,6 +2,8 @@ import type { Department, User } from "./user";
 
 export type RequestStatus = "PENDING" | "ACCEPTED" | "REJECTED";
 
+export type PaperStatus = "ACTIVE" | "PENDING_REVIEW" | "REJECTED";
+
 export interface ResearchPaper {
   paperId: number;
   title: string;
@@ -10,6 +12,8 @@ export interface ResearchPaper {
   department: Department;
   submissionDate: string; // YYYY-MM-DD
   filePath?: string; // relative file path, e.g. '2023/dept_cs/paper_123.pdf'
+  status?: PaperStatus;
+  uploadedBy?: User | null;
   archived?: boolean;
   archivedAt?: string | null; // ISO datetime when archived (optional)
 }

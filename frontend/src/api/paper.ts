@@ -1,3 +1,4 @@
+import type { PaperMetadata } from "@/api/admin/papers";
 import { axiosClient } from "@/api/axiosClient";
 import type { DocumentRequest, Page, ResearchPaper } from "@/types";
 
@@ -29,4 +30,53 @@ export const getMyPaperRequest = async (paperId: number): Promise<DocumentReques
     `/api/papers/${paperId.toString()}/my-request`,
   );
   return response.data;
+};
+
+export const submitPaper = async (metadata: PaperMetadata, file: File): Promise<ResearchPaper> => {
+  const formData = new FormData();
+  formData.append("metadata", JSON.stringify(metadata));
+  formData.append("file", file);
+
+  const response = await axiosClient.post<ResearchPaper>("/api/submissions", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
+
+export const getMySubmissions = async (
+  params: GetPapersParams = {},
+): Promise<Page<ResearchPaper>> => {
+  const response = await axiosClient.get<Page<ResearchPaper>>("/api/submissions", {
+    params,
+  });
+  return response.data;
+};
+
+export const updateSubmission = async (
+  id: number,
+  metadata: PaperMetadata,
+  file?: File | null,
+): Promise<ResearchPaper> => {
+  const formData = new FormData();
+  formData.append("metadata", JSON.stringify(metadata));
+  if (file) {
+    formData.append("file", file);
+  }
+
+  const response = await axiosClient.put<ResearchPaper>(
+    `/api/submissions/${id.toString()}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
+  return response.data;
+};
+
+export const deleteSubmission = async (id: number): Promise<void> => {
+  await axiosClient.delete(`/api/submissions/${id.toString()}`);
 };
