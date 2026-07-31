@@ -14,5 +14,5 @@ export const markAllRead = async (): Promise<void> => {
 };
 
 export const markAsRead = async (notificationId: number): Promise<void> => {
-  await axiosClient.put(`/api/notifications/${notificationId}/read`);
+  await axiosClient.put(`/api/notifications/${String(notificationId)}/read`);
 };

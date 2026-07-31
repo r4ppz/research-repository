@@ -14,7 +14,7 @@ export const NotificationBell = () => {
       type="button"
       className={style.bellButton}
       onClick={() => void navigate("/notifications")}
-      aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}
+      aria-label={`Notifications${unreadCount > 0 ? ` (${String(unreadCount)} unread)` : ""}`}
     >
       <Bell className={style.bellIcon} />
       {unreadCount > 0 && (
