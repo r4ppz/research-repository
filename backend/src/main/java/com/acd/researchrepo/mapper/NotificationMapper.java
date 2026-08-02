@@ -1,6 +1,6 @@
 package com.acd.researchrepo.mapper;
 
-import com.acd.researchrepo.dto.external.notifications.NotificationDto;
+import com.acd.researchrepo.dto.external.notifications.NotificationResponse;
 import com.acd.researchrepo.model.Notification;
 import java.time.ZoneOffset;
 import org.springframework.stereotype.Component;
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class NotificationMapper {
 
-  public NotificationDto toDto(Notification notification) {
+  public NotificationResponse toDto(Notification notification) {
     if (notification == null) return null;
 
-    return NotificationDto.builder()
+    return NotificationResponse.builder()
         .notificationId(notification.getNotificationId())
         .message(notification.getMessage())
         .type(notification.getType())

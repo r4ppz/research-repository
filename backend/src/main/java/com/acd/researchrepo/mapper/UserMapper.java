@@ -1,6 +1,6 @@
 package com.acd.researchrepo.mapper;
 
-import com.acd.researchrepo.dto.external.model.UserDto;
+import com.acd.researchrepo.dto.external.users.UserResponse;
 import com.acd.researchrepo.model.User;
 import com.acd.researchrepo.model.UserRole;
 import org.springframework.stereotype.Component;
@@ -14,13 +14,13 @@ public class UserMapper {
     this.departmentMapper = departmentMapper;
   }
 
-  public UserDto toDto(User user) {
+  public UserResponse toDto(User user) {
     if (user == null) {
       return null;
     }
 
-    UserDto.UserDtoBuilder builder =
-        UserDto.builder()
+    UserResponse.UserResponseBuilder builder =
+        UserResponse.builder()
             .userId(user.getUserId())
             .email(user.getEmail())
             .fullName(user.getFullName())

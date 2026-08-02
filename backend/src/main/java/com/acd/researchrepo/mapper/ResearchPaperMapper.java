@@ -1,6 +1,6 @@
 package com.acd.researchrepo.mapper;
 
-import com.acd.researchrepo.dto.external.model.ResearchPaperDto;
+import com.acd.researchrepo.dto.external.papers.PaperResponse;
 import com.acd.researchrepo.model.ResearchPaper;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +15,12 @@ public class ResearchPaperMapper {
     this.userMapper = userMapper;
   }
 
-  public ResearchPaperDto toDto(ResearchPaper paper) {
+  public PaperResponse toDto(ResearchPaper paper) {
     if (paper == null) {
       return null;
     }
 
-    return ResearchPaperDto.builder()
+    return PaperResponse.builder()
         .paperId(paper.getPaperId())
         .title(paper.getTitle())
         .authorName(paper.getAuthorName())
