@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PaperUserRequestResponse {
+public class PaperRequestStatusResponse {
   private Integer requestId;
   private RequestStatus status;
   private LocalDateTime createdAt;

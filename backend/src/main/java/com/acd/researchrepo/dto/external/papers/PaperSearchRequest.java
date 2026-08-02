@@ -19,7 +19,7 @@ import org.springframework.data.domain.Sort;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ResearchPaperSearchRequest extends PaginationRequest {
+public class PaperSearchRequest extends PaginationRequest {
 
   private String search;
   private List<Integer> departmentId;

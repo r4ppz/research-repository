@@ -1,4 +1,4 @@
-package com.acd.researchrepo.dto.external.papers;
+package com.acd.researchrepo.dto.external.common;
 
 import java.util.List;
 import java.util.function.Function;
