@@ -99,4 +99,27 @@ public class LocalStorageProvider implements FileStorageProvider {
       throw new ApiException(ErrorCode.FILE_STORAGE_ERROR, "Could not delete file");
     }
   }
+
+  @Override
+  public void moveFile(String source, String target) {
+    try {
+      Path src = rootLocation.resolve(source).normalize();
+      Path dst = rootLocation.resolve(target).normalize();
+
+      if (!src.startsWith(rootLocation) || !dst.startsWith(rootLocation)) {
+        throw new ApiException(
+            ErrorCode.INVALID_REQUEST, "Cannot move file outside current directory");
+      }
+
+      if (!Files.exists(src)) {
+        throw new ApiException(ErrorCode.FILE_NOT_FOUND, "File not found");
+      }
+
+      Files.createDirectories(dst.getParent());
+      Files.move(src, dst, StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+      log.error("Could not move file: {} -> {}", source, target, e);
+      throw new ApiException(ErrorCode.FILE_STORAGE_ERROR, "Could not move file");
+    }
+  }
 }

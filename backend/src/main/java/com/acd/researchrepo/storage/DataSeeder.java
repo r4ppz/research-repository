@@ -66,14 +66,15 @@ public class DataSeeder implements CommandLineRunner {
         continue;
       }
 
-      // Create paper entity and persist to PostgreSQL
+      // Create paper entity and persist to PostgreSQL. Storage path is derived from the
+      // department's stable slug so it always matches the folder scheme used at runtime.
       ResearchPaper paper = new ResearchPaper();
       paper.setTitle(seed.title());
       paper.setAuthorName(seed.authorName());
       paper.setAbstractText(seed.abstractText());
-      paper.setFilePath(seed.filePath());
-      String seedPath = seed.filePath();
-      paper.setOriginalFileName(seedPath.substring(seedPath.lastIndexOf('/') + 1));
+      String filePath = "files/" + dept.getSlug() + "/" + seed.fileName();
+      paper.setFilePath(filePath);
+      paper.setOriginalFileName(seed.fileName());
       paper.setDepartment(dept);
       paper.setSubmissionDate(seed.submissionDate());
       paper.setArchived(false);
@@ -82,8 +83,7 @@ public class DataSeeder implements CommandLineRunner {
 
       // Generate a real (minimal) PDF and store it via the active storage provider
       byte[] pdfBytes = generatePdf(seed.title(), seed.authorName(), seed.abstractText());
-      storageProvider.saveFile(
-          new ByteArrayMultipartFile(pdfBytes, seed.filePath()), seed.filePath());
+      storageProvider.saveFile(new ByteArrayMultipartFile(pdfBytes, filePath), filePath);
 
       papersCreated++;
     }
@@ -226,7 +226,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " specificity of 91.7%, outperforming traditional computer-aided diagnosis"
                   + " systems. The model utilizes transfer learning from a ResNet-50 backbone with"
                   + " custom attention layers to focus on regions of clinical interest.",
-              "files/it/medical_image_dl.pdf",
+              "medical_image_dl.pdf",
               "Information Technology",
               LocalDate.of(2025, 3, 15)),
           new SeedPaper(
@@ -238,7 +238,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " data without relying on centralized providers. The system was evaluated"
                   + " across 500 test users, demonstrating a 40% reduction in authentication time"
                   + " compared to traditional OAuth flows.",
-              "files/it/blockchain_identity.pdf",
+              "blockchain_identity.pdf",
               "Information Technology",
               LocalDate.of(2025, 1, 20)),
           new SeedPaper(
@@ -249,7 +249,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " algorithm that balances computational load between edge nodes and cloud"
                   + " servers. Simulation results show a 35% reduction in response time and a 28%"
                   + " decrease in energy consumption compared to cloud-only processing.",
-              "files/it/edge_iot_optimization.pdf",
+              "edge_iot_optimization.pdf",
               "Information Technology",
               LocalDate.of(2024, 11, 8)),
           new SeedPaper(
@@ -260,7 +260,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " XGBoost, and neural networks for real-time intrusion detection. Using the"
                   + " CICIDS2017 dataset, the ensemble achieves 97.8% accuracy with a false"
                   + " positive rate of 1.2%, significantly outperforming individual classifiers.",
-              "files/it/cybersecurity_ml.pdf",
+              "cybersecurity_ml.pdf",
               "Information Technology",
               LocalDate.of(2025, 2, 10)),
           // Teacher Education
@@ -273,7 +273,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " 22% improvement in problem-solving skills compared to the control group."
                   + " Student engagement, measured through classroom observation, also increased"
                   + " significantly.",
-              "files/teacher_ed/gamification_math.pdf",
+              "gamification_math.pdf",
               "Teacher Education",
               LocalDate.of(2024, 9, 12)),
           new SeedPaper(
@@ -285,7 +285,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " strategies that improve academic outcomes. Results indicate that flexible"
                   + " grouping and multisensory teaching materials yield the highest improvement in"
                   + " reading comprehension scores.",
-              "files/teacher_ed/inclusive_education.pdf",
+              "inclusive_education.pdf",
               "Teacher Education",
               LocalDate.of(2024, 8, 5)),
           new SeedPaper(
@@ -297,7 +297,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " received hardware, only 40% have adequate internet connectivity. Teacher"
                   + " training emerged as the strongest predictor of successful technology"
                   + " integration.",
-              "files/teacher_ed/edtech_philippines.pdf",
+              "edtech_philippines.pdf",
               "Teacher Education",
               LocalDate.of(2025, 1, 28)),
           new SeedPaper(
@@ -309,7 +309,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " students. Project-based assessments demonstrated the highest construct"
                   + " validity, though automated quizzes proved most efficient for large class"
                   + " sizes.",
-              "files/teacher_ed/online_assessment.pdf",
+              "online_assessment.pdf",
               "Teacher Education",
               LocalDate.of(2024, 10, 15)),
           // Business Administration
@@ -322,7 +322,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " Results indicate that cloud computing adoption and social media marketing"
                   + " have the strongest positive impact on revenue growth, with digitally mature"
                   + " firms outperforming peers by 35%.",
-              "files/business_admin/digital_transformation_sme.pdf",
+              "digital_transformation_sme.pdf",
               "Business Administration",
               LocalDate.of(2025, 2, 20)),
           new SeedPaper(
@@ -334,7 +334,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " recommendations and one-click checkout significantly reduce cart abandonment"
                   + " rates. Trust in payment security emerged as the primary factor influencing"
                   + " repeat purchases.",
-              "files/business_admin/mobile_commerce_behavior.pdf",
+              "mobile_commerce_behavior.pdf",
               "Business Administration",
               LocalDate.of(2024, 12, 3)),
           new SeedPaper(
@@ -345,7 +345,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " Asia-Pacific region. Findings highlight that supplier diversification, safety"
                   + " stock optimization, and digital supply chain visibility are the most"
                   + " effective strategies for mitigating disruption impacts.",
-              "files/business_admin/supply_chain_resilience.pdf",
+              "supply_chain_resilience.pdf",
               "Business Administration",
               LocalDate.of(2024, 7, 18)),
           new SeedPaper(
@@ -356,7 +356,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " that only 35% of respondents demonstrate adequate financial literacy. Those"
                   + " with higher literacy scores are significantly more likely to invest in"
                   + " diversified portfolios and less likely to engage in speculative trading.",
-              "files/business_admin/financial_literacy.pdf",
+              "financial_literacy.pdf",
               "Business Administration",
               LocalDate.of(2025, 3, 1)),
           // Hospitality Management
@@ -369,7 +369,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " identified include community-based tourism models, visitor caps, and plastic"
                   + " waste reduction programs. Economic benefits to local communities were found"
                   + " to be the strongest motivator for adoption.",
-              "files/hospitality/sustainable_tourism_asean.pdf",
+              "sustainable_tourism_asean.pdf",
               "Hospitality Management",
               LocalDate.of(2024, 11, 22)),
           new SeedPaper(
@@ -380,7 +380,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " hospitality industry, 350 guest responses were analyzed. Responsiveness and"
                   + " empathy were identified as the strongest predictors of overall satisfaction,"
                   + " exceeding the importance of tangible amenities.",
-              "files/hospitality/boutique_hotel_quality.pdf",
+              "boutique_hotel_quality.pdf",
               "Hospitality Management",
               LocalDate.of(2025, 1, 14)),
           new SeedPaper(
@@ -391,7 +391,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " restaurants. Results indicate that while 85% of establishments have basic"
                   + " hygiene protocols, only 45% maintain proper temperature documentation."
                   + " Training frequency correlates strongly with overall compliance scores.",
-              "files/hospitality/food_safety_dining.pdf",
+              "food_safety_dining.pdf",
               "Hospitality Management",
               LocalDate.of(2024, 9, 30)),
           new SeedPaper(
@@ -403,7 +403,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " appeal and perceived authenticity of user posts were found to be more"
                   + " influential than traditional travel advertisements, particularly among"
                   + " Millennial and Gen Z respondents.",
-              "files/hospitality/social_media_travel.pdf",
+              "social_media_travel.pdf",
               "Hospitality Management",
               LocalDate.of(2025, 2, 5)),
           // Social Work
@@ -415,7 +415,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " program implemented across 10 barangays. The program trained community health"
                   + " workers to deliver basic psychosocial support. Results show a 30% reduction"
                   + " in self-reported depression symptoms among participants over six months.",
-              "files/social_work/community_mental_health.pdf",
+              "community_mental_health.pdf",
               "Social Work",
               LocalDate.of(2024, 10, 8)),
           new SeedPaper(
@@ -427,7 +427,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " insufficient staffing ratios, limited referral networks, and inconsistent"
                   + " case documentation. Recommendations include standardized training and"
                   + " improved inter-agency coordination.",
-              "files/social_work/child_welfare_policy.pdf",
+              "child_welfare_policy.pdf",
               "Social Work",
               LocalDate.of(2024, 8, 20)),
           new SeedPaper(
@@ -438,7 +438,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " experiences of 25 social workers in post-disaster settings. Findings"
                   + " highlight the importance of pre-disaster community organizing, psychological"
                   + " first aid training, and culturally sensitive relief distribution protocols.",
-              "files/social_work/disaster_response_sw.pdf",
+              "disaster_response_sw.pdf",
               "Social Work",
               LocalDate.of(2025, 1, 30)),
           new SeedPaper(
@@ -450,7 +450,7 @@ public class DataSeeder implements CommandLineRunner {
                   + " workers, gaps in healthcare access, pension distribution, and senior citizen"
                   + " center utilization were identified. A community-based integrated care model"
                   + " is proposed.",
-              "files/social_work/geriatric_services.pdf",
+              "geriatric_services.pdf",
               "Social Work",
               LocalDate.of(2024, 12, 12)));
 
@@ -458,7 +458,7 @@ public class DataSeeder implements CommandLineRunner {
       String title,
       String authorName,
       String abstractText,
-      String filePath,
+      String fileName,
       String departmentName,
       LocalDate submissionDate) {}
 }

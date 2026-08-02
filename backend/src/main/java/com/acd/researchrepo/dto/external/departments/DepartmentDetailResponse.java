@@ -9,6 +9,7 @@ import lombok.Getter;
 public class DepartmentDetailResponse {
   private Integer departmentId;
   private String departmentName;
+  private String slug;
   private Long paperCount;
   private Long userCount;
   private LocalDateTime createdAt;

@@ -10,4 +10,5 @@ import lombok.extern.jackson.Jacksonized;
 public class DepartmentResponse {
   private final Integer departmentId;
   private final String departmentName;
+  private final String slug;
 }

@@ -92,7 +92,8 @@ public class SubmissionService {
     paper.setStatus(ResearchPaperStatus.PENDING_REVIEW);
     paper.setUploadedBy(principal.getUser());
 
-    String relativePath = ResearchPaperService.buildFilePath();
+    String relativePath =
+        ResearchPaperService.buildFilePath(department, file.getOriginalFilename());
     String originalFileName = safeOriginalFileName(file.getOriginalFilename());
 
     fileStorageService.saveFile(file, relativePath);
@@ -181,11 +182,22 @@ public class SubmissionService {
               .findById(metadata.getDepartmentId())
               .orElseThrow(
                   () -> new ApiException(ErrorCode.VALIDATION_ERROR, "Department not found"));
+
+      // Move the existing file into the new department's folder unless a replacement file is
+      // being uploaded (that branch saves the new file under the new department path and deletes
+      // the old one).
+      if (file == null || file.isEmpty()) {
+        String oldPath = paper.getFilePath();
+        String newPath = ResearchPaperService.relocateFilePath(oldPath, department);
+        fileStorageService.moveFile(oldPath, newPath);
+        paper.setFilePath(newPath);
+      }
       paper.setDepartment(department);
     }
 
     if (file != null && !file.isEmpty()) {
-      String relativePath = ResearchPaperService.buildFilePath();
+      String relativePath =
+          ResearchPaperService.buildFilePath(paper.getDepartment(), file.getOriginalFilename());
 
       String oldPath = paper.getFilePath();
       fileStorageService.saveFile(file, relativePath);

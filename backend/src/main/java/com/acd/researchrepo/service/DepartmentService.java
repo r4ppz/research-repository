@@ -98,11 +98,18 @@ public class DepartmentService {
   public DepartmentDetailResponse createDepartment(
       DepartmentCreateRequest request, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
-    if (departmentRepository.existsByDepartmentName(request.getDepartmentName().trim())) {
+    String name = request.getDepartmentName().trim();
+    if (departmentRepository.existsByDepartmentName(name)) {
       throw new ApiException(ErrorCode.DUPLICATE_REQUEST, "Department name already exists");
     }
+    String slug = generateSlug(name);
+    if (departmentRepository.existsBySlug(slug)) {
+      throw new ApiException(
+          ErrorCode.DUPLICATE_REQUEST, "A department with a similar name already exists");
+    }
     Department department = new Department();
-    department.setDepartmentName(request.getDepartmentName().trim());
+    department.setDepartmentName(name);
+    department.setSlug(slug);
     Department saved = departmentRepository.save(department);
     return departmentMapper.toAdminDto(
         saved,
@@ -110,6 +117,16 @@ public class DepartmentService {
         userRepository.countByDepartmentDepartmentId(saved.getDepartmentId()));
   }
 
+  /**
+   * Updates a department's display name. The storage {@code slug} is deliberately left unchanged
+   * on rename so existing file folders stay stable (known limitation: renaming a department does
+   * not move its stored files; a new folder is only created for newly uploaded papers).
+   *
+   * @param id the ID of the department to update
+   * @param request the updated name
+   * @param principal the acting SUPER_ADMIN
+   * @throws ApiException if unauthorized, the department is not found, or the name is duplicated
+   */
   public DepartmentDetailResponse updateDepartment(
       Integer id, DepartmentUpdateRequest request, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
@@ -167,5 +184,10 @@ public class DepartmentService {
     if (!RoleBasedAccess.isUserSuperAdmin(principal)) {
       throw new ApiException(ErrorCode.ACCESS_DENIED, "Access denied");
     }
+  }
+
+  /** Derives a filesystem-safe folder slug from a department name. */
+  private static String generateSlug(String departmentName) {
+    return departmentName.toLowerCase().replaceAll("[^a-z0-9]+", "_").replaceAll("^_+|_+$", "");
   }
 }

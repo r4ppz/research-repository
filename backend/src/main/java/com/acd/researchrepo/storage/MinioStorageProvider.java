@@ -2,6 +2,8 @@ package com.acd.researchrepo.storage;
 
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
+import io.minio.CopyObjectArgs;
+import io.minio.CopySource;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -77,6 +79,24 @@ public class MinioStorageProvider implements FileStorageProvider {
     } catch (MinioException | IOException | InvalidKeyException | NoSuchAlgorithmException e) {
       log.error("Could not delete file from MinIO: {}", subPath, e);
       throw new ApiException(ErrorCode.FILE_STORAGE_ERROR, "Could not delete file");
+    }
+  }
+
+  @Override
+  public void moveFile(String source, String target) {
+    try {
+      CopyObjectArgs copyArgs =
+          CopyObjectArgs.builder()
+              .bucket(bucket)
+              .object(target)
+              .source(CopySource.builder().bucket(bucket).object(source).build())
+              .build();
+
+      minioClient.copyObject(copyArgs);
+      minioClient.removeObject(RemoveObjectArgs.builder().bucket(bucket).object(source).build());
+    } catch (MinioException | IOException | InvalidKeyException | NoSuchAlgorithmException e) {
+      log.error("Could not move file in MinIO: {} -> {}", source, target, e);
+      throw new ApiException(ErrorCode.FILE_STORAGE_ERROR, "Could not move file");
     }
   }
 }

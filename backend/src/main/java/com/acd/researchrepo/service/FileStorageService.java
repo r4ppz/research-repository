@@ -52,6 +52,10 @@ public class FileStorageService {
     storageProvider.deleteFile(subPath);
   }
 
+  public void moveFile(String source, String target) {
+    storageProvider.moveFile(source, target);
+  }
+
   private void validateFile(MultipartFile file) {
     if (file.isEmpty()) {
       throw new ApiException(ErrorCode.VALIDATION_ERROR, "File is empty");

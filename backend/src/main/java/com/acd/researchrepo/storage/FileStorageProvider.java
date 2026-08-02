@@ -22,4 +22,10 @@ public interface FileStorageProvider {
 
   /** Deletes the file at the given relative path. No-op if the file does not exist. */
   void deleteFile(String subPath);
+
+  /**
+   * Moves a file from {@code source} to {@code target}. If the move fails at any point, an
+   * exception is thrown and the source file is left intact.
+   */
+  void moveFile(String source, String target);
 }

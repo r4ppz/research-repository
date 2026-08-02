@@ -23,6 +23,7 @@ public class DepartmentMapper {
     return DepartmentResponse.builder()
         .departmentId(department.getDepartmentId())
         .departmentName(department.getDepartmentName())
+        .slug(department.getSlug())
         .build();
   }
 
@@ -39,6 +40,7 @@ public class DepartmentMapper {
     return DepartmentDetailResponse.builder()
         .departmentId(department.getDepartmentId())
         .departmentName(department.getDepartmentName())
+        .slug(department.getSlug())
         .paperCount(paperCount)
         .userCount(userCount)
         .createdAt(department.getCreatedAt())

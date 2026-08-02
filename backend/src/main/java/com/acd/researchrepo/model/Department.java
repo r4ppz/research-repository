@@ -36,6 +36,12 @@ public class Department {
   @Size(max = 64)
   private String departmentName;
 
+  /** Stable, filesystem-safe folder slug used in storage paths (e.g. {@code it}). */
+  @Column(name = "slug", unique = true, nullable = false, length = 64)
+  @NotNull
+  @Size(max = 64)
+  private String slug;
+
   @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<User> users;
 

@@ -9,6 +9,7 @@ import com.acd.researchrepo.dto.external.papers.PaperUpdateRequest;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.mapper.ResearchPaperMapper;
+import com.acd.researchrepo.model.Department;
 import com.acd.researchrepo.model.DocumentRequest;
 import com.acd.researchrepo.model.RequestStatus;
 import com.acd.researchrepo.model.ResearchPaper;
@@ -218,6 +219,14 @@ public class ResearchPaperService {
               .findById(metadata.getDepartmentId())
               .orElseThrow(
                   () -> new ApiException(ErrorCode.VALIDATION_ERROR, "Department not found"));
+
+      // Move the physical file into the new department's folder so the storage path stays in
+      // sync with the department. On failure an exception propagates and the transaction rolls
+      // back, leaving the old file untouched.
+      String oldPath = paper.getFilePath();
+      String newPath = relocateFilePath(oldPath, department);
+      fileStorageService.moveFile(oldPath, newPath);
+      paper.setFilePath(newPath);
       paper.setDepartment(department);
     }
 
@@ -294,7 +303,8 @@ public class ResearchPaperService {
 
   /**
    * Creates a new research paper with an uploaded file. Files are stored under {@code
-   * papers/{random_id}}. DEPARTMENT_ADMINs can only create papers for their own department.
+   * files/{department_slug}/{random_id}.{ext}}. DEPARTMENT_ADMINs can only create papers for
+   * their own department.
    *
    * @param metadata the paper metadata
    * @param file the uploaded file
@@ -336,8 +346,8 @@ public class ResearchPaperService {
     paper.setStatus(ResearchPaperStatus.ACTIVE);
     paper.setUploadedBy(principal.getUser());
 
-    // We need a path. Pattern: papers/{random_id}
-    String relativePath = buildFilePath();
+    // We need a path. Pattern: files/{department_slug}/{random_id}.{ext}
+    String relativePath = buildFilePath(department, file.getOriginalFilename());
 
     // Save file
     fileStorageService.saveFile(file, relativePath);
@@ -350,10 +360,35 @@ public class ResearchPaperService {
     return researchPaperMapper.toDto(savedPaper);
   }
 
-  static String buildFilePath() {
+  static String buildFilePath(Department department, String originalFilename) {
     byte[] bytes = new byte[8];
     new SecureRandom().nextBytes(bytes);
-    return "papers/" + HexFormat.of().formatHex(bytes);
+    return "files/"
+        + department.getSlug()
+        + "/"
+        + HexFormat.of().formatHex(bytes)
+        + safeExtension(originalFilename);
+  }
+
+  /**
+   * Returns the storage path the given {@code oldPath} would have after the paper is moved to
+   * {@code newDepartment}. The basename is preserved so only the department segment changes.
+   */
+  static String relocateFilePath(String oldPath, Department newDepartment) {
+    String basename = oldPath.substring(oldPath.lastIndexOf('/') + 1);
+    return "files/" + newDepartment.getSlug() + "/" + basename;
+  }
+
+  /** Returns a safe, allowlisted extension for the storage path — never derived from user input. */
+  private static String safeExtension(String originalFilename) {
+    String lower = originalFilename == null ? "" : originalFilename.toLowerCase();
+    if (lower.endsWith(".doc")) {
+      return ".doc";
+    }
+    if (lower.endsWith(".docx")) {
+      return ".docx";
+    }
+    return ".pdf";
   }
 
   private static String safeOriginalFileName(String originalFilename) {
