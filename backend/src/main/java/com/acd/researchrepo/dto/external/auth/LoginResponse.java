@@ -1,12 +1,12 @@
 package com.acd.researchrepo.dto.external.auth;
 
-import com.acd.researchrepo.dto.external.model.UserDto;
+import com.acd.researchrepo.dto.external.users.UserResponse;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class AuthResponse {
+public class LoginResponse {
   private final String accessToken;
-  private final UserDto user;
+  private final UserResponse user;
 }
