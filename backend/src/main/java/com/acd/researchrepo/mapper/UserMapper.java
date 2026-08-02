@@ -5,6 +5,7 @@ import com.acd.researchrepo.model.User;
 import com.acd.researchrepo.model.UserRole;
 import org.springframework.stereotype.Component;
 
+/** Maps {@link User} entities to their API representations. */
 @Component
 public class UserMapper {
 
@@ -14,6 +15,12 @@ public class UserMapper {
     this.departmentMapper = departmentMapper;
   }
 
+  /**
+   * Maps a user entity to a {@link UserResponse}, including the department for DEPARTMENT_ADMINs.
+   *
+   * @param user the user entity, or null
+   * @return the mapped response, or null if the input is null
+   */
   public UserResponse toDto(User user) {
     if (user == null) {
       return null;

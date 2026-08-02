@@ -167,6 +167,10 @@ public class ResearchPaperService {
   /**
    * Archives a research paper. As a side effect, all active (PENDING or ACCEPTED) document
    * requests for this paper are rejected with reason "Paper archived".
+   *
+   * @param id the ID of the paper to archive
+   * @param principal the acting admin
+   * @throws ApiException if unauthorized or the paper is not found
    */
   @Transactional
   public void archivePaper(Integer id, CustomUserPrincipal principal) {
@@ -244,6 +248,11 @@ public class ResearchPaperService {
   /**
    * Returns the filename (without path) of a research paper file, after verifying the caller has
    * download access.
+   *
+   * @param paperId the ID of the paper
+   * @param principal the requesting user
+   * @return the bare filename of the paper's stored file
+   * @throws ApiException if unauthorized or the paper is not found
    */
   public String getPaperFileName(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper =
@@ -261,6 +270,11 @@ public class ResearchPaperService {
    * Downloads the file for a research paper. Access is granted only if the caller has an accepted
    * document request (students/faculty), belongs to the paper's department (DEPARTMENT_ADMIN), or
    * is a SUPER_ADMIN.
+   *
+   * @param paperId the ID of the paper
+   * @param principal the requesting user
+   * @return the paper's file as a loadable {@link Resource}
+   * @throws ApiException if unauthorized or the paper/file is not found
    */
   public Resource downloadPaper(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper =
@@ -277,6 +291,12 @@ public class ResearchPaperService {
    * Creates a new research paper with an uploaded file. Files are stored under {@code
    * {year}/{department_slug}/paper_{timestamp}.{ext}}. DEPARTMENT_ADMINs can only create papers for
    * their own department.
+   *
+   * @param metadata the paper metadata
+   * @param file the uploaded file
+   * @param principal the acting admin
+   * @return the created paper
+   * @throws ApiException if unauthorized, the department is missing, or the file cannot be saved
    */
   @Transactional
   public PaperResponse createPaper(

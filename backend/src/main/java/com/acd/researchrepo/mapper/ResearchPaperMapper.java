@@ -4,6 +4,7 @@ import com.acd.researchrepo.dto.external.papers.PaperResponse;
 import com.acd.researchrepo.model.ResearchPaper;
 import org.springframework.stereotype.Component;
 
+/** Maps {@link ResearchPaper} entities to their API representations. */
 @Component
 public class ResearchPaperMapper {
 
@@ -15,6 +16,12 @@ public class ResearchPaperMapper {
     this.userMapper = userMapper;
   }
 
+  /**
+   * Maps a paper entity to a {@link PaperResponse}, including department and uploader.
+   *
+   * @param paper the paper entity, or null
+   * @return the mapped response, or null if the input is null
+   */
   public PaperResponse toDto(ResearchPaper paper) {
     if (paper == null) {
       return null;

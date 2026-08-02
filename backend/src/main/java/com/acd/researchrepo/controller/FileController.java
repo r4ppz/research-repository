@@ -29,6 +29,15 @@ public class FileController {
     this.researchPaperService = researchPaperService;
   }
 
+  /**
+   * Streams a research paper file as an attachment (download) or inline (browser preview), after
+   * verifying download access.
+   *
+   * @param paperId the ID of the paper
+   * @param view if true, serve inline; otherwise force download
+   * @param userPrincipal the requesting user
+   * @return the file resource with content disposition
+   */
   @GetMapping("/{paperId}")
   @Operation(summary = "Download or view a research paper file")
   public ResponseEntity<Resource> downloadFile(

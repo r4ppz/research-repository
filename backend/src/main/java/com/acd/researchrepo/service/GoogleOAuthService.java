@@ -64,6 +64,11 @@ public class GoogleOAuthService {
   /**
    * Exchanges a Google authorization code for a token, verifies the ID token, and extracts user
    * profile data. Enforces email domain restrictions based on the active environment profile.
+   *
+   * @param authorizationCode the Google authorization code
+   * @return the verified user profile
+   * @throws ApiException if the code is invalid, the ID token cannot be verified, or the email
+   *     domain is not allowed
    */
   public GoogleUserProfile validateCodeAndGetUserInfo(String authorizationCode) {
     GoogleTokenResponse tokenResponse = exchangeAuthorizationCode(authorizationCode);

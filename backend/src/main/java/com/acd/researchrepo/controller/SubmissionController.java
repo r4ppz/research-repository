@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+/** REST endpoints for students to submit, list, update, and delete their paper submissions. */
 @Slf4j
 @RestController
 @RequestMapping("/api/submissions")
@@ -37,6 +38,14 @@ public class SubmissionController {
     this.objectMapper = objectMapper;
   }
 
+  /**
+   * Submits a new paper (multipart: metadata JSON + file). Creates a PENDING_REVIEW submission.
+   *
+   * @param metadataJson the paper metadata as JSON
+   * @param file the uploaded file
+   * @param principal the submitting student
+   * @return the created submission with 201
+   */
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<PaperResponse> submitPaper(
       @RequestPart("metadata") String metadataJson,
@@ -52,6 +61,13 @@ public class SubmissionController {
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
+  /**
+   * Lists the caller's own submissions.
+   *
+   * @param request the search/pagination parameters
+   * @param principal the requesting user
+   * @return a paginated list of the caller's submissions
+   */
   @GetMapping
   public ResponseEntity<PaginatedResponse<PaperResponse>> getMySubmissions(
       @Valid PaperSearchRequest request, @AuthenticationPrincipal CustomUserPrincipal principal) {
@@ -60,6 +76,15 @@ public class SubmissionController {
     return ResponseEntity.ok(submissionService.getMySubmissions(request, principal));
   }
 
+  /**
+   * Updates a PENDING_REVIEW submission. The file is optional; omit it to keep the current file.
+   *
+   * @param id the submission ID
+   * @param metadataJson the updated metadata as JSON
+   * @param file the replacement file, or null
+   * @param principal the submitting student
+   * @return the updated submission
+   */
   @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<PaperResponse> updateSubmission(
       @PathVariable Integer id,
@@ -76,6 +101,13 @@ public class SubmissionController {
     return ResponseEntity.ok(response);
   }
 
+  /**
+   * Deletes a PENDING_REVIEW submission and its stored file.
+   *
+   * @param id the submission ID
+   * @param principal the submitting student
+   * @return 204 No Content
+   */
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteSubmission(
       @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal principal) {

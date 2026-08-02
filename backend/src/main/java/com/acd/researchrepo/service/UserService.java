@@ -32,6 +32,13 @@ public class UserService {
     this.userMapper = userMapper;
   }
 
+  /**
+   * Returns the public profile of a user.
+   *
+   * @param userId the ID of the user
+   * @return the user's public profile
+   * @throws ApiException if the user is not found
+   */
   public UserResponse getUserById(Integer userId) {
     return userRepository
         .findById(userId)
@@ -43,6 +50,9 @@ public class UserService {
    * Finds an existing user by email or creates a new one from Google profile data. Existing users
    * have their name and profile picture updated if changed. New users are assigned a role based on
    * the initial SUPER_ADMIN bootstrap email configuration.
+   *
+   * @param googleInfo the verified Google profile data
+   * @return the found or newly created user entity
    */
   @Transactional
   public User findOrCreateUser(GoogleUserProfile googleInfo) {

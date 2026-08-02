@@ -52,7 +52,7 @@ public class DepartmentService {
    * Retrieves a list of departments that have at least one associated research paper.
    *
    * @param user the authenticated user requesting the departments
-   * @return a list of DepartmentResponse objects
+   * @return a list of {@link DepartmentResponse} objects
    */
   public List<DepartmentResponse> getAvailableDepartments(CustomUserPrincipal user) {
     List<Department> departments;
@@ -132,6 +132,10 @@ public class DepartmentService {
 
   /**
    * Deletes a department. Fails if any research papers or users are still linked to it.
+   *
+   * @param id the ID of the department to delete
+   * @param principal the acting SUPER_ADMIN
+   * @throws ApiException if unauthorized, the department is not found, or it has linked papers/users
    */
   public void deleteDepartment(Integer id, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);

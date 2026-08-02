@@ -51,6 +51,16 @@ public class AdminUserService {
     this.userMapper = userMapper;
   }
 
+  /**
+   * Lists users with optional search, paginated.
+   *
+   * @param page the page index (0-based)
+   * @param size the page size
+   * @param search optional search term matching email or full name
+   * @param principal the acting SUPER_ADMIN
+   * @return a paginated list of user profiles
+   * @throws ApiException if the caller is not a SUPER_ADMIN
+   */
   public PaginatedResponse<UserResponse> listUsers(
       int page, int size, String search, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
@@ -69,6 +79,13 @@ public class AdminUserService {
    * Changes a user's role and optionally their department. Logs the change to {@link
    * RoleChangeLog} and revokes all of the target user's refresh tokens, forcing re-authentication.
    * A user cannot change their own role.
+   *
+   * @param targetUserId the ID of the user to modify
+   * @param request the new role and optional department
+   * @param principal the acting SUPER_ADMIN
+   * @return the updated user profile
+   * @throws ApiException if unauthorized, the target/department is not found, or role change is
+   *     invalid
    */
   @Transactional
   public UserResponse changeRole(
@@ -127,6 +144,11 @@ public class AdminUserService {
   /**
    * Creates a new user with the specified role. DEPARTMENT_ADMIN requires a departmentId. The
    * user's display name is derived from the email local-part.
+   *
+   * @param request the user details
+   * @param principal the acting SUPER_ADMIN
+   * @return the created user profile
+   * @throws ApiException if unauthorized, the email is taken, or the department is missing/invalid
    */
   @Transactional
   public UserResponse createUser(CreateUserRequest request, CustomUserPrincipal principal) {

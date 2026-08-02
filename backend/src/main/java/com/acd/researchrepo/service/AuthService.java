@@ -52,7 +52,7 @@ public class AuthService {
    * creates the user, generates new tokens, and returns authentication data.
    *
    * @param googleAuthCode the Google authorization code to validate
-   * @return AuthTokens containing access token, refresh token, and user info
+   * @return a {@link AuthTokens} containing access token, refresh token, and user info
    */
   @Transactional
   public AuthTokens authenticateWithGoogle(String googleAuthCode) {
@@ -120,7 +120,7 @@ public class AuthService {
    * tokens for the user before creating a new one.
    *
    * @param user the user for whom the refresh token is created
-   * @return the newly created and saved RefreshToken
+   * @return the newly created and saved {@link RefreshToken}
    */
   @Transactional
   private RefreshToken createRefreshToken(User user) {

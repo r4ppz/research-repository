@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+/** Handles student paper submissions — create, update, delete, and admin approval/rejection. */
 @Slf4j
 @Service
 public class SubmissionService {
@@ -51,6 +52,16 @@ public class SubmissionService {
     this.userRepository = userRepository;
   }
 
+  /**
+   * Creates a PENDING_REVIEW submission from an uploaded file, notifying the department's admins.
+   *
+   * @param metadata the paper metadata
+   * @param file the uploaded file
+   * @param principal the submitting student
+   * @return the created submission
+   * @throws ApiException if the caller is not a student, the domain is not allowed, or the
+   *     department/file is invalid
+   */
   @Transactional
   public PaperResponse createSubmission(
       PaperCreateRequest metadata, MultipartFile file, CustomUserPrincipal principal) {
@@ -103,6 +114,13 @@ public class SubmissionService {
     return researchPaperMapper.toDto(savedPaper);
   }
 
+  /**
+   * Returns the caller's own submissions, paginated.
+   *
+   * @param request the search/pagination request
+   * @param principal the requesting user
+   * @return a paginated list of the caller's submissions
+   */
   public PaginatedResponse<PaperResponse> getMySubmissions(
       PaperSearchRequest request, CustomUserPrincipal principal) {
 
@@ -126,6 +144,17 @@ public class SubmissionService {
     return PaginatedResponse.fromPage(paperPage, researchPaperMapper::toDto);
   }
 
+  /**
+   * Updates a PENDING_REVIEW submission, optionally replacing the uploaded file.
+   *
+   * @param paperId the ID of the submission
+   * @param metadata the updated metadata
+   * @param file the replacement file, or null to keep the existing one
+   * @param principal the submitting student
+   * @return the updated submission
+   * @throws ApiException if the caller is not the owner, the status is not PENDING_REVIEW, or the
+   *     department is invalid
+   */
   @Transactional
   public PaperResponse updateSubmission(
       Integer paperId,
@@ -173,6 +202,13 @@ public class SubmissionService {
     return researchPaperMapper.toDto(savedPaper);
   }
 
+  /**
+   * Deletes a PENDING_REVIEW submission and its stored file.
+   *
+   * @param paperId the ID of the submission
+   * @param principal the submitting student
+   * @throws ApiException if the caller is not the owner or the status is not PENDING_REVIEW
+   */
   @Transactional
   public void deleteSubmission(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper = getAndVerifySubmissionOwnership(paperId, principal);
@@ -187,6 +223,14 @@ public class SubmissionService {
     fileStorageService.deleteFile(relativePath);
   }
 
+  /**
+   * Approves a PENDING_REVIEW submission, making it live, and notifies the uploader.
+   *
+   * @param paperId the ID of the submission
+   * @param principal the acting admin
+   * @return the approved submission
+   * @throws ApiException if unauthorized or the status is not PENDING_REVIEW
+   */
   @Transactional
   public PaperResponse approveSubmission(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper = verifyAdminAccess(paperId, principal);
@@ -211,6 +255,13 @@ public class SubmissionService {
     return researchPaperMapper.toDto(savedPaper);
   }
 
+  /**
+   * Rejects a PENDING_REVIEW submission: deletes the paper and its file, and notifies the uploader.
+   *
+   * @param paperId the ID of the submission
+   * @param principal the acting admin
+   * @throws ApiException if unauthorized or the status is not PENDING_REVIEW
+   */
   @Transactional
   public void rejectSubmission(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper = verifyAdminAccess(paperId, principal);

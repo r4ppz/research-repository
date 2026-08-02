@@ -41,6 +41,13 @@ public class NotificationService {
    * Creates a notification record and publishes a {@link NotificationCreatedEvent}. The event
    * listener dispatches the SSE after the enclosing transaction commits, preventing phantom
    * notifications on rollback.
+   *
+   * @param userId the recipient user ID
+   * @param message the notification message
+   * @param type the notification type
+   * @param relatedEntityId the ID of the related entity (paper, request, etc.)
+   * @param relatedEntityType the type of the related entity
+   * @return the created notification
    */
   @Transactional
   public NotificationResponse createAndSend(
@@ -82,6 +89,13 @@ public class NotificationService {
     notificationRepository.markAllReadByUserId(userId);
   }
 
+  /**
+   * Marks a single notification as read, verifying it belongs to the user.
+   *
+   * @param notificationId the ID of the notification
+   * @param userId the owning user ID
+   * @throws ApiException if the notification is not found or belongs to another user
+   */
   @Transactional
   public void markAsRead(Integer notificationId, Integer userId) {
     Notification notification =

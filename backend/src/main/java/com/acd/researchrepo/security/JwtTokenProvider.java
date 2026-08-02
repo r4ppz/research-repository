@@ -13,9 +13,10 @@ import java.util.Map;
 import javax.crypto.SecretKey;
 import org.springframework.stereotype.Service;
 
-// This is JWT/access token generation class
-// SpringSecurity handles most of the work like decoding, verifying etc.
-// Refresh token generation is in AuthService since they are not JWTs
+/**
+ * Generates JWT access tokens for authenticated users. Refresh token generation is handled in
+ * {@link com.acd.researchrepo.service.AuthService} since refresh tokens are not JWTs.
+ */
 @Service
 public class JwtTokenProvider {
 
@@ -37,7 +38,7 @@ public class JwtTokenProvider {
    * Generates a JWT access token for the specified user.
    *
    * @param user the user for whom to generate the token
-   * @return a signed JWT access token as a String
+   * @return a signed JWT access token as a {@code String}
    */
   public String generateAccessToken(@NotNull User user) {
     Instant now = Instant.now();
