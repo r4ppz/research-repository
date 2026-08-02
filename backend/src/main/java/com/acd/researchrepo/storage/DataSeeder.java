@@ -1,10 +1,9 @@
-package com.acd.researchrepo.config;
+package com.acd.researchrepo.storage;
 
 import com.acd.researchrepo.model.Department;
 import com.acd.researchrepo.model.ResearchPaper;
 import com.acd.researchrepo.repository.DepartmentRepository;
 import com.acd.researchrepo.repository.ResearchPaperRepository;
-import com.acd.researchrepo.storage.FileStorageProvider;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;

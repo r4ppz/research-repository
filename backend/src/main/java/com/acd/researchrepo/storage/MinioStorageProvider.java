@@ -27,12 +27,12 @@ import org.springframework.web.multipart.MultipartFile;
  * com.acd.researchrepo.environment.AppProperties.Minio}.
  */
 @ConditionalOnProperty(name = "app.storage.provider", havingValue = "minio")
-public class MinioFileStorageProvider implements FileStorageProvider {
+public class MinioStorageProvider implements FileStorageProvider {
 
   private final MinioClient minioClient;
   private final String bucket;
 
-  public MinioFileStorageProvider(
+  public MinioStorageProvider(
       MinioClient minioClient, @Value("${app.minio.bucket}") String bucket) {
     this.minioClient = minioClient;
     this.bucket = bucket;

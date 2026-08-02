@@ -24,11 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
  * that resolved paths stay within the root.
  */
 @ConditionalOnProperty(name = "app.storage.provider", havingValue = "local", matchIfMissing = true)
-public class LocalFileStorageProvider implements FileStorageProvider {
+public class LocalStorageProvider implements FileStorageProvider {
 
   private final Path rootLocation;
 
-  public LocalFileStorageProvider(@Value("${app.storage.upload-dir}") String uploadDir) {
+  public LocalStorageProvider(@Value("${app.storage.upload-dir}") String uploadDir) {
     this.rootLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
     try {
       Files.createDirectories(rootLocation);

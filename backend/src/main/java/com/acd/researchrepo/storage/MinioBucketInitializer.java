@@ -23,12 +23,13 @@ import org.springframework.stereotype.Component;
  * app.storage.provider=minio}.
  */
 @ConditionalOnProperty(name = "app.storage.provider", havingValue = "minio")
-public class BucketInitRunner {
+public class MinioBucketInitializer {
 
   private final MinioClient minioClient;
   private final String bucket;
 
-  public BucketInitRunner(MinioClient minioClient, @Value("${app.minio.bucket}") String bucket) {
+  public MinioBucketInitializer(
+      MinioClient minioClient, @Value("${app.minio.bucket}") String bucket) {
     this.minioClient = minioClient;
     this.bucket = bucket;
   }
