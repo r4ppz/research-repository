@@ -87,17 +87,21 @@ public class FileStorageService {
 
             @Override
             public void afterCompletion(int status) {
-              // STATUS_UNKNOWN is only ever reported on failure paths (a commit that failed to
-              // roll back cleanly), never after a clean commit, so the database cannot reference
-              // the newly copied file in either case. Clean up the orphan copy whenever the
-              // commit did not succeed.
-              if (status != TransactionSynchronization.STATUS_COMMITTED
+              // Only delete the newly copied file when the rollback is confirmed. On
+              // STATUS_UNKNOWN the transaction manager could not determine the outcome — the
+              // database may have committed — so the copy is left for reconciliation rather than
+              // risking destruction of a file a committed row now references.
+              if (status == TransactionSynchronization.STATUS_ROLLED_BACK
                   && rollbackCleanupPath != null) {
                 log.warn(
-                    "Transaction completed with status {}; cleaning up orphaned copy {}",
+                    "Transaction rolled back; cleaning up orphaned copy {}", rollbackCleanupPath);
+                deleteFileBestEffort(rollbackCleanupPath);
+              } else if (status == TransactionSynchronization.STATUS_UNKNOWN
+                  && rollbackCleanupPath != null) {
+                log.warn(
+                    "Transaction ended with status {}; orphaned copy {} left for reconciliation",
                     status,
                     rollbackCleanupPath);
-                deleteFileBestEffort(rollbackCleanupPath);
               }
             }
           });
