@@ -1,7 +1,7 @@
 package com.acd.researchrepo.controller;
 
-import com.acd.researchrepo.dto.external.requests.CreateRequestRequest;
-import com.acd.researchrepo.dto.external.requests.CreateRequestResponse;
+import com.acd.researchrepo.dto.external.requests.CreateDocumentRequestRequest;
+import com.acd.researchrepo.dto.external.requests.CreateDocumentRequestResponse;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.service.DocumentRequestService;
 import jakarta.validation.Valid;
@@ -32,11 +32,11 @@ public class RequestsController {
   }
 
   @PostMapping
-  public ResponseEntity<CreateRequestResponse> createRequest(
-      @Valid @RequestBody CreateRequestRequest request,
+  public ResponseEntity<CreateDocumentRequestResponse> createRequest(
+      @Valid @RequestBody CreateDocumentRequestRequest request,
       @AuthenticationPrincipal CustomUserPrincipal user) {
     log.debug("api/requests endpoint hit");
-    CreateRequestResponse response = requestService.createRequest(request, user);
+    CreateDocumentRequestResponse response = requestService.createRequest(request, user);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 

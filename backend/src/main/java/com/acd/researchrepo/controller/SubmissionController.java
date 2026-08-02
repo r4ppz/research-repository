@@ -1,14 +1,12 @@
 package com.acd.researchrepo.controller;
 
-import com.acd.researchrepo.dto.external.model.ResearchPaperDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
 import com.acd.researchrepo.dto.external.papers.PaperCreateRequest;
-import com.acd.researchrepo.dto.external.papers.ResearchPaperSearchRequest;
-import com.acd.researchrepo.exception.ApiException;
-import com.acd.researchrepo.exception.ErrorCode;
+import com.acd.researchrepo.dto.external.papers.PaperResponse;
+import com.acd.researchrepo.dto.external.papers.PaperSearchRequest;
 import com.acd.researchrepo.security.CustomUserPrincipal;
-import com.acd.researchrepo.service.PaperSubmissionService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.acd.researchrepo.service.SubmissionService;
+import com.acd.researchrepo.util.MultipartParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -31,47 +29,39 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/submissions")
 public class SubmissionController {
 
-  private final PaperSubmissionService paperSubmissionService;
+  private final SubmissionService submissionService;
   private final ObjectMapper objectMapper;
 
-  public SubmissionController(
-      PaperSubmissionService paperSubmissionService, ObjectMapper objectMapper) {
-    this.paperSubmissionService = paperSubmissionService;
+  public SubmissionController(SubmissionService submissionService, ObjectMapper objectMapper) {
+    this.submissionService = submissionService;
     this.objectMapper = objectMapper;
   }
 
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<ResearchPaperDto> submitPaper(
+  public ResponseEntity<PaperResponse> submitPaper(
       @RequestPart("metadata") String metadataJson,
       @RequestPart("file") MultipartFile file,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
 
     log.debug("POST /api/submissions endpoint hit");
 
-    PaperCreateRequest metadata;
-    try {
-      metadata = objectMapper.readValue(metadataJson, PaperCreateRequest.class);
-    } catch (JsonProcessingException e) {
-      log.debug("Failed to parse submission metadata", e);
-      throw new ApiException(ErrorCode.INVALID_REQUEST, "The metadata part must be valid JSON");
-    }
+    PaperCreateRequest metadata = MultipartParser.parseMetadata(metadataJson, objectMapper);
 
-    ResearchPaperDto response = paperSubmissionService.createSubmission(metadata, file, principal);
+    PaperResponse response = submissionService.createSubmission(metadata, file, principal);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @GetMapping
-  public ResponseEntity<PaginatedResponse<ResearchPaperDto>> getMySubmissions(
-      @Valid ResearchPaperSearchRequest request,
-      @AuthenticationPrincipal CustomUserPrincipal principal) {
+  public ResponseEntity<PaginatedResponse<PaperResponse>> getMySubmissions(
+      @Valid PaperSearchRequest request, @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("GET /api/submissions endpoint hit");
 
-    return ResponseEntity.ok(paperSubmissionService.getMySubmissions(request, principal));
+    return ResponseEntity.ok(submissionService.getMySubmissions(request, principal));
   }
 
   @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<ResearchPaperDto> updateSubmission(
+  public ResponseEntity<PaperResponse> updateSubmission(
       @PathVariable Integer id,
       @RequestPart("metadata") String metadataJson,
       @RequestPart(value = "file", required = false) MultipartFile file,
@@ -79,16 +69,9 @@ public class SubmissionController {
 
     log.debug("PUT /api/submissions/{} endpoint hit", id);
 
-    PaperCreateRequest metadata;
-    try {
-      metadata = objectMapper.readValue(metadataJson, PaperCreateRequest.class);
-    } catch (JsonProcessingException e) {
-      log.debug("Failed to parse submission metadata", e);
-      throw new ApiException(ErrorCode.INVALID_REQUEST, "The metadata part must be valid JSON");
-    }
+    PaperCreateRequest metadata = MultipartParser.parseMetadata(metadataJson, objectMapper);
 
-    ResearchPaperDto response =
-        paperSubmissionService.updateSubmission(id, metadata, file, principal);
+    PaperResponse response = submissionService.updateSubmission(id, metadata, file, principal);
 
     return ResponseEntity.ok(response);
   }
@@ -97,7 +80,7 @@ public class SubmissionController {
   public ResponseEntity<Void> deleteSubmission(
       @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("DELETE /api/submissions/{} endpoint hit", id);
-    paperSubmissionService.deleteSubmission(id, principal);
+    submissionService.deleteSubmission(id, principal);
     return ResponseEntity.noContent().build();
   }
 }

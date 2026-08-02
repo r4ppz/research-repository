@@ -1,14 +1,14 @@
 package com.acd.researchrepo.controller;
 
-import com.acd.researchrepo.dto.external.auth.AuthResponse;
-import com.acd.researchrepo.dto.external.auth.GoogleAuthRequest;
+import com.acd.researchrepo.dto.external.auth.GoogleLoginRequest;
+import com.acd.researchrepo.dto.external.auth.LoginResponse;
 import com.acd.researchrepo.dto.external.auth.RefreshResponse;
-import com.acd.researchrepo.dto.internal.AuthTokenContainer;
-import com.acd.researchrepo.dto.internal.RefreshResult;
+import com.acd.researchrepo.dto.internal.AuthTokens;
+import com.acd.researchrepo.dto.internal.TokenRefreshResult;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
+import com.acd.researchrepo.security.AuthCookieHandler;
 import com.acd.researchrepo.service.AuthService;
-import com.acd.researchrepo.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -29,23 +29,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
   private final AuthService authService;
-  private final CookieUtil cookieUtil;
+  private final AuthCookieHandler authCookieHandler;
 
-  public AuthController(AuthService authService, CookieUtil cookieUtil) {
+  public AuthController(AuthService authService, AuthCookieHandler authCookieHandler) {
     this.authService = authService;
-    this.cookieUtil = cookieUtil;
+    this.authCookieHandler = authCookieHandler;
   }
 
   @PostMapping("/google")
-  public ResponseEntity<AuthResponse> loginWithGoogle(
-      @Valid @RequestBody GoogleAuthRequest request, HttpServletResponse response) {
+  public ResponseEntity<LoginResponse> loginWithGoogle(
+      @Valid @RequestBody GoogleLoginRequest request, HttpServletResponse response) {
     log.debug("api/auth/google endpoint hit");
 
-    AuthTokenContainer tokens = authService.authenticateWithGoogle(request.getCode());
-    AuthResponse authResponse =
-        AuthResponse.builder().accessToken(tokens.getAccessToken()).user(tokens.getUser()).build();
+    AuthTokens tokens = authService.authenticateWithGoogle(request.getCode());
+    LoginResponse authResponse =
+        LoginResponse.builder().accessToken(tokens.getAccessToken()).user(tokens.getUser()).build();
 
-    cookieUtil.setRefreshTokenCookie(response, tokens.getRefreshToken());
+    authCookieHandler.setRefreshTokenCookie(response, tokens.getRefreshToken());
     return ResponseEntity.ok(authResponse);
   }
 
@@ -54,21 +54,21 @@ public class AuthController {
       HttpServletRequest request, HttpServletResponse response) {
     log.debug("api/auth/refresh endpoint hit");
 
-    String refreshToken = cookieUtil.extractRefreshTokenFromCookie(request);
+    String refreshToken = authCookieHandler.extractRefreshTokenFromCookie(request);
     if (refreshToken == null) {
       throw new ApiException(ErrorCode.REFRESH_TOKEN_REVOKED);
     }
 
     try {
-      RefreshResult result = authService.refreshAccessToken(refreshToken);
-      cookieUtil.setRefreshTokenCookie(response, result.getRefreshToken());
+      TokenRefreshResult result = authService.refreshAccessToken(refreshToken);
+      authCookieHandler.setRefreshTokenCookie(response, result.getRefreshToken());
 
       RefreshResponse refreshResponse =
           RefreshResponse.builder().accessToken(result.getAccessToken()).build();
 
       return ResponseEntity.ok(refreshResponse);
     } catch (RuntimeException e) {
-      cookieUtil.clearRefreshTokenCookie(response);
+      authCookieHandler.clearRefreshTokenCookie(response);
       throw new ApiException(ErrorCode.REFRESH_TOKEN_REVOKED);
     }
   }
@@ -77,11 +77,11 @@ public class AuthController {
   public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
     log.debug("api/auth/logout endpoint hit");
 
-    String refreshToken = cookieUtil.extractRefreshTokenFromCookie(request);
+    String refreshToken = authCookieHandler.extractRefreshTokenFromCookie(request);
     if (refreshToken != null) {
       authService.revokeRefreshToken(refreshToken);
     }
-    cookieUtil.clearRefreshTokenCookie(response);
+    authCookieHandler.clearRefreshTokenCookie(response);
     return ResponseEntity.noContent().build();
   }
 }

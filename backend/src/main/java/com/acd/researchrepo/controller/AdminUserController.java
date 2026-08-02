@@ -1,10 +1,10 @@
 package com.acd.researchrepo.controller;
 
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
 import com.acd.researchrepo.dto.external.common.PaginationRequest;
-import com.acd.researchrepo.dto.external.model.UserDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
-import com.acd.researchrepo.dto.external.requests.ChangeRoleRequest;
-import com.acd.researchrepo.dto.external.requests.CreateUserRequest;
+import com.acd.researchrepo.dto.external.users.ChangeRoleRequest;
+import com.acd.researchrepo.dto.external.users.CreateUserRequest;
+import com.acd.researchrepo.dto.external.users.UserResponse;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.service.AdminUserService;
 import jakarta.validation.Valid;
@@ -38,7 +38,7 @@ public class AdminUserController {
   }
 
   @GetMapping
-  public ResponseEntity<PaginatedResponse<UserDto>> getUsers(
+  public ResponseEntity<PaginatedResponse<UserResponse>> getUsers(
       @Valid PaginationRequest pagination,
       @RequestParam(required = false) String search,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
@@ -50,7 +50,7 @@ public class AdminUserController {
   }
 
   @PostMapping
-  public ResponseEntity<UserDto> createUser(
+  public ResponseEntity<UserResponse> createUser(
       @Valid @RequestBody CreateUserRequest request,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
 
@@ -61,7 +61,7 @@ public class AdminUserController {
   }
 
   @PutMapping("/{id}/role")
-  public ResponseEntity<UserDto> changeUserRole(
+  public ResponseEntity<UserResponse> changeUserRole(
       @PathVariable("id") Integer targetUserId,
       @Valid @RequestBody ChangeRoleRequest request,
       @AuthenticationPrincipal CustomUserPrincipal principal) {

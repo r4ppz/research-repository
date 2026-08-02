@@ -1,10 +1,10 @@
 package com.acd.researchrepo.controller;
 
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
 import com.acd.researchrepo.dto.external.common.PaginationRequest;
-import com.acd.researchrepo.dto.external.departments.AdminDepartmentDto;
 import com.acd.researchrepo.dto.external.departments.DepartmentCreateRequest;
+import com.acd.researchrepo.dto.external.departments.DepartmentDetailResponse;
 import com.acd.researchrepo.dto.external.departments.DepartmentUpdateRequest;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.service.DepartmentService;
 import jakarta.validation.Valid;
@@ -37,7 +37,7 @@ public class AdminDepartmentController {
   }
 
   @GetMapping
-  public ResponseEntity<PaginatedResponse<AdminDepartmentDto>> getDepartments(
+  public ResponseEntity<PaginatedResponse<DepartmentDetailResponse>> getDepartments(
       @Valid PaginationRequest pagination, @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("GET /api/admin/departments endpoint hit");
     return ResponseEntity.ok(
@@ -46,7 +46,7 @@ public class AdminDepartmentController {
   }
 
   @PostMapping
-  public ResponseEntity<AdminDepartmentDto> createDepartment(
+  public ResponseEntity<DepartmentDetailResponse> createDepartment(
       @Valid @RequestBody DepartmentCreateRequest request,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("POST /api/admin/departments endpoint hit");
@@ -55,7 +55,7 @@ public class AdminDepartmentController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<AdminDepartmentDto> updateDepartment(
+  public ResponseEntity<DepartmentDetailResponse> updateDepartment(
       @PathVariable Integer id,
       @Valid @RequestBody DepartmentUpdateRequest request,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
