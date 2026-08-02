@@ -1,9 +1,9 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.external.model.ResearchPaperDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
 import com.acd.researchrepo.dto.external.papers.PaperCreateRequest;
-import com.acd.researchrepo.dto.external.papers.ResearchPaperSearchRequest;
+import com.acd.researchrepo.dto.external.papers.PaperResponse;
+import com.acd.researchrepo.dto.external.papers.PaperSearchRequest;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.mapper.ResearchPaperMapper;
@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
-public class PaperSubmissionService {
+public class SubmissionService {
   private final ResearchPaperRepository researchPaperRepository;
   private final ResearchPaperMapper researchPaperMapper;
   private final FileStorageService fileStorageService;
@@ -36,7 +36,7 @@ public class PaperSubmissionService {
   private final NotificationService notificationService;
   private final UserRepository userRepository;
 
-  public PaperSubmissionService(
+  public SubmissionService(
       ResearchPaperRepository researchPaperRepository,
       ResearchPaperMapper researchPaperMapper,
       FileStorageService fileStorageService,
@@ -52,7 +52,7 @@ public class PaperSubmissionService {
   }
 
   @Transactional
-  public ResearchPaperDto createSubmission(
+  public PaperResponse createSubmission(
       PaperCreateRequest metadata, MultipartFile file, CustomUserPrincipal principal) {
 
     if (!RoleBasedAccess.isUserStudent(principal)) {
@@ -81,15 +81,8 @@ public class PaperSubmissionService {
     paper.setStatus(ResearchPaperStatus.PENDING_REVIEW);
     paper.setUploadedBy(principal.getUser());
 
-    String year = String.valueOf(submissionDate.getYear());
-    String deptSlug = department.getDepartmentName().toLowerCase().replaceAll("[^a-z0-9]", "_");
-    String originalFilename = file.getOriginalFilename();
-    String extension =
-        originalFilename != null && originalFilename.contains(".")
-            ? originalFilename.substring(originalFilename.lastIndexOf("."))
-            : ".pdf";
-    String filename = "paper_" + System.currentTimeMillis() + extension;
-    String relativePath = String.format("%s/%s/%s", year, deptSlug, filename);
+    String relativePath =
+        ResearchPaperService.buildFilePath(submissionDate, department, file.getOriginalFilename());
 
     fileStorageService.saveFile(file, relativePath);
     paper.setFilePath(relativePath);
@@ -110,8 +103,8 @@ public class PaperSubmissionService {
     return researchPaperMapper.toDto(savedPaper);
   }
 
-  public PaginatedResponse<ResearchPaperDto> getMySubmissions(
-      ResearchPaperSearchRequest request, CustomUserPrincipal principal) {
+  public PaginatedResponse<PaperResponse> getMySubmissions(
+      PaperSearchRequest request, CustomUserPrincipal principal) {
 
     Boolean archived = RoleBasedAccess.isUserAdmin(principal) ? request.getArchived() : false;
 
@@ -134,7 +127,7 @@ public class PaperSubmissionService {
   }
 
   @Transactional
-  public ResearchPaperDto updateSubmission(
+  public PaperResponse updateSubmission(
       Integer paperId,
       PaperCreateRequest metadata,
       MultipartFile file,
@@ -162,16 +155,9 @@ public class PaperSubmissionService {
     }
 
     if (file != null && !file.isEmpty()) {
-      String year = String.valueOf(paper.getSubmissionDate().getYear());
-      String deptSlug =
-          paper.getDepartment().getDepartmentName().toLowerCase().replaceAll("[^a-z0-9]", "_");
-      String originalFilename = file.getOriginalFilename();
-      String extension =
-          originalFilename != null && originalFilename.contains(".")
-              ? originalFilename.substring(originalFilename.lastIndexOf("."))
-              : ".pdf";
-      String filename = "paper_" + System.currentTimeMillis() + extension;
-      String relativePath = String.format("%s/%s/%s", year, deptSlug, filename);
+      String relativePath =
+          ResearchPaperService.buildFilePath(
+              paper.getSubmissionDate(), paper.getDepartment(), file.getOriginalFilename());
 
       String oldPath = paper.getFilePath();
       fileStorageService.saveFile(file, relativePath);
@@ -202,7 +188,7 @@ public class PaperSubmissionService {
   }
 
   @Transactional
-  public ResearchPaperDto approveSubmission(Integer paperId, CustomUserPrincipal principal) {
+  public PaperResponse approveSubmission(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper = verifyAdminAccess(paperId, principal);
 
     if (paper.getStatus() != ResearchPaperStatus.PENDING_REVIEW) {

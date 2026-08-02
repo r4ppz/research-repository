@@ -1,6 +1,6 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.internal.GoogleUserInfo;
+import com.acd.researchrepo.dto.internal.GoogleUserProfile;
 import com.acd.researchrepo.environment.AppProperties;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  * restriction enforcement. In production, only {@code @acdeducation.com} emails are allowed.
  */
 @Service
-public class GoogleAuthService {
+public class GoogleOAuthService {
 
   private final String environment;
   private final String googleClientId;
@@ -33,7 +33,7 @@ public class GoogleAuthService {
   private final GoogleIdTokenVerifier idTokenVerifier;
   private final AppProperties appProperties;
 
-  public GoogleAuthService(
+  public GoogleOAuthService(
       AppProperties appProperties, @Value("${spring.profiles.active}") String environment) {
 
     this.environment = environment;
@@ -65,7 +65,7 @@ public class GoogleAuthService {
    * Exchanges a Google authorization code for a token, verifies the ID token, and extracts user
    * profile data. Enforces email domain restrictions based on the active environment profile.
    */
-  public GoogleUserInfo validateCodeAndGetUserInfo(String authorizationCode) {
+  public GoogleUserProfile validateCodeAndGetUserInfo(String authorizationCode) {
     GoogleTokenResponse tokenResponse = exchangeAuthorizationCode(authorizationCode);
     GoogleIdToken.Payload payload = verifyAndExtractPayload(tokenResponse.getIdToken());
 
@@ -73,7 +73,7 @@ public class GoogleAuthService {
 
     enforceDomainRestrictions(email);
 
-    return GoogleUserInfo.builder()
+    return GoogleUserProfile.builder()
         .email(email)
         .name((String) payload.get("name"))
         .googleId(payload.getSubject())
