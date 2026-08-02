@@ -7,6 +7,6 @@ import lombok.extern.jackson.Jacksonized;
 @Getter
 @Jacksonized
 @Builder
-public class CreateRequestRequest {
+public class CreateDocumentRequestRequest {
   private Integer paperId;
 }

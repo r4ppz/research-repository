@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CreateRequestResponse {
+public class CreateDocumentRequestResponse {
   private Integer requestId;
 }

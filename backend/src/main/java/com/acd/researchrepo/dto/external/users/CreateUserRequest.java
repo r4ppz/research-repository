@@ -1,4 +1,4 @@
-package com.acd.researchrepo.dto.external.requests;
+package com.acd.researchrepo.dto.external.users;
 
 import com.acd.researchrepo.model.UserRole;
 import jakarta.validation.constraints.Email;
