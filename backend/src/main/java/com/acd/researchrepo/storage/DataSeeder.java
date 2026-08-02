@@ -79,11 +79,18 @@ public class DataSeeder implements CommandLineRunner {
       paper.setSubmissionDate(seed.submissionDate());
       paper.setArchived(false);
 
-      paperRepository.save(paper);
-
-      // Generate a real (minimal) PDF and store it via the active storage provider
+      // Generate the PDF and store it first, then persist the row. Storing first keeps the
+      // database from ever referencing a missing file: if the row insert fails, the stored file
+      // is deleted again so re-running the seed (idempotent by title) is not left stranded.
       byte[] pdfBytes = generatePdf(seed.title(), seed.authorName(), seed.abstractText());
       storageProvider.saveFile(new ByteArrayMultipartFile(pdfBytes, filePath), filePath);
+
+      try {
+        paperRepository.save(paper);
+      } catch (RuntimeException e) {
+        storageProvider.deleteFile(filePath);
+        throw e;
+      }
 
       papersCreated++;
     }
