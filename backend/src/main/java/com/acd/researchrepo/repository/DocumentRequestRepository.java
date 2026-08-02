@@ -14,11 +14,6 @@ public interface DocumentRequestRepository
 
   @Query(
       "SELECT dr FROM DocumentRequest dr JOIN dr.paper p WHERE dr.user.userId = :userId AND"
-          + " p.archived = false")
-  List<DocumentRequest> findByUserIdAndPaperNotArchived(@Param("userId") Integer userId);
-
-  @Query(
-      "SELECT dr FROM DocumentRequest dr JOIN dr.paper p WHERE dr.user.userId = :userId AND"
           + " dr.paper.paperId = :paperId AND (dr.status = 'PENDING' OR dr.status = 'ACCEPTED')")
   List<DocumentRequest> findByUserIdAndPaperIdAndActiveStatus(
       @Param("userId") Integer userId, @Param("paperId") Integer paperId);

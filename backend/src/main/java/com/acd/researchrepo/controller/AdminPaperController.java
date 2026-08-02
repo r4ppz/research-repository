@@ -1,16 +1,14 @@
 package com.acd.researchrepo.controller;
 
-import com.acd.researchrepo.dto.external.model.ResearchPaperDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
 import com.acd.researchrepo.dto.external.papers.PaperCreateRequest;
+import com.acd.researchrepo.dto.external.papers.PaperResponse;
+import com.acd.researchrepo.dto.external.papers.PaperSearchRequest;
 import com.acd.researchrepo.dto.external.papers.PaperUpdateRequest;
-import com.acd.researchrepo.dto.external.papers.ResearchPaperSearchRequest;
-import com.acd.researchrepo.exception.ApiException;
-import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.security.CustomUserPrincipal;
-import com.acd.researchrepo.service.PaperSubmissionService;
 import com.acd.researchrepo.service.ResearchPaperService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.acd.researchrepo.service.SubmissionService;
+import com.acd.researchrepo.util.MultipartParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -40,61 +38,54 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminPaperController {
 
   private final ResearchPaperService researchPaperService;
-  private final PaperSubmissionService paperSubmissionService;
+  private final SubmissionService submissionService;
   private final ObjectMapper objectMapper;
 
   public AdminPaperController(
       ResearchPaperService researchPaperService,
-      PaperSubmissionService paperSubmissionService,
+      SubmissionService submissionService,
       ObjectMapper objectMapper) {
     this.researchPaperService = researchPaperService;
-    this.paperSubmissionService = paperSubmissionService;
+    this.submissionService = submissionService;
     this.objectMapper = objectMapper;
   }
 
   @GetMapping
-  public ResponseEntity<PaginatedResponse<ResearchPaperDto>> getAdminPapers(
-      @Valid ResearchPaperSearchRequest request,
-      @AuthenticationPrincipal CustomUserPrincipal principal) {
+  public ResponseEntity<PaginatedResponse<PaperResponse>> getAdminPapers(
+      @Valid PaperSearchRequest request, @AuthenticationPrincipal CustomUserPrincipal principal) {
 
     log.debug("GET /api/admin/papers endpoint hit");
 
-    PaginatedResponse<ResearchPaperDto> response =
+    PaginatedResponse<PaperResponse> response =
         researchPaperService.getAdminPapers(request, principal);
 
     return ResponseEntity.ok(response);
   }
 
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<ResearchPaperDto> createPaper(
+  public ResponseEntity<PaperResponse> createPaper(
       @RequestPart("metadata") String metadataJson,
       @RequestPart("file") MultipartFile file,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
 
     log.debug("POST /api/admin/papers endpoint hit");
 
-    PaperCreateRequest metadata;
-    try {
-      metadata = objectMapper.readValue(metadataJson, PaperCreateRequest.class);
-    } catch (JsonProcessingException e) {
-      log.debug("Failed to parse paper metadata", e);
-      throw new ApiException(ErrorCode.INVALID_REQUEST, "The metadata part must be valid JSON");
-    }
+    PaperCreateRequest metadata = MultipartParser.parseMetadata(metadataJson, objectMapper);
 
-    ResearchPaperDto response = researchPaperService.createPaper(metadata, file, principal);
+    PaperResponse response = researchPaperService.createPaper(metadata, file, principal);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ResearchPaperDto> updatePaper(
+  public ResponseEntity<PaperResponse> updatePaper(
       @PathVariable Integer id,
       @Valid @RequestBody PaperUpdateRequest metadata,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
 
     log.debug("PUT /api/admin/papers/{} endpoint hit", id);
 
-    ResearchPaperDto response = researchPaperService.updatePaper(id, metadata, principal);
+    PaperResponse response = researchPaperService.updatePaper(id, metadata, principal);
 
     return ResponseEntity.ok(response);
   }
@@ -111,10 +102,10 @@ public class AdminPaperController {
   }
 
   @PutMapping("/{id}/approve")
-  public ResponseEntity<ResearchPaperDto> approveSubmission(
+  public ResponseEntity<PaperResponse> approveSubmission(
       @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("PUT /api/admin/papers/{}/approve endpoint hit", id);
-    ResearchPaperDto response = paperSubmissionService.approveSubmission(id, principal);
+    PaperResponse response = submissionService.approveSubmission(id, principal);
     return ResponseEntity.ok(response);
   }
 
@@ -122,7 +113,7 @@ public class AdminPaperController {
   public ResponseEntity<Void> rejectSubmission(
       @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("PUT /api/admin/papers/{}/reject-submission endpoint hit", id);
-    paperSubmissionService.rejectSubmission(id, principal);
+    submissionService.rejectSubmission(id, principal);
     return ResponseEntity.noContent().build();
   }
 

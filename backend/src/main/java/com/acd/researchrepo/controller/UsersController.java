@@ -1,9 +1,9 @@
 package com.acd.researchrepo.controller;
 
-import com.acd.researchrepo.dto.external.model.UserDocumentRequestDto;
-import com.acd.researchrepo.dto.external.model.UserDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
 import com.acd.researchrepo.dto.external.requests.DocumentRequestSearchRequest;
+import com.acd.researchrepo.dto.external.users.UserRequestSummary;
+import com.acd.researchrepo.dto.external.users.UserResponse;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.security.CustomUserPrincipal;
@@ -30,14 +30,13 @@ public class UsersController {
   private final UserService userService;
   private final DocumentRequestService documentRequestService;
 
-  public UsersController(
-      UserService userService, DocumentRequestService documentRequestService) {
+  public UsersController(UserService userService, DocumentRequestService documentRequestService) {
     this.userService = userService;
     this.documentRequestService = documentRequestService;
   }
 
   @GetMapping("/me")
-  public ResponseEntity<UserDto> getCurrentUser(
+  public ResponseEntity<UserResponse> getCurrentUser(
       @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("api/users/me endpoint hit");
 
@@ -45,7 +44,7 @@ public class UsersController {
   }
 
   @GetMapping("/me/requests")
-  public ResponseEntity<PaginatedResponse<UserDocumentRequestDto>> getUserRequests(
+  public ResponseEntity<PaginatedResponse<UserRequestSummary>> getUserRequests(
       @AuthenticationPrincipal CustomUserPrincipal principal,
       @Valid DocumentRequestSearchRequest request) {
     log.debug("api/users/me/requests endpoint hit");

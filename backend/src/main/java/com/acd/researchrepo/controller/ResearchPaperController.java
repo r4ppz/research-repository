@@ -1,9 +1,9 @@
 package com.acd.researchrepo.controller;
 
-import com.acd.researchrepo.dto.external.model.ResearchPaperDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
-import com.acd.researchrepo.dto.external.papers.PaperUserRequestResponse;
-import com.acd.researchrepo.dto.external.papers.ResearchPaperSearchRequest;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
+import com.acd.researchrepo.dto.external.papers.PaperRequestStatusResponse;
+import com.acd.researchrepo.dto.external.papers.PaperResponse;
+import com.acd.researchrepo.dto.external.papers.PaperSearchRequest;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.service.ResearchPaperService;
 import jakarta.validation.Valid;
@@ -31,8 +31,8 @@ public class ResearchPaperController {
   }
 
   @GetMapping
-  public ResponseEntity<PaginatedResponse<ResearchPaperDto>> listPapers(
-      @Valid ResearchPaperSearchRequest request,
+  public ResponseEntity<PaginatedResponse<PaperResponse>> listPapers(
+      @Valid PaperSearchRequest request,
       @AuthenticationPrincipal CustomUserPrincipal userPrincipal) {
     log.debug("api/papers endpoint hit");
 
@@ -40,7 +40,7 @@ public class ResearchPaperController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ResearchPaperDto> getPaperById(
+  public ResponseEntity<PaperResponse> getPaperById(
       @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal userPrincipal) {
     log.debug("api/papers/{} endpoint hit", id);
 
@@ -48,11 +48,11 @@ public class ResearchPaperController {
   }
 
   @GetMapping("/{id}/my-request")
-  public ResponseEntity<PaperUserRequestResponse> getUserRequestForPaper(
+  public ResponseEntity<PaperRequestStatusResponse> getUserRequestForPaper(
       @PathVariable Integer id, @AuthenticationPrincipal CustomUserPrincipal userPrincipal) {
     log.debug("api/papers/{}/my-request endpoint hit", id);
 
-    PaperUserRequestResponse response =
+    PaperRequestStatusResponse response =
         researchPaperService.getUserRequestForPaper(id, userPrincipal);
     return ResponseEntity.ok(response);
   }

@@ -1,10 +1,10 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.external.departments.AdminDepartmentDto;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
 import com.acd.researchrepo.dto.external.departments.DepartmentCreateRequest;
+import com.acd.researchrepo.dto.external.departments.DepartmentDetailResponse;
+import com.acd.researchrepo.dto.external.departments.DepartmentResponse;
 import com.acd.researchrepo.dto.external.departments.DepartmentUpdateRequest;
-import com.acd.researchrepo.dto.external.model.DepartmentDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.mapper.DepartmentMapper;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -52,9 +53,9 @@ public class DepartmentService {
    * Retrieves a list of departments that have at least one associated research paper.
    *
    * @param user the authenticated user requesting the departments
-   * @return a list of DepartmentDto objects
+   * @return a list of {@link DepartmentResponse} objects
    */
-  public List<DepartmentDto> getAvailableDepartments(CustomUserPrincipal user) {
+  public List<DepartmentResponse> getAvailableDepartments(CustomUserPrincipal user) {
     List<Department> departments;
 
     departments = departmentRepository.findAll();
@@ -62,7 +63,7 @@ public class DepartmentService {
     // Only include departments that have at least one paper in scope
     Set<Integer> deptHasPaper = new HashSet<>(researchPaperRepository.findDistinctDepartmentIds());
 
-    List<DepartmentDto> departmentDto =
+    List<DepartmentResponse> departmentDto =
         departments.stream()
             .filter(deps -> deptHasPaper.contains(deps.getDepartmentId()))
             .sorted(Comparator.comparing(Department::getDepartmentName))
@@ -72,7 +73,7 @@ public class DepartmentService {
     return departmentDto;
   }
 
-  public PaginatedResponse<AdminDepartmentDto> getAdminDepartments(
+  public PaginatedResponse<DepartmentDetailResponse> getAdminDepartments(
       int page, int size, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
 
@@ -87,21 +88,57 @@ public class DepartmentService {
     Map<Integer, Long> userCounts = toDepartmentCountMap(userRepository.countByDepartmentIds(ids));
 
     return PaginatedResponse.fromPage(
-        departments, dept -> toAdminDto(dept, paperCounts, userCounts));
+        departments,
+        dept ->
+            departmentMapper.toAdminDto(
+                dept,
+                paperCounts.getOrDefault(dept.getDepartmentId(), 0L),
+                userCounts.getOrDefault(dept.getDepartmentId(), 0L)));
   }
 
-  public AdminDepartmentDto createDepartment(
+  public DepartmentDetailResponse createDepartment(
       DepartmentCreateRequest request, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
-    if (departmentRepository.existsByDepartmentName(request.getDepartmentName().trim())) {
+    String name = request.getDepartmentName().trim();
+    if (departmentRepository.existsByDepartmentName(name)) {
       throw new ApiException(ErrorCode.DUPLICATE_REQUEST, "Department name already exists");
     }
+    String slug = generateSlug(name);
+    if (slug.isEmpty()) {
+      throw new ApiException(
+          ErrorCode.VALIDATION_ERROR, "Department name must contain letters or numbers");
+    }
+    if (departmentRepository.existsBySlug(slug)) {
+      throw new ApiException(
+          ErrorCode.DUPLICATE_REQUEST, "A department with a similar name already exists");
+    }
     Department department = new Department();
-    department.setDepartmentName(request.getDepartmentName().trim());
-    return toAdminDto(departmentRepository.save(department));
+    department.setDepartmentName(name);
+    department.setSlug(slug);
+    Department saved;
+    try {
+      saved = departmentRepository.save(department);
+    } catch (DataIntegrityViolationException e) {
+      throw new ApiException(
+          ErrorCode.DUPLICATE_REQUEST, "A department with a similar name already exists");
+    }
+    return departmentMapper.toAdminDto(
+        saved,
+        researchPaperRepository.countByDepartmentDepartmentId(saved.getDepartmentId()),
+        userRepository.countByDepartmentDepartmentId(saved.getDepartmentId()));
   }
 
-  public AdminDepartmentDto updateDepartment(
+  /**
+   * Updates a department's display name. The storage {@code slug} is deliberately left unchanged
+   * on rename so existing file folders stay stable (known limitation: renaming a department does
+   * not move its stored files; a new folder is only created for newly uploaded papers).
+   *
+   * @param id the ID of the department to update
+   * @param request the updated name
+   * @param principal the acting SUPER_ADMIN
+   * @throws ApiException if unauthorized, the department is not found, or the name is duplicated
+   */
+  public DepartmentDetailResponse updateDepartment(
       Integer id, DepartmentUpdateRequest request, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
     Department department =
@@ -114,11 +151,19 @@ public class DepartmentService {
       throw new ApiException(ErrorCode.DUPLICATE_REQUEST, "Department name already exists");
     }
     department.setDepartmentName(request.getDepartmentName().trim());
-    return toAdminDto(departmentRepository.save(department));
+    Department saved = departmentRepository.save(department);
+    return departmentMapper.toAdminDto(
+        saved,
+        researchPaperRepository.countByDepartmentDepartmentId(saved.getDepartmentId()),
+        userRepository.countByDepartmentDepartmentId(saved.getDepartmentId()));
   }
 
   /**
    * Deletes a department. Fails if any research papers or users are still linked to it.
+   *
+   * @param id the ID of the department to delete
+   * @param principal the acting SUPER_ADMIN
+   * @throws ApiException if unauthorized, the department is not found, or it has linked papers/users
    */
   public void deleteDepartment(Integer id, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
@@ -138,20 +183,6 @@ public class DepartmentService {
     departmentRepository.delete(department);
   }
 
-  private AdminDepartmentDto toAdminDto(Department department) {
-    long paperCount =
-        researchPaperRepository.countByDepartmentDepartmentId(department.getDepartmentId());
-    long userCount = userRepository.countByDepartmentDepartmentId(department.getDepartmentId());
-    return AdminDepartmentDto.builder()
-        .departmentId(department.getDepartmentId())
-        .departmentName(department.getDepartmentName())
-        .paperCount(paperCount)
-        .userCount(userCount)
-        .createdAt(department.getCreatedAt())
-        .updatedAt(department.getUpdatedAt())
-        .build();
-  }
-
   private static Map<Integer, Long> toDepartmentCountMap(List<Object[]> rows) {
     Map<Integer, Long> map = new HashMap<>();
     for (Object[] row : rows) {
@@ -160,21 +191,14 @@ public class DepartmentService {
     return map;
   }
 
-  private static AdminDepartmentDto toAdminDto(
-      Department department, Map<Integer, Long> paperCounts, Map<Integer, Long> userCounts) {
-    return AdminDepartmentDto.builder()
-        .departmentId(department.getDepartmentId())
-        .departmentName(department.getDepartmentName())
-        .paperCount(paperCounts.getOrDefault(department.getDepartmentId(), 0L))
-        .userCount(userCounts.getOrDefault(department.getDepartmentId(), 0L))
-        .createdAt(department.getCreatedAt())
-        .updatedAt(department.getUpdatedAt())
-        .build();
-  }
-
   private void requireSuperAdmin(CustomUserPrincipal principal) {
     if (!RoleBasedAccess.isUserSuperAdmin(principal)) {
       throw new ApiException(ErrorCode.ACCESS_DENIED, "Access denied");
     }
+  }
+
+  /** Derives a filesystem-safe folder slug from a department name. */
+  private static String generateSlug(String departmentName) {
+    return departmentName.toLowerCase().replaceAll("[^a-z0-9]+", "_").replaceAll("^_+|_+$", "");
   }
 }

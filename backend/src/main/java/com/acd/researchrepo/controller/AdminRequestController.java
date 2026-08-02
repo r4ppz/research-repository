@@ -1,9 +1,9 @@
 package com.acd.researchrepo.controller;
 
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
-import com.acd.researchrepo.dto.external.requests.AdminRequestResponse;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
+import com.acd.researchrepo.dto.external.requests.DocumentRequestResponse;
 import com.acd.researchrepo.dto.external.requests.DocumentRequestSearchRequest;
-import com.acd.researchrepo.dto.external.requests.RejectRequestRequest;
+import com.acd.researchrepo.dto.external.requests.RejectRequestBody;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.service.DocumentRequestService;
 import jakarta.validation.Valid;
@@ -33,40 +33,40 @@ public class AdminRequestController {
   }
 
   @GetMapping
-  public ResponseEntity<PaginatedResponse<AdminRequestResponse>> getAdminRequests(
+  public ResponseEntity<PaginatedResponse<DocumentRequestResponse>> getAdminRequests(
       @Valid DocumentRequestSearchRequest request,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
 
     log.debug("api/admin/requests endpoint hit!!");
 
-    PaginatedResponse<AdminRequestResponse> response =
+    PaginatedResponse<DocumentRequestResponse> response =
         documentRequestService.getAdminRequests(request, principal);
 
     return ResponseEntity.ok(response);
   }
 
   @PutMapping("/{requestId}/accept")
-  public ResponseEntity<AdminRequestResponse> acceptRequest(
+  public ResponseEntity<DocumentRequestResponse> acceptRequest(
       @PathVariable Integer requestId, @AuthenticationPrincipal CustomUserPrincipal principal) {
 
     log.debug("PUT /api/admin/requests/{}/accept endpoint hit", requestId);
 
-    AdminRequestResponse response = documentRequestService.acceptRequest(requestId, principal);
+    DocumentRequestResponse response = documentRequestService.acceptRequest(requestId, principal);
 
     return ResponseEntity.ok(response);
   }
 
   @PutMapping("/{requestId}/reject")
-  public ResponseEntity<AdminRequestResponse> rejectRequest(
+  public ResponseEntity<DocumentRequestResponse> rejectRequest(
       @PathVariable Integer requestId,
-      @Valid @RequestBody(required = false) RejectRequestRequest request,
+      @Valid @RequestBody(required = false) RejectRequestBody request,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
 
     log.debug("PUT /api/admin/requests/{}/reject endpoint hit", requestId);
 
     String reason = request != null ? request.getReason() : null;
 
-    AdminRequestResponse response =
+    DocumentRequestResponse response =
         documentRequestService.rejectRequest(requestId, reason, principal);
 
     return ResponseEntity.ok(response);

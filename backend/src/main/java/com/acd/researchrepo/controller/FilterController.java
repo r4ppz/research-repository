@@ -1,8 +1,8 @@
 package com.acd.researchrepo.controller;
 
+import com.acd.researchrepo.dto.external.departments.DepartmentResponse;
 import com.acd.researchrepo.dto.external.filters.DepartmentListResponse;
 import com.acd.researchrepo.dto.external.filters.YearListResponse;
-import com.acd.researchrepo.dto.external.model.DepartmentDto;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.service.DepartmentService;
 import com.acd.researchrepo.service.ResearchPaperService;
@@ -49,7 +49,7 @@ public class FilterController {
       @AuthenticationPrincipal CustomUserPrincipal userPrincipal) {
     log.debug("api/filters/departments endpoint hit");
 
-    List<DepartmentDto> departments = departmentService.getAvailableDepartments(userPrincipal);
+    List<DepartmentResponse> departments = departmentService.getAvailableDepartments(userPrincipal);
 
     return departments.isEmpty()
         ? ResponseEntity.noContent().build()

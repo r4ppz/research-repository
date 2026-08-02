@@ -1,8 +1,8 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.internal.AuthTokenContainer;
-import com.acd.researchrepo.dto.internal.GoogleUserInfo;
-import com.acd.researchrepo.dto.internal.RefreshResult;
+import com.acd.researchrepo.dto.internal.AuthTokens;
+import com.acd.researchrepo.dto.internal.GoogleUserProfile;
+import com.acd.researchrepo.dto.internal.TokenRefreshResult;
 import com.acd.researchrepo.environment.AppProperties;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
@@ -10,6 +10,7 @@ import com.acd.researchrepo.mapper.UserMapper;
 import com.acd.researchrepo.model.RefreshToken;
 import com.acd.researchrepo.model.User;
 import com.acd.researchrepo.repository.RefreshTokenRepository;
+import com.acd.researchrepo.security.JwtTokenProvider;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -23,21 +24,21 @@ public class AuthService {
   private final int refreshTokenMaxAge;
 
   private final RefreshTokenRepository refreshTokenRepository;
-  private final JwtService jwtService;
-  private final GoogleAuthService googleAuthService;
+  private final JwtTokenProvider jwtTokenProvider;
+  private final GoogleOAuthService googleAuthService;
   private final UserMapper userMapper;
   private final UserService userService;
   private final AppProperties appProperties;
 
   public AuthService(
       RefreshTokenRepository refreshTokenRepository,
-      JwtService jwtService,
-      GoogleAuthService googleAuthService,
+      JwtTokenProvider jwtTokenProvider,
+      GoogleOAuthService googleAuthService,
       UserMapper userMapper,
       UserService userService,
       AppProperties appProperties) {
     this.refreshTokenRepository = refreshTokenRepository;
-    this.jwtService = jwtService;
+    this.jwtTokenProvider = jwtTokenProvider;
     this.googleAuthService = googleAuthService;
     this.userMapper = userMapper;
     this.userService = userService;
@@ -51,17 +52,17 @@ public class AuthService {
    * creates the user, generates new tokens, and returns authentication data.
    *
    * @param googleAuthCode the Google authorization code to validate
-   * @return AuthTokenContainer containing access token, refresh token, and user info
+   * @return a {@link AuthTokens} containing access token, refresh token, and user info
    */
   @Transactional
-  public AuthTokenContainer authenticateWithGoogle(String googleAuthCode) {
-    GoogleUserInfo googleUserInfo = googleAuthService.validateCodeAndGetUserInfo(googleAuthCode);
+  public AuthTokens authenticateWithGoogle(String googleAuthCode) {
+    GoogleUserProfile googleUserInfo = googleAuthService.validateCodeAndGetUserInfo(googleAuthCode);
 
     User user = userService.findOrCreateUser(googleUserInfo);
     RefreshToken newRefresh = createRefreshToken(user);
-    String accessToken = jwtService.generateAccessToken(user);
+    String accessToken = jwtTokenProvider.generateAccessToken(user);
 
-    return AuthTokenContainer.builder()
+    return AuthTokens.builder()
         .accessToken(accessToken)
         .refreshToken(newRefresh.getToken())
         .user(userMapper.toDto(user))
@@ -75,11 +76,11 @@ public class AuthService {
    * generates a new access token for the associated user.
    *
    * @param refreshTokenValue the value of the refresh token to use for refreshing
-   * @return a {@link RefreshResult} containing the new access and refresh tokens
+   * @return a {@link TokenRefreshResult} containing the new access and refresh tokens
    * @throws ApiException if the refresh token is revoked or expired
    */
   @Transactional
-  public RefreshResult refreshAccessToken(String refreshTokenValue) {
+  public TokenRefreshResult refreshAccessToken(String refreshTokenValue) {
     LocalDateTime now = LocalDateTime.now();
 
     RefreshToken oldToken =
@@ -96,9 +97,9 @@ public class AuthService {
     refreshTokenRepository.delete(oldToken);
 
     RefreshToken newToken = createRefreshToken(user);
-    String newAccessToken = jwtService.generateAccessToken(user);
+    String newAccessToken = jwtTokenProvider.generateAccessToken(user);
 
-    return RefreshResult.builder()
+    return TokenRefreshResult.builder()
         .accessToken(newAccessToken)
         .refreshToken(newToken.getToken())
         .build();
@@ -119,7 +120,7 @@ public class AuthService {
    * tokens for the user before creating a new one.
    *
    * @param user the user for whom the refresh token is created
-   * @return the newly created and saved RefreshToken
+   * @return the newly created and saved {@link RefreshToken}
    */
   @Transactional
   private RefreshToken createRefreshToken(User user) {

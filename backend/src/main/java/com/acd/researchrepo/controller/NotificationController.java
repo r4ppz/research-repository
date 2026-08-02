@@ -1,8 +1,8 @@
 package com.acd.researchrepo.controller;
 
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
 import com.acd.researchrepo.dto.external.common.PaginationRequest;
-import com.acd.researchrepo.dto.external.notifications.NotificationDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
+import com.acd.researchrepo.dto.external.notifications.NotificationResponse;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.service.NotificationService;
 import com.acd.researchrepo.service.SseEmitterService;
@@ -45,7 +45,7 @@ public class NotificationController {
   }
 
   @GetMapping
-  public ResponseEntity<PaginatedResponse<NotificationDto>> getNotifications(
+  public ResponseEntity<PaginatedResponse<NotificationResponse>> getNotifications(
       @Valid PaginationRequest pagination, @AuthenticationPrincipal CustomUserPrincipal principal) {
     log.debug("GET /api/notifications endpoint hit");
     return ResponseEntity.ok(

@@ -1,9 +1,10 @@
 package com.acd.researchrepo.mapper;
 
-import com.acd.researchrepo.dto.external.model.ResearchPaperDto;
+import com.acd.researchrepo.dto.external.papers.PaperResponse;
 import com.acd.researchrepo.model.ResearchPaper;
 import org.springframework.stereotype.Component;
 
+/** Maps {@link ResearchPaper} entities to their API representations. */
 @Component
 public class ResearchPaperMapper {
 
@@ -15,12 +16,18 @@ public class ResearchPaperMapper {
     this.userMapper = userMapper;
   }
 
-  public ResearchPaperDto toDto(ResearchPaper paper) {
+  /**
+   * Maps a paper entity to a {@link PaperResponse}, including department and uploader.
+   *
+   * @param paper the paper entity, or null
+   * @return the mapped response, or null if the input is null
+   */
+  public PaperResponse toDto(ResearchPaper paper) {
     if (paper == null) {
       return null;
     }
 
-    return ResearchPaperDto.builder()
+    return PaperResponse.builder()
         .paperId(paper.getPaperId())
         .title(paper.getTitle())
         .authorName(paper.getAuthorName())
@@ -28,6 +35,7 @@ public class ResearchPaperMapper {
         .department(departmentMapper.toDto(paper.getDepartment()))
         .submissionDate(paper.getSubmissionDate())
         .filePath(paper.getFilePath())
+        .originalFileName(paper.getOriginalFileName())
         .status(paper.getStatus().name())
         .uploadedBy(paper.getUploadedBy() != null ? userMapper.toDto(paper.getUploadedBy()) : null)
         .archived(paper.getArchived())

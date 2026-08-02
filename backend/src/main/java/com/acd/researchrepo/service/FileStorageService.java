@@ -8,6 +8,8 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -27,6 +29,8 @@ public class FileStorageService {
           "application/msword",
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
   private static final long MAX_FILE_SIZE = 20 * 1024 * 1024;
+
+  private static final int DELETE_RETRIES = 3;
 
   private static final byte[] PDF_MAGIC = {0x25, 0x50, 0x44, 0x46}; // %PDF
   private static final byte[] OLE2_MAGIC = {
@@ -50,6 +54,95 @@ public class FileStorageService {
 
   public void deleteFile(String subPath) {
     storageProvider.deleteFile(subPath);
+  }
+
+  /**
+   * Copies a file from {@code source} to {@code target} inside the current transaction and defers
+   * deletion of {@code source} until the transaction commits. If the transaction rolls back, the
+   * orphaned {@code target} copy is removed and {@code source} is left intact, so the database can
+   * never reference a deleted file.
+   */
+  public void moveFileAfterCommit(String source, String target) {
+    storageProvider.copyFile(source, target);
+    deferCleanup(source, target);
+  }
+
+  /**
+   * Defers deletion of {@code path} until the current transaction commits (e.g. an old file that is
+   * replaced by a new upload). If the transaction rolls back, {@code rollbackCleanupPath} — the
+   * newly stored replacement — is removed instead, keeping storage free of orphans.
+   */
+  public void deleteFileAfterCommit(String path, String rollbackCleanupPath) {
+    deferCleanup(path, rollbackCleanupPath);
+  }
+
+  private void deferCleanup(String deleteAfterCommitPath, String rollbackCleanupPath) {
+    if (TransactionSynchronizationManager.isSynchronizationActive()) {
+      TransactionSynchronizationManager.registerSynchronization(
+          new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+              deleteFileWithRetry(deleteAfterCommitPath);
+            }
+
+            @Override
+            public void afterCompletion(int status) {
+              // Only delete the newly copied file when the rollback is confirmed. On
+              // STATUS_UNKNOWN the transaction manager could not determine the outcome — the
+              // database may have committed — so the copy is left for reconciliation rather than
+              // risking destruction of a file a committed row now references.
+              if (status == TransactionSynchronization.STATUS_ROLLED_BACK
+                  && rollbackCleanupPath != null) {
+                log.warn(
+                    "Transaction rolled back; cleaning up orphaned copy {}", rollbackCleanupPath);
+                deleteFileBestEffort(rollbackCleanupPath);
+              } else if (status == TransactionSynchronization.STATUS_UNKNOWN
+                  && rollbackCleanupPath != null) {
+                log.warn(
+                    "Transaction ended with status {}; orphaned copy {} left for reconciliation",
+                    status,
+                    rollbackCleanupPath);
+              }
+            }
+          });
+    } else {
+      storageProvider.deleteFile(deleteAfterCommitPath);
+    }
+  }
+
+  private void deleteFileWithRetry(String subPath) {
+    for (int attempt = 1; attempt <= DELETE_RETRIES; attempt++) {
+      try {
+        storageProvider.deleteFile(subPath);
+        return;
+      } catch (RuntimeException e) {
+        if (attempt == DELETE_RETRIES) {
+          log.error(
+              "Failed to delete file after commit after {} attempts: {}", attempt, subPath, e);
+        } else {
+          log.warn(
+              "Retrying file deletion after commit (attempt {}/{}): {}",
+              attempt,
+              DELETE_RETRIES,
+              subPath,
+              e);
+          try {
+            Thread.sleep(100L * attempt);
+          } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return;
+          }
+        }
+      }
+    }
+  }
+
+  private void deleteFileBestEffort(String subPath) {
+    try {
+      storageProvider.deleteFile(subPath);
+    } catch (RuntimeException e) {
+      log.warn("Could not clean up orphaned file after rollback: {}", subPath, e);
+    }
   }
 
   private void validateFile(MultipartFile file) {

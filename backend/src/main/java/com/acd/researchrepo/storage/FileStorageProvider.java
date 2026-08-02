@@ -22,4 +22,11 @@ public interface FileStorageProvider {
 
   /** Deletes the file at the given relative path. No-op if the file does not exist. */
   void deleteFile(String subPath);
+
+  /**
+   * Copies a file from {@code source} to {@code target}, leaving the source intact. If the copy
+   * fails, an exception is thrown and neither file is modified. Deletion of the source is the
+   * caller's responsibility and is deferred until after the surrounding transaction commits.
+   */
+  void copyFile(String source, String target);
 }

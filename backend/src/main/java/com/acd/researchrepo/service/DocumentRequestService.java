@@ -1,12 +1,12 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.external.model.UserDocumentRequestDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
-import com.acd.researchrepo.dto.external.papers.PaperUserRequestResponse;
-import com.acd.researchrepo.dto.external.requests.AdminRequestResponse;
-import com.acd.researchrepo.dto.external.requests.CreateRequestRequest;
-import com.acd.researchrepo.dto.external.requests.CreateRequestResponse;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
+import com.acd.researchrepo.dto.external.papers.PaperRequestStatusResponse;
+import com.acd.researchrepo.dto.external.requests.CreateDocumentRequestRequest;
+import com.acd.researchrepo.dto.external.requests.CreateDocumentRequestResponse;
+import com.acd.researchrepo.dto.external.requests.DocumentRequestResponse;
 import com.acd.researchrepo.dto.external.requests.DocumentRequestSearchRequest;
+import com.acd.researchrepo.dto.external.users.UserRequestSummary;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.mapper.DocumentRequestMapper;
@@ -52,7 +52,7 @@ public class DocumentRequestService {
     this.userRepository = userRepository;
   }
 
-  public PaginatedResponse<UserDocumentRequestDto> getUserDocumentRequests(
+  public PaginatedResponse<UserRequestSummary> getUserDocumentRequests(
       CustomUserPrincipal userPrincipal, DocumentRequestSearchRequest request) {
 
     if (!RoleBasedAccess.isUserStudentOrFaculty(userPrincipal)) {
@@ -72,10 +72,15 @@ public class DocumentRequestService {
   /**
    * Creates a new document access request. Prevents duplicate active requests for the same paper
    * and sends notifications to all DEPARTMENT_ADMINs in the paper's department.
+   *
+   * @param requestDto the request details
+   * @param userPrincipal the requesting student/faculty
+   * @return the created request's ID
+   * @throws ApiException if unauthorized, the paper is missing/archived, or an active request exists
    */
   @Transactional
-  public CreateRequestResponse createRequest(
-      CreateRequestRequest requestDto, CustomUserPrincipal userPrincipal) {
+  public CreateDocumentRequestResponse createRequest(
+      CreateDocumentRequestRequest requestDto, CustomUserPrincipal userPrincipal) {
     if (!RoleBasedAccess.isUserStudentOrFaculty(userPrincipal)) {
       throw new ApiException(ErrorCode.ACCESS_DENIED, "Access denied");
     }
@@ -119,12 +124,16 @@ public class DocumentRequestService {
           "DOCUMENT_REQUEST");
     }
 
-    return CreateRequestResponse.builder().requestId(savedRequest.getRequestId()).build();
+    return CreateDocumentRequestResponse.builder().requestId(savedRequest.getRequestId()).build();
   }
 
   /**
    * Deletes a document request. Only allowed if the request belongs to the caller and is in
    * PENDING or REJECTED status.
+   *
+   * @param requestId the ID of the request to delete
+   * @param userPrincipal the requesting student/faculty
+   * @throws ApiException if unauthorized, the request is missing, or deletion is not allowed
    */
   @Transactional
   public void deleteRequest(Integer requestId, CustomUserPrincipal userPrincipal) {
@@ -152,7 +161,7 @@ public class DocumentRequestService {
     }
   }
 
-  public PaperUserRequestResponse getUserRequestForPaper(
+  public PaperRequestStatusResponse getUserRequestForPaper(
       Integer paperId, CustomUserPrincipal userPrincipal) {
     if (!RoleBasedAccess.isUserStudentOrFaculty(userPrincipal)) {
       throw new ApiException(ErrorCode.ACCESS_DENIED, "Access denied");
@@ -179,7 +188,7 @@ public class DocumentRequestService {
     return documentRequestMapper.toPaperUserRequestResponse(request);
   }
 
-  public PaginatedResponse<AdminRequestResponse> getAdminRequests(
+  public PaginatedResponse<DocumentRequestResponse> getAdminRequests(
       DocumentRequestSearchRequest request, CustomUserPrincipal userPrincipal) {
 
     if (!RoleBasedAccess.isUserAdmin(userPrincipal)) {
@@ -223,9 +232,15 @@ public class DocumentRequestService {
   /**
    * Accepts a PENDING document request. DEPARTMENT_ADMINs can only accept requests for papers in
    * their own department. Sends a notification to the requesting user.
+   *
+   * @param requestId the ID of the request to accept
+   * @param userPrincipal the acting admin
+   * @return the updated request
+   * @throws ApiException if unauthorized or the request is not in PENDING status
    */
   @Transactional
-  public AdminRequestResponse acceptRequest(Integer requestId, CustomUserPrincipal userPrincipal) {
+  public DocumentRequestResponse acceptRequest(
+      Integer requestId, CustomUserPrincipal userPrincipal) {
     // Authorization: must be admin
     if (!RoleBasedAccess.isUserAdmin(userPrincipal)) {
       throw new ApiException(ErrorCode.ACCESS_DENIED, "Admin privileges required");
@@ -276,9 +291,15 @@ public class DocumentRequestService {
   /**
    * Rejects a document request (any non-terminal status). DEPARTMENT_ADMINs can only reject
    * requests for papers in their own department. Sends a notification to the requesting user.
+   *
+   * @param requestId the ID of the request to reject
+   * @param reason the rejection reason
+   * @param userPrincipal the acting admin
+   * @return the updated request
+   * @throws ApiException if unauthorized or the request is already in a terminal state
    */
   @Transactional
-  public AdminRequestResponse rejectRequest(
+  public DocumentRequestResponse rejectRequest(
       Integer requestId, String reason, CustomUserPrincipal userPrincipal) {
     // Authorization: must be admin
     if (!RoleBasedAccess.isUserAdmin(userPrincipal)) {

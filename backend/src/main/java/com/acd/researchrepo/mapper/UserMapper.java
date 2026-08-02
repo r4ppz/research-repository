@@ -1,10 +1,11 @@
 package com.acd.researchrepo.mapper;
 
-import com.acd.researchrepo.dto.external.model.UserDto;
+import com.acd.researchrepo.dto.external.users.UserResponse;
 import com.acd.researchrepo.model.User;
 import com.acd.researchrepo.model.UserRole;
 import org.springframework.stereotype.Component;
 
+/** Maps {@link User} entities to their API representations. */
 @Component
 public class UserMapper {
 
@@ -14,13 +15,19 @@ public class UserMapper {
     this.departmentMapper = departmentMapper;
   }
 
-  public UserDto toDto(User user) {
+  /**
+   * Maps a user entity to a {@link UserResponse}, including the department for DEPARTMENT_ADMINs.
+   *
+   * @param user the user entity, or null
+   * @return the mapped response, or null if the input is null
+   */
+  public UserResponse toDto(User user) {
     if (user == null) {
       return null;
     }
 
-    UserDto.UserDtoBuilder builder =
-        UserDto.builder()
+    UserResponse.UserResponseBuilder builder =
+        UserResponse.builder()
             .userId(user.getUserId())
             .email(user.getEmail())
             .fullName(user.getFullName())

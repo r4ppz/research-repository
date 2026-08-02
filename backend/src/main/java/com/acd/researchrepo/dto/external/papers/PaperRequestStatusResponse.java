@@ -1,0 +1,15 @@
+package com.acd.researchrepo.dto.external.papers;
+
+import com.acd.researchrepo.model.RequestStatus;
+import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class PaperRequestStatusResponse {
+  private Integer requestId;
+  private RequestStatus status;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
+}

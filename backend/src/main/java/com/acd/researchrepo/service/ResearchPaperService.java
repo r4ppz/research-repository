@@ -1,14 +1,15 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.external.model.ResearchPaperDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
 import com.acd.researchrepo.dto.external.papers.PaperCreateRequest;
+import com.acd.researchrepo.dto.external.papers.PaperRequestStatusResponse;
+import com.acd.researchrepo.dto.external.papers.PaperResponse;
+import com.acd.researchrepo.dto.external.papers.PaperSearchRequest;
 import com.acd.researchrepo.dto.external.papers.PaperUpdateRequest;
-import com.acd.researchrepo.dto.external.papers.PaperUserRequestResponse;
-import com.acd.researchrepo.dto.external.papers.ResearchPaperSearchRequest;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.mapper.ResearchPaperMapper;
+import com.acd.researchrepo.model.Department;
 import com.acd.researchrepo.model.DocumentRequest;
 import com.acd.researchrepo.model.RequestStatus;
 import com.acd.researchrepo.model.ResearchPaper;
@@ -19,8 +20,10 @@ import com.acd.researchrepo.repository.ResearchPaperRepository;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.spec.ResearchPaperSpec;
 import com.acd.researchrepo.util.RoleBasedAccess;
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -61,8 +64,8 @@ public class ResearchPaperService {
     this.departmentRepository = departmentRepository;
   }
 
-  public PaginatedResponse<ResearchPaperDto> getPapers(
-      ResearchPaperSearchRequest request, CustomUserPrincipal userPrincipal) {
+  public PaginatedResponse<PaperResponse> getPapers(
+      PaperSearchRequest request, CustomUserPrincipal userPrincipal) {
 
     Boolean archived = request.getArchived();
     if (!RoleBasedAccess.isUserAdmin(userPrincipal)) {
@@ -83,8 +86,8 @@ public class ResearchPaperService {
    * DEPARTMENT_ADMIN} is forced to their own department (ignoring any {@code departmentId} filter);
    * {@code SUPER_ADMIN} can filter by any department or see all.
    */
-  public PaginatedResponse<ResearchPaperDto> getAdminPapers(
-      ResearchPaperSearchRequest request, CustomUserPrincipal userPrincipal) {
+  public PaginatedResponse<PaperResponse> getAdminPapers(
+      PaperSearchRequest request, CustomUserPrincipal userPrincipal) {
 
     // Authorization check: must be admin
     if (!RoleBasedAccess.isUserAdmin(userPrincipal)) {
@@ -124,7 +127,7 @@ public class ResearchPaperService {
     return PaginatedResponse.fromPage(paperPage, researchPaperMapper::toDto);
   }
 
-  public ResearchPaperDto getPaperById(Integer id, CustomUserPrincipal userPrincipal) {
+  public PaperResponse getPaperById(Integer id, CustomUserPrincipal userPrincipal) {
     Optional<ResearchPaper> paperOpt = researchPaperRepository.findById(id);
 
     if (paperOpt.isEmpty()) {
@@ -158,7 +161,7 @@ public class ResearchPaperService {
     return researchPaperRepository.findDistinctYears(deptId, onlyActive);
   }
 
-  public PaperUserRequestResponse getUserRequestForPaper(
+  public PaperRequestStatusResponse getUserRequestForPaper(
       Integer paperId, CustomUserPrincipal userPrincipal) {
     return documentRequestService.getUserRequestForPaper(paperId, userPrincipal);
   }
@@ -166,6 +169,10 @@ public class ResearchPaperService {
   /**
    * Archives a research paper. As a side effect, all active (PENDING or ACCEPTED) document
    * requests for this paper are rejected with reason "Paper archived".
+   *
+   * @param id the ID of the paper to archive
+   * @param principal the acting admin
+   * @throws ApiException if unauthorized or the paper is not found
    */
   @Transactional
   public void archivePaper(Integer id, CustomUserPrincipal principal) {
@@ -188,7 +195,7 @@ public class ResearchPaperService {
   }
 
   @Transactional
-  public ResearchPaperDto updatePaper(
+  public PaperResponse updatePaper(
       Integer id, PaperUpdateRequest metadata, CustomUserPrincipal principal) {
 
     ResearchPaper paper = getAndVerifyAdminAccess(id, principal);
@@ -212,6 +219,14 @@ public class ResearchPaperService {
               .findById(metadata.getDepartmentId())
               .orElseThrow(
                   () -> new ApiException(ErrorCode.VALIDATION_ERROR, "Department not found"));
+
+      // Copy the physical file into the new department's folder so the storage path stays in
+      // sync with the department. The old file is deleted only after the transaction commits, so
+      // a rollback never leaves the database referencing a deleted file.
+      String oldPath = paper.getFilePath();
+      String newPath = relocateFilePath(oldPath, department);
+      fileStorageService.moveFileAfterCommit(oldPath, newPath);
+      paper.setFilePath(newPath);
       paper.setDepartment(department);
     }
 
@@ -243,6 +258,11 @@ public class ResearchPaperService {
   /**
    * Returns the filename (without path) of a research paper file, after verifying the caller has
    * download access.
+   *
+   * @param paperId the ID of the paper
+   * @param principal the requesting user
+   * @return the bare filename of the paper's stored file
+   * @throws ApiException if unauthorized or the paper is not found
    */
   public String getPaperFileName(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper =
@@ -252,6 +272,10 @@ public class ResearchPaperService {
 
     validateDownloadAccess(paper, principal);
 
+    if (paper.getOriginalFileName() != null) {
+      return paper.getOriginalFileName();
+    }
+
     String filePath = paper.getFilePath();
     return filePath.substring(filePath.lastIndexOf('/') + 1);
   }
@@ -260,6 +284,11 @@ public class ResearchPaperService {
    * Downloads the file for a research paper. Access is granted only if the caller has an accepted
    * document request (students/faculty), belongs to the paper's department (DEPARTMENT_ADMIN), or
    * is a SUPER_ADMIN.
+   *
+   * @param paperId the ID of the paper
+   * @param principal the requesting user
+   * @return the paper's file as a loadable {@link Resource}
+   * @throws ApiException if unauthorized or the paper/file is not found
    */
   public Resource downloadPaper(Integer paperId, CustomUserPrincipal principal) {
     ResearchPaper paper =
@@ -274,11 +303,17 @@ public class ResearchPaperService {
 
   /**
    * Creates a new research paper with an uploaded file. Files are stored under {@code
-   * {year}/{department_slug}/paper_{timestamp}.{ext}}. DEPARTMENT_ADMINs can only create papers for
+   * files/{department_slug}/{random_id}.{ext}}. DEPARTMENT_ADMINs can only create papers for
    * their own department.
+   *
+   * @param metadata the paper metadata
+   * @param file the uploaded file
+   * @param principal the acting admin
+   * @return the created paper
+   * @throws ApiException if unauthorized, the department is missing, or the file cannot be saved
    */
   @Transactional
-  public ResearchPaperDto createPaper(
+  public PaperResponse createPaper(
       PaperCreateRequest metadata, MultipartFile file, CustomUserPrincipal principal) {
 
     // Authorization & Role-based validation
@@ -311,26 +346,55 @@ public class ResearchPaperService {
     paper.setStatus(ResearchPaperStatus.ACTIVE);
     paper.setUploadedBy(principal.getUser());
 
-    // We need a path. Pattern: {year}/{dept_slug}/filename
-    String year = String.valueOf(submissionDate.getYear());
-    String deptSlug = department.getDepartmentName().toLowerCase().replaceAll("[^a-z0-9]", "_");
-    String originalFilename = file.getOriginalFilename();
-    String extension =
-        originalFilename != null && originalFilename.contains(".")
-            ? originalFilename.substring(originalFilename.lastIndexOf("."))
-            : ".pdf";
-
-    String filename = "paper_" + System.currentTimeMillis() + extension;
-    String relativePath = String.format("%s/%s/%s", year, deptSlug, filename);
+    // We need a path. Pattern: files/{department_slug}/{random_id}.{ext}
+    String relativePath = buildFilePath(department, file.getOriginalFilename());
 
     // Save file
     fileStorageService.saveFile(file, relativePath);
 
     // Update entity with path and save
     paper.setFilePath(relativePath);
+    paper.setOriginalFileName(safeOriginalFileName(file.getOriginalFilename()));
     ResearchPaper savedPaper = researchPaperRepository.save(paper);
 
     return researchPaperMapper.toDto(savedPaper);
+  }
+
+  static String buildFilePath(Department department, String originalFilename) {
+    byte[] bytes = new byte[8];
+    new SecureRandom().nextBytes(bytes);
+    return "files/"
+        + department.getSlug()
+        + "/"
+        + HexFormat.of().formatHex(bytes)
+        + safeExtension(originalFilename);
+  }
+
+  /**
+   * Returns the storage path the given {@code oldPath} would have after the paper is moved to
+   * {@code newDepartment}. The basename is preserved so only the department segment changes.
+   */
+  static String relocateFilePath(String oldPath, Department newDepartment) {
+    String basename = oldPath.substring(oldPath.lastIndexOf('/') + 1);
+    return "files/" + newDepartment.getSlug() + "/" + basename;
+  }
+
+  /** Returns a safe, allowlisted extension for the storage path — never derived from user input. */
+  private static String safeExtension(String originalFilename) {
+    String lower = originalFilename == null ? "" : originalFilename.toLowerCase();
+    if (lower.endsWith(".doc")) {
+      return ".doc";
+    }
+    if (lower.endsWith(".docx")) {
+      return ".docx";
+    }
+    return ".pdf";
+  }
+
+  private static String safeOriginalFileName(String originalFilename) {
+    return originalFilename != null && !originalFilename.isBlank()
+        ? originalFilename
+        : "untitled.pdf";
   }
 
   /**

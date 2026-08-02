@@ -1,7 +1,7 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.external.notifications.NotificationDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
+import com.acd.researchrepo.dto.external.notifications.NotificationResponse;
 import com.acd.researchrepo.event.NotificationCreatedEvent;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
@@ -41,9 +41,16 @@ public class NotificationService {
    * Creates a notification record and publishes a {@link NotificationCreatedEvent}. The event
    * listener dispatches the SSE after the enclosing transaction commits, preventing phantom
    * notifications on rollback.
+   *
+   * @param userId the recipient user ID
+   * @param message the notification message
+   * @param type the notification type
+   * @param relatedEntityId the ID of the related entity (paper, request, etc.)
+   * @param relatedEntityType the type of the related entity
+   * @return the created notification
    */
   @Transactional
-  public NotificationDto createAndSend(
+  public NotificationResponse createAndSend(
       Integer userId,
       String message,
       String type,
@@ -59,14 +66,15 @@ public class NotificationService {
     notification.setIsRead(false);
 
     notification = notificationRepository.save(notification);
-    NotificationDto dto = notificationMapper.toDto(notification);
+    NotificationResponse dto = notificationMapper.toDto(notification);
 
     eventPublisher.publishEvent(new NotificationCreatedEvent(userId, dto));
 
     return dto;
   }
 
-  public PaginatedResponse<NotificationDto> getNotifications(Integer userId, Pageable pageable) {
+  public PaginatedResponse<NotificationResponse> getNotifications(
+      Integer userId, Pageable pageable) {
     return PaginatedResponse.fromPage(
         notificationRepository.findByUserUserIdOrderByCreatedAtDesc(userId, pageable),
         notificationMapper::toDto);
@@ -81,12 +89,20 @@ public class NotificationService {
     notificationRepository.markAllReadByUserId(userId);
   }
 
+  /**
+   * Marks a single notification as read, verifying it belongs to the user.
+   *
+   * @param notificationId the ID of the notification
+   * @param userId the owning user ID
+   * @throws ApiException if the notification is not found or belongs to another user
+   */
   @Transactional
   public void markAsRead(Integer notificationId, Integer userId) {
     Notification notification =
         notificationRepository
             .findById(notificationId)
-            .orElseThrow(() -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Notification not found"));
+            .orElseThrow(
+                () -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Notification not found"));
 
     if (!notification.getUser().getUserId().equals(userId)) {
       throw new ApiException(ErrorCode.ACCESS_DENIED, "Access denied");
