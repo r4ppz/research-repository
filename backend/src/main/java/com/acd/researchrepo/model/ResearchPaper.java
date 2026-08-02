@@ -58,6 +58,10 @@ public class ResearchPaper {
   @Size(max = 512)
   private String filePath;
 
+  @Column(name = "original_file_name", length = 255)
+  @Size(max = 255)
+  private String originalFileName;
+
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "department_id", nullable = false)
   @NotNull

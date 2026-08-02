@@ -92,11 +92,12 @@ public class SubmissionService {
     paper.setStatus(ResearchPaperStatus.PENDING_REVIEW);
     paper.setUploadedBy(principal.getUser());
 
-    String relativePath =
-        ResearchPaperService.buildFilePath(submissionDate, department, file.getOriginalFilename());
+    String relativePath = ResearchPaperService.buildFilePath();
+    String originalFileName = safeOriginalFileName(file.getOriginalFilename());
 
     fileStorageService.saveFile(file, relativePath);
     paper.setFilePath(relativePath);
+    paper.setOriginalFileName(originalFileName);
     ResearchPaper savedPaper = researchPaperRepository.save(paper);
 
     List<User> admins =
@@ -184,13 +185,12 @@ public class SubmissionService {
     }
 
     if (file != null && !file.isEmpty()) {
-      String relativePath =
-          ResearchPaperService.buildFilePath(
-              paper.getSubmissionDate(), paper.getDepartment(), file.getOriginalFilename());
+      String relativePath = ResearchPaperService.buildFilePath();
 
       String oldPath = paper.getFilePath();
       fileStorageService.saveFile(file, relativePath);
       paper.setFilePath(relativePath);
+      paper.setOriginalFileName(safeOriginalFileName(file.getOriginalFilename()));
       try {
         fileStorageService.deleteFile(oldPath);
       } catch (Exception e) {
@@ -286,6 +286,12 @@ public class SubmissionService {
           paperId,
           "RESEARCH_PAPER");
     }
+  }
+
+  private static String safeOriginalFileName(String originalFilename) {
+    return originalFilename != null && !originalFilename.isBlank()
+        ? originalFilename
+        : "untitled.pdf";
   }
 
   private ResearchPaper getAndVerifySubmissionOwnership(

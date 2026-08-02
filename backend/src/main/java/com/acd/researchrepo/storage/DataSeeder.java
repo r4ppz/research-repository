@@ -72,6 +72,8 @@ public class DataSeeder implements CommandLineRunner {
       paper.setAuthorName(seed.authorName());
       paper.setAbstractText(seed.abstractText());
       paper.setFilePath(seed.filePath());
+      String seedPath = seed.filePath();
+      paper.setOriginalFileName(seedPath.substring(seedPath.lastIndexOf('/') + 1));
       paper.setDepartment(dept);
       paper.setSubmissionDate(seed.submissionDate());
       paper.setArchived(false);

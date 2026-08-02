@@ -9,7 +9,6 @@ import com.acd.researchrepo.dto.external.papers.PaperUpdateRequest;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.mapper.ResearchPaperMapper;
-import com.acd.researchrepo.model.Department;
 import com.acd.researchrepo.model.DocumentRequest;
 import com.acd.researchrepo.model.RequestStatus;
 import com.acd.researchrepo.model.ResearchPaper;
@@ -20,8 +19,10 @@ import com.acd.researchrepo.repository.ResearchPaperRepository;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.spec.ResearchPaperSpec;
 import com.acd.researchrepo.util.RoleBasedAccess;
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -262,6 +263,10 @@ public class ResearchPaperService {
 
     validateDownloadAccess(paper, principal);
 
+    if (paper.getOriginalFileName() != null) {
+      return paper.getOriginalFileName();
+    }
+
     String filePath = paper.getFilePath();
     return filePath.substring(filePath.lastIndexOf('/') + 1);
   }
@@ -289,8 +294,7 @@ public class ResearchPaperService {
 
   /**
    * Creates a new research paper with an uploaded file. Files are stored under {@code
-   * {year}/{department_slug}/paper_{timestamp}.{ext}}. DEPARTMENT_ADMINs can only create papers for
-   * their own department.
+   * papers/{random_id}}. DEPARTMENT_ADMINs can only create papers for their own department.
    *
    * @param metadata the paper metadata
    * @param file the uploaded file
@@ -332,27 +336,30 @@ public class ResearchPaperService {
     paper.setStatus(ResearchPaperStatus.ACTIVE);
     paper.setUploadedBy(principal.getUser());
 
-    // We need a path. Pattern: {year}/{dept_slug}/filename
-    String relativePath = buildFilePath(submissionDate, department, file.getOriginalFilename());
+    // We need a path. Pattern: papers/{random_id}
+    String relativePath = buildFilePath();
 
     // Save file
     fileStorageService.saveFile(file, relativePath);
 
     // Update entity with path and save
     paper.setFilePath(relativePath);
+    paper.setOriginalFileName(safeOriginalFileName(file.getOriginalFilename()));
     ResearchPaper savedPaper = researchPaperRepository.save(paper);
 
     return researchPaperMapper.toDto(savedPaper);
   }
 
-  static String buildFilePath(LocalDate date, Department dept, String originalFilename) {
-    String year = String.valueOf(date.getYear());
-    String deptSlug = dept.getDepartmentName().toLowerCase().replaceAll("[^a-z0-9]", "_");
-    String ext =
-        originalFilename != null && originalFilename.contains(".")
-            ? originalFilename.substring(originalFilename.lastIndexOf("."))
-            : ".pdf";
-    return String.format("%s/%s/paper_%d%s", year, deptSlug, System.currentTimeMillis(), ext);
+  static String buildFilePath() {
+    byte[] bytes = new byte[8];
+    new SecureRandom().nextBytes(bytes);
+    return "papers/" + HexFormat.of().formatHex(bytes);
+  }
+
+  private static String safeOriginalFileName(String originalFilename) {
+    return originalFilename != null && !originalFilename.isBlank()
+        ? originalFilename
+        : "untitled.pdf";
   }
 
   /**

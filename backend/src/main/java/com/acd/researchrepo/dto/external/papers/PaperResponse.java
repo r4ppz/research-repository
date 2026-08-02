@@ -17,6 +17,7 @@ public class PaperResponse {
   private DepartmentResponse department;
   private LocalDate submissionDate;
   private String filePath;
+  private String originalFileName;
   private String status;
   private UserResponse uploadedBy;
   private Boolean archived;

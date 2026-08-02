@@ -35,6 +35,7 @@ public class ResearchPaperMapper {
         .department(departmentMapper.toDto(paper.getDepartment()))
         .submissionDate(paper.getSubmissionDate())
         .filePath(paper.getFilePath())
+        .originalFileName(paper.getOriginalFileName())
         .status(paper.getStatus().name())
         .uploadedBy(paper.getUploadedBy() != null ? userMapper.toDto(paper.getUploadedBy()) : null)
         .archived(paper.getArchived())
