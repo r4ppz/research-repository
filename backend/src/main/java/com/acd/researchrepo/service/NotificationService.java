@@ -101,7 +101,8 @@ public class NotificationService {
     Notification notification =
         notificationRepository
             .findById(notificationId)
-            .orElseThrow(() -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Notification not found"));
+            .orElseThrow(
+                () -> new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "Notification not found"));
 
     if (!notification.getUser().getUserId().equals(userId)) {
       throw new ApiException(ErrorCode.ACCESS_DENIED, "Access denied");

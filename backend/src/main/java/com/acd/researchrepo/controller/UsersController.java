@@ -30,8 +30,7 @@ public class UsersController {
   private final UserService userService;
   private final DocumentRequestService documentRequestService;
 
-  public UsersController(
-      UserService userService, DocumentRequestService documentRequestService) {
+  public UsersController(UserService userService, DocumentRequestService documentRequestService) {
     this.userService = userService;
     this.documentRequestService = documentRequestService;
   }
