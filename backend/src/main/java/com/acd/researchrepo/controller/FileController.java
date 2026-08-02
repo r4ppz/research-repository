@@ -64,11 +64,13 @@ public class FileController {
     if (filename == null) {
       return "download.pdf";
     }
-    return filename
-        .replaceAll("[^\\x20-\\x7E]", "_")
-        .replaceAll("[\"\\\\]", "_")
-        .replaceAll("_+", "_")
-        .trim();
+    String sanitized =
+        filename
+            .replaceAll("[^\\x20-\\x7E]", "_")
+            .replaceAll("[\"\\\\]", "_")
+            .replaceAll("_+", "_")
+            .trim();
+    return sanitized.isEmpty() ? "download.pdf" : sanitized;
   }
 
   private String determineContentType(String filename) {
