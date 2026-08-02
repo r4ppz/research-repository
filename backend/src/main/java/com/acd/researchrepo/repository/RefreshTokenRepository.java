@@ -1,7 +1,6 @@
 package com.acd.researchrepo.repository;
 
 import com.acd.researchrepo.model.RefreshToken;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,9 +13,4 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Inte
   @Modifying
   @Query("DELETE FROM RefreshToken r WHERE r.user.userId = :userId")
   void deleteByUserId(@Param("userId") Integer userId);
-
-  // UNUSED
-  @Modifying
-  @Query("DELETE FROM RefreshToken r WHERE r.user.userId = :userId AND r.expiresAt < :now")
-  void deleteExpiredByUserId(@Param("userId") Integer userId, @Param("now") LocalDateTime now);
 }

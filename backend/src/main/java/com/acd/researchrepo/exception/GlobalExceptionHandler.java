@@ -50,13 +50,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return buildValidationErrorResponse(exception, request);
   }
 
-  @Override
-  protected ResponseEntity<Object> handleBindException(
-      BindException exception, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-
-    return buildValidationErrorResponse(exception, request);
-  }
-
   private ResponseEntity<Object> buildValidationErrorResponse(
       BindException exception, WebRequest request) {
     String traceId = MDC.get("traceId");
