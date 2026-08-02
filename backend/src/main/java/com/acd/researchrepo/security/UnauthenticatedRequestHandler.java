@@ -1,6 +1,7 @@
-package com.acd.researchrepo.exception;
+package com.acd.researchrepo.security;
 
 import com.acd.researchrepo.dto.external.error.ErrorResponse;
+import com.acd.researchrepo.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,11 +17,11 @@ import org.springframework.stereotype.Component;
  * errors happen before the controller layer, so @ControllerAdvice can't catch them.
  */
 @Component
-public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class UnauthenticatedRequestHandler implements AuthenticationEntryPoint {
 
   private final ObjectMapper objectMapper;
 
-  public RestAuthenticationEntryPoint(ObjectMapper objectMapper) {
+  public UnauthenticatedRequestHandler(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
   }
 

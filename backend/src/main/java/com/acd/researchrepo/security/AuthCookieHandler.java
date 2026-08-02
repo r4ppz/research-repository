@@ -1,4 +1,4 @@
-package com.acd.researchrepo.util;
+package com.acd.researchrepo.security;
 
 import com.acd.researchrepo.environment.AppProperties;
 import jakarta.servlet.http.Cookie;
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class CookieUtil {
+public class AuthCookieHandler {
 
   private final String environment;
   private final String refreshTokenName;
   private final int refreshTokenMaxAge;
 
-  public CookieUtil(
+  public AuthCookieHandler(
       AppProperties appProperties, @Value("${spring.profiles.active:}") String environment) {
     this.environment = environment;
     this.refreshTokenName = appProperties.getToken().getRefreshTokenCookieName();

@@ -1,4 +1,4 @@
-package com.acd.researchrepo.service;
+package com.acd.researchrepo.security;
 
 import com.acd.researchrepo.environment.AppProperties;
 import com.acd.researchrepo.model.User;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 // SpringSecurity handles most of the work like decoding, verifying etc.
 // Refresh token generation is in AuthService since they are not JWTs
 @Service
-public class JwtService {
+public class JwtTokenProvider {
 
   private final AppProperties appProperties;
 
@@ -26,7 +26,7 @@ public class JwtService {
 
   private final SecretKey signingKey;
 
-  public JwtService(AppProperties appProperties) {
+  public JwtTokenProvider(AppProperties appProperties) {
     this.appProperties = appProperties;
     this.jwtSecret = this.appProperties.getJwt().getSecret();
     this.accessTokenExpirySeconds = this.appProperties.getJwt().getAccessTokenExpiry();

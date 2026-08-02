@@ -1,8 +1,6 @@
-package com.acd.researchrepo.config;
+package com.acd.researchrepo.security;
 
 import com.acd.researchrepo.environment.AppProperties;
-import com.acd.researchrepo.exception.RestAuthenticationEntryPoint;
-import com.acd.researchrepo.security.CustomJwtAuthConverter;
 import io.jsonwebtoken.security.Keys;
 import java.util.List;
 import javax.crypto.SecretKey;
@@ -29,7 +27,7 @@ public class SecurityConfig {
 
   private final AppProperties appProperties;
   private final CustomJwtAuthConverter customJwtAuthConverter;
-  private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+  private final UnauthenticatedRequestHandler unauthenticatedRequestHandler;
 
   private final List<String> allowedOrigins;
   private final String jwtSecret;
@@ -39,15 +37,15 @@ public class SecurityConfig {
    *
    * @param appProperties application security and CORS settings
    * @param customJwtAuthConverter converts JWT claims into authenticated principals
-   * @param restAuthenticationEntryPoint handles authentication failures
+   * @param unauthenticatedRequestHandler handles authentication failures
    */
   public SecurityConfig(
       AppProperties appProperties,
       CustomJwtAuthConverter customJwtAuthConverter,
-      RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
+      UnauthenticatedRequestHandler unauthenticatedRequestHandler) {
     this.appProperties = appProperties;
     this.customJwtAuthConverter = customJwtAuthConverter;
-    this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
+    this.unauthenticatedRequestHandler = unauthenticatedRequestHandler;
     this.allowedOrigins = this.appProperties.getCors().getAllowedOrigins();
     this.jwtSecret = this.appProperties.getJwt().getSecret();
   }
@@ -72,7 +70,7 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .sessionManagement(sessionManagement())
         .oauth2ResourceServer(oauth2ResourceServer())
-        .exceptionHandling(ex -> ex.authenticationEntryPoint(restAuthenticationEntryPoint))
+        .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthenticatedRequestHandler))
         .authorizeHttpRequests(authorizeHttpRequests());
     return http.build();
   }
