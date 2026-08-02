@@ -24,8 +24,9 @@ public interface FileStorageProvider {
   void deleteFile(String subPath);
 
   /**
-   * Moves a file from {@code source} to {@code target}. If the move fails at any point, an
-   * exception is thrown and the source file is left intact.
+   * Copies a file from {@code source} to {@code target}, leaving the source intact. If the copy
+   * fails, an exception is thrown and neither file is modified. Deletion of the source is the
+   * caller's responsibility and is deferred until after the surrounding transaction commits.
    */
-  void moveFile(String source, String target);
+  void copyFile(String source, String target);
 }

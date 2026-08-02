@@ -220,12 +220,12 @@ public class ResearchPaperService {
               .orElseThrow(
                   () -> new ApiException(ErrorCode.VALIDATION_ERROR, "Department not found"));
 
-      // Move the physical file into the new department's folder so the storage path stays in
-      // sync with the department. On failure an exception propagates and the transaction rolls
-      // back, leaving the old file untouched.
+      // Copy the physical file into the new department's folder so the storage path stays in
+      // sync with the department. The old file is deleted only after the transaction commits, so
+      // a rollback never leaves the database referencing a deleted file.
       String oldPath = paper.getFilePath();
       String newPath = relocateFilePath(oldPath, department);
-      fileStorageService.moveFile(oldPath, newPath);
+      fileStorageService.moveFileAfterCommit(oldPath, newPath);
       paper.setFilePath(newPath);
       paper.setDepartment(department);
     }

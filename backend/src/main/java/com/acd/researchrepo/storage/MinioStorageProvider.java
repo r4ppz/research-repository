@@ -83,7 +83,7 @@ public class MinioStorageProvider implements FileStorageProvider {
   }
 
   @Override
-  public void moveFile(String source, String target) {
+  public void copyFile(String source, String target) {
     try {
       CopyObjectArgs copyArgs =
           CopyObjectArgs.builder()
@@ -93,10 +93,9 @@ public class MinioStorageProvider implements FileStorageProvider {
               .build();
 
       minioClient.copyObject(copyArgs);
-      minioClient.removeObject(RemoveObjectArgs.builder().bucket(bucket).object(source).build());
     } catch (MinioException | IOException | InvalidKeyException | NoSuchAlgorithmException e) {
-      log.error("Could not move file in MinIO: {} -> {}", source, target, e);
-      throw new ApiException(ErrorCode.FILE_STORAGE_ERROR, "Could not move file");
+      log.error("Could not copy file in MinIO: {} -> {}", source, target, e);
+      throw new ApiException(ErrorCode.FILE_STORAGE_ERROR, "Could not copy file");
     }
   }
 }

@@ -183,13 +183,14 @@ public class SubmissionService {
               .orElseThrow(
                   () -> new ApiException(ErrorCode.VALIDATION_ERROR, "Department not found"));
 
-      // Move the existing file into the new department's folder unless a replacement file is
+      // Copy the existing file into the new department's folder unless a replacement file is
       // being uploaded (that branch saves the new file under the new department path and deletes
-      // the old one).
+      // the old one after commit). Deletion of the old file is deferred until the transaction
+      // commits so a rollback never leaves the database referencing a deleted file.
       if (file == null || file.isEmpty()) {
         String oldPath = paper.getFilePath();
         String newPath = ResearchPaperService.relocateFilePath(oldPath, department);
-        fileStorageService.moveFile(oldPath, newPath);
+        fileStorageService.moveFileAfterCommit(oldPath, newPath);
         paper.setFilePath(newPath);
       }
       paper.setDepartment(department);
@@ -203,11 +204,7 @@ public class SubmissionService {
       fileStorageService.saveFile(file, relativePath);
       paper.setFilePath(relativePath);
       paper.setOriginalFileName(safeOriginalFileName(file.getOriginalFilename()));
-      try {
-        fileStorageService.deleteFile(oldPath);
-      } catch (Exception e) {
-        log.warn("Failed to delete old file after replacement: {}", oldPath, e);
-      }
+      fileStorageService.deleteFileAfterCommit(oldPath, relativePath);
     }
 
     ResearchPaper savedPaper = researchPaperRepository.save(paper);

@@ -101,14 +101,14 @@ public class LocalStorageProvider implements FileStorageProvider {
   }
 
   @Override
-  public void moveFile(String source, String target) {
+  public void copyFile(String source, String target) {
     try {
       Path src = rootLocation.resolve(source).normalize();
       Path dst = rootLocation.resolve(target).normalize();
 
       if (!src.startsWith(rootLocation) || !dst.startsWith(rootLocation)) {
         throw new ApiException(
-            ErrorCode.INVALID_REQUEST, "Cannot move file outside current directory");
+            ErrorCode.INVALID_REQUEST, "Cannot copy file outside current directory");
       }
 
       if (!Files.exists(src)) {
@@ -116,10 +116,10 @@ public class LocalStorageProvider implements FileStorageProvider {
       }
 
       Files.createDirectories(dst.getParent());
-      Files.move(src, dst, StandardCopyOption.REPLACE_EXISTING);
+      Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
-      log.error("Could not move file: {} -> {}", source, target, e);
-      throw new ApiException(ErrorCode.FILE_STORAGE_ERROR, "Could not move file");
+      log.error("Could not copy file: {} -> {}", source, target, e);
+      throw new ApiException(ErrorCode.FILE_STORAGE_ERROR, "Could not copy file");
     }
   }
 }
