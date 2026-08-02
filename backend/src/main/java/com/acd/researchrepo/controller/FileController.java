@@ -3,7 +3,6 @@ package com.acd.researchrepo.controller;
 import com.acd.researchrepo.security.CustomUserPrincipal;
 import com.acd.researchrepo.service.ResearchPaperService;
 import io.swagger.v3.oas.annotations.Operation;
-import java.nio.charset.StandardCharsets;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -51,15 +50,25 @@ public class FileController {
     Resource resource = researchPaperService.downloadPaper(paperId, userPrincipal);
 
     String contentType = determineContentType(filename);
+    String safeFilename = sanitizeHeaderFilename(filename);
     ContentDisposition disposition =
-        ContentDisposition.builder(view ? "inline" : "attachment")
-            .filename(filename, StandardCharsets.UTF_8)
-            .build();
+        ContentDisposition.builder(view ? "inline" : "attachment").filename(safeFilename).build();
 
     return ResponseEntity.ok()
         .contentType(MediaType.parseMediaType(contentType))
         .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
         .body(resource);
+  }
+
+  private String sanitizeHeaderFilename(String filename) {
+    if (filename == null) {
+      return "download.pdf";
+    }
+    return filename
+        .replaceAll("[^\\x20-\\x7E]", "_")
+        .replaceAll("[\"\\\\]", "_")
+        .replaceAll("_+", "_")
+        .trim();
   }
 
   private String determineContentType(String filename) {
