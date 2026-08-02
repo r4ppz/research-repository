@@ -1,6 +1,6 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.external.notifications.NotificationDto;
+import com.acd.researchrepo.dto.external.notifications.NotificationResponse;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,6 +46,8 @@ public class SseEmitterService {
 
   /**
    * Explicitly removes all emitters for a user. Each emitter is completed before removal.
+   *
+   * <p>Currently unused. Intended to disconnect a user's SSE streams when they log out.
    */
   public void removeEmitter(Integer userId) {
     Set<SseEmitter> userEmitters = emitters.remove(userId);
@@ -59,7 +61,7 @@ public class SseEmitterService {
    * Sends a notification event to all active SSE connections for a user. If an emitter fails, it is
    * removed individually without affecting other connections for the same user.
    */
-  public void sendToUser(Integer userId, NotificationDto dto) {
+  public void sendToUser(Integer userId, NotificationResponse dto) {
     Set<SseEmitter> userEmitters = emitters.get(userId);
     if (userEmitters == null || userEmitters.isEmpty()) {
       return;

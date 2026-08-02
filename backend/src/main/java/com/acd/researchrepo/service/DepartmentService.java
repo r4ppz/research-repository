@@ -1,10 +1,10 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.external.departments.AdminDepartmentDto;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
 import com.acd.researchrepo.dto.external.departments.DepartmentCreateRequest;
+import com.acd.researchrepo.dto.external.departments.DepartmentDetailResponse;
+import com.acd.researchrepo.dto.external.departments.DepartmentResponse;
 import com.acd.researchrepo.dto.external.departments.DepartmentUpdateRequest;
-import com.acd.researchrepo.dto.external.model.DepartmentDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.mapper.DepartmentMapper;
@@ -52,9 +52,9 @@ public class DepartmentService {
    * Retrieves a list of departments that have at least one associated research paper.
    *
    * @param user the authenticated user requesting the departments
-   * @return a list of DepartmentDto objects
+   * @return a list of DepartmentResponse objects
    */
-  public List<DepartmentDto> getAvailableDepartments(CustomUserPrincipal user) {
+  public List<DepartmentResponse> getAvailableDepartments(CustomUserPrincipal user) {
     List<Department> departments;
 
     departments = departmentRepository.findAll();
@@ -62,7 +62,7 @@ public class DepartmentService {
     // Only include departments that have at least one paper in scope
     Set<Integer> deptHasPaper = new HashSet<>(researchPaperRepository.findDistinctDepartmentIds());
 
-    List<DepartmentDto> departmentDto =
+    List<DepartmentResponse> departmentDto =
         departments.stream()
             .filter(deps -> deptHasPaper.contains(deps.getDepartmentId()))
             .sorted(Comparator.comparing(Department::getDepartmentName))
@@ -72,7 +72,7 @@ public class DepartmentService {
     return departmentDto;
   }
 
-  public PaginatedResponse<AdminDepartmentDto> getAdminDepartments(
+  public PaginatedResponse<DepartmentDetailResponse> getAdminDepartments(
       int page, int size, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
 
@@ -87,10 +87,15 @@ public class DepartmentService {
     Map<Integer, Long> userCounts = toDepartmentCountMap(userRepository.countByDepartmentIds(ids));
 
     return PaginatedResponse.fromPage(
-        departments, dept -> toAdminDto(dept, paperCounts, userCounts));
+        departments,
+        dept ->
+            departmentMapper.toAdminDto(
+                dept,
+                paperCounts.getOrDefault(dept.getDepartmentId(), 0L),
+                userCounts.getOrDefault(dept.getDepartmentId(), 0L)));
   }
 
-  public AdminDepartmentDto createDepartment(
+  public DepartmentDetailResponse createDepartment(
       DepartmentCreateRequest request, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
     if (departmentRepository.existsByDepartmentName(request.getDepartmentName().trim())) {
@@ -98,10 +103,14 @@ public class DepartmentService {
     }
     Department department = new Department();
     department.setDepartmentName(request.getDepartmentName().trim());
-    return toAdminDto(departmentRepository.save(department));
+    Department saved = departmentRepository.save(department);
+    return departmentMapper.toAdminDto(
+        saved,
+        researchPaperRepository.countByDepartmentDepartmentId(saved.getDepartmentId()),
+        userRepository.countByDepartmentDepartmentId(saved.getDepartmentId()));
   }
 
-  public AdminDepartmentDto updateDepartment(
+  public DepartmentDetailResponse updateDepartment(
       Integer id, DepartmentUpdateRequest request, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
     Department department =
@@ -114,7 +123,11 @@ public class DepartmentService {
       throw new ApiException(ErrorCode.DUPLICATE_REQUEST, "Department name already exists");
     }
     department.setDepartmentName(request.getDepartmentName().trim());
-    return toAdminDto(departmentRepository.save(department));
+    Department saved = departmentRepository.save(department);
+    return departmentMapper.toAdminDto(
+        saved,
+        researchPaperRepository.countByDepartmentDepartmentId(saved.getDepartmentId()),
+        userRepository.countByDepartmentDepartmentId(saved.getDepartmentId()));
   }
 
   /**
@@ -138,38 +151,12 @@ public class DepartmentService {
     departmentRepository.delete(department);
   }
 
-  private AdminDepartmentDto toAdminDto(Department department) {
-    long paperCount =
-        researchPaperRepository.countByDepartmentDepartmentId(department.getDepartmentId());
-    long userCount = userRepository.countByDepartmentDepartmentId(department.getDepartmentId());
-    return AdminDepartmentDto.builder()
-        .departmentId(department.getDepartmentId())
-        .departmentName(department.getDepartmentName())
-        .paperCount(paperCount)
-        .userCount(userCount)
-        .createdAt(department.getCreatedAt())
-        .updatedAt(department.getUpdatedAt())
-        .build();
-  }
-
   private static Map<Integer, Long> toDepartmentCountMap(List<Object[]> rows) {
     Map<Integer, Long> map = new HashMap<>();
     for (Object[] row : rows) {
       map.put((Integer) row[0], (Long) row[1]);
     }
     return map;
-  }
-
-  private static AdminDepartmentDto toAdminDto(
-      Department department, Map<Integer, Long> paperCounts, Map<Integer, Long> userCounts) {
-    return AdminDepartmentDto.builder()
-        .departmentId(department.getDepartmentId())
-        .departmentName(department.getDepartmentName())
-        .paperCount(paperCounts.getOrDefault(department.getDepartmentId(), 0L))
-        .userCount(userCounts.getOrDefault(department.getDepartmentId(), 0L))
-        .createdAt(department.getCreatedAt())
-        .updatedAt(department.getUpdatedAt())
-        .build();
   }
 
   private void requireSuperAdmin(CustomUserPrincipal principal) {

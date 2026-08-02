@@ -1,9 +1,9 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.external.model.UserDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
-import com.acd.researchrepo.dto.external.requests.ChangeRoleRequest;
-import com.acd.researchrepo.dto.external.requests.CreateUserRequest;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
+import com.acd.researchrepo.dto.external.users.ChangeRoleRequest;
+import com.acd.researchrepo.dto.external.users.CreateUserRequest;
+import com.acd.researchrepo.dto.external.users.UserResponse;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.mapper.UserMapper;
@@ -51,7 +51,7 @@ public class AdminUserService {
     this.userMapper = userMapper;
   }
 
-  public PaginatedResponse<UserDto> listUsers(
+  public PaginatedResponse<UserResponse> listUsers(
       int page, int size, String search, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
 
@@ -71,7 +71,7 @@ public class AdminUserService {
    * A user cannot change their own role.
    */
   @Transactional
-  public UserDto changeRole(
+  public UserResponse changeRole(
       Integer targetUserId, ChangeRoleRequest request, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
 
@@ -129,7 +129,7 @@ public class AdminUserService {
    * user's display name is derived from the email local-part.
    */
   @Transactional
-  public UserDto createUser(CreateUserRequest request, CustomUserPrincipal principal) {
+  public UserResponse createUser(CreateUserRequest request, CustomUserPrincipal principal) {
     requireSuperAdmin(principal);
 
     String email = request.getEmail().toLowerCase().trim();

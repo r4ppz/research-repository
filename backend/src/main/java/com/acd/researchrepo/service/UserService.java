@@ -1,7 +1,7 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.external.model.UserDto;
-import com.acd.researchrepo.dto.internal.GoogleUserInfo;
+import com.acd.researchrepo.dto.external.users.UserResponse;
+import com.acd.researchrepo.dto.internal.GoogleUserProfile;
 import com.acd.researchrepo.environment.AppProperties;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
@@ -32,7 +32,7 @@ public class UserService {
     this.userMapper = userMapper;
   }
 
-  public UserDto getUserById(Integer userId) {
+  public UserResponse getUserById(Integer userId) {
     return userRepository
         .findById(userId)
         .map(userMapper::toDto)
@@ -45,7 +45,7 @@ public class UserService {
    * the initial SUPER_ADMIN bootstrap email configuration.
    */
   @Transactional
-  public User findOrCreateUser(GoogleUserInfo googleInfo) {
+  public User findOrCreateUser(GoogleUserProfile googleInfo) {
     String email = normalizeEmail(googleInfo.getEmail());
 
     Optional<User> existingUser = userRepository.findByEmail(email);
@@ -84,7 +84,7 @@ public class UserService {
     return UserRole.STUDENT;
   }
 
-  private boolean updateUserIfChanged(User user, GoogleUserInfo googleInfo) {
+  private boolean updateUserIfChanged(User user, GoogleUserProfile googleInfo) {
 
     boolean changed = false;
 

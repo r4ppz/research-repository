@@ -1,14 +1,15 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.external.model.ResearchPaperDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
 import com.acd.researchrepo.dto.external.papers.PaperCreateRequest;
+import com.acd.researchrepo.dto.external.papers.PaperRequestStatusResponse;
+import com.acd.researchrepo.dto.external.papers.PaperResponse;
+import com.acd.researchrepo.dto.external.papers.PaperSearchRequest;
 import com.acd.researchrepo.dto.external.papers.PaperUpdateRequest;
-import com.acd.researchrepo.dto.external.papers.PaperUserRequestResponse;
-import com.acd.researchrepo.dto.external.papers.ResearchPaperSearchRequest;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
 import com.acd.researchrepo.mapper.ResearchPaperMapper;
+import com.acd.researchrepo.model.Department;
 import com.acd.researchrepo.model.DocumentRequest;
 import com.acd.researchrepo.model.RequestStatus;
 import com.acd.researchrepo.model.ResearchPaper;
@@ -61,8 +62,8 @@ public class ResearchPaperService {
     this.departmentRepository = departmentRepository;
   }
 
-  public PaginatedResponse<ResearchPaperDto> getPapers(
-      ResearchPaperSearchRequest request, CustomUserPrincipal userPrincipal) {
+  public PaginatedResponse<PaperResponse> getPapers(
+      PaperSearchRequest request, CustomUserPrincipal userPrincipal) {
 
     Boolean archived = request.getArchived();
     if (!RoleBasedAccess.isUserAdmin(userPrincipal)) {
@@ -83,8 +84,8 @@ public class ResearchPaperService {
    * DEPARTMENT_ADMIN} is forced to their own department (ignoring any {@code departmentId} filter);
    * {@code SUPER_ADMIN} can filter by any department or see all.
    */
-  public PaginatedResponse<ResearchPaperDto> getAdminPapers(
-      ResearchPaperSearchRequest request, CustomUserPrincipal userPrincipal) {
+  public PaginatedResponse<PaperResponse> getAdminPapers(
+      PaperSearchRequest request, CustomUserPrincipal userPrincipal) {
 
     // Authorization check: must be admin
     if (!RoleBasedAccess.isUserAdmin(userPrincipal)) {
@@ -124,7 +125,7 @@ public class ResearchPaperService {
     return PaginatedResponse.fromPage(paperPage, researchPaperMapper::toDto);
   }
 
-  public ResearchPaperDto getPaperById(Integer id, CustomUserPrincipal userPrincipal) {
+  public PaperResponse getPaperById(Integer id, CustomUserPrincipal userPrincipal) {
     Optional<ResearchPaper> paperOpt = researchPaperRepository.findById(id);
 
     if (paperOpt.isEmpty()) {
@@ -158,7 +159,7 @@ public class ResearchPaperService {
     return researchPaperRepository.findDistinctYears(deptId, onlyActive);
   }
 
-  public PaperUserRequestResponse getUserRequestForPaper(
+  public PaperRequestStatusResponse getUserRequestForPaper(
       Integer paperId, CustomUserPrincipal userPrincipal) {
     return documentRequestService.getUserRequestForPaper(paperId, userPrincipal);
   }
@@ -188,7 +189,7 @@ public class ResearchPaperService {
   }
 
   @Transactional
-  public ResearchPaperDto updatePaper(
+  public PaperResponse updatePaper(
       Integer id, PaperUpdateRequest metadata, CustomUserPrincipal principal) {
 
     ResearchPaper paper = getAndVerifyAdminAccess(id, principal);
@@ -278,7 +279,7 @@ public class ResearchPaperService {
    * their own department.
    */
   @Transactional
-  public ResearchPaperDto createPaper(
+  public PaperResponse createPaper(
       PaperCreateRequest metadata, MultipartFile file, CustomUserPrincipal principal) {
 
     // Authorization & Role-based validation
@@ -312,16 +313,7 @@ public class ResearchPaperService {
     paper.setUploadedBy(principal.getUser());
 
     // We need a path. Pattern: {year}/{dept_slug}/filename
-    String year = String.valueOf(submissionDate.getYear());
-    String deptSlug = department.getDepartmentName().toLowerCase().replaceAll("[^a-z0-9]", "_");
-    String originalFilename = file.getOriginalFilename();
-    String extension =
-        originalFilename != null && originalFilename.contains(".")
-            ? originalFilename.substring(originalFilename.lastIndexOf("."))
-            : ".pdf";
-
-    String filename = "paper_" + System.currentTimeMillis() + extension;
-    String relativePath = String.format("%s/%s/%s", year, deptSlug, filename);
+    String relativePath = buildFilePath(submissionDate, department, file.getOriginalFilename());
 
     // Save file
     fileStorageService.saveFile(file, relativePath);
@@ -331,6 +323,16 @@ public class ResearchPaperService {
     ResearchPaper savedPaper = researchPaperRepository.save(paper);
 
     return researchPaperMapper.toDto(savedPaper);
+  }
+
+  static String buildFilePath(LocalDate date, Department dept, String originalFilename) {
+    String year = String.valueOf(date.getYear());
+    String deptSlug = dept.getDepartmentName().toLowerCase().replaceAll("[^a-z0-9]", "_");
+    String ext =
+        originalFilename != null && originalFilename.contains(".")
+            ? originalFilename.substring(originalFilename.lastIndexOf("."))
+            : ".pdf";
+    return String.format("%s/%s/paper_%d%s", year, deptSlug, System.currentTimeMillis(), ext);
   }
 
   /**

@@ -1,7 +1,7 @@
 package com.acd.researchrepo.service;
 
-import com.acd.researchrepo.dto.external.notifications.NotificationDto;
-import com.acd.researchrepo.dto.external.papers.PaginatedResponse;
+import com.acd.researchrepo.dto.external.common.PaginatedResponse;
+import com.acd.researchrepo.dto.external.notifications.NotificationResponse;
 import com.acd.researchrepo.event.NotificationCreatedEvent;
 import com.acd.researchrepo.exception.ApiException;
 import com.acd.researchrepo.exception.ErrorCode;
@@ -43,7 +43,7 @@ public class NotificationService {
    * notifications on rollback.
    */
   @Transactional
-  public NotificationDto createAndSend(
+  public NotificationResponse createAndSend(
       Integer userId,
       String message,
       String type,
@@ -59,14 +59,15 @@ public class NotificationService {
     notification.setIsRead(false);
 
     notification = notificationRepository.save(notification);
-    NotificationDto dto = notificationMapper.toDto(notification);
+    NotificationResponse dto = notificationMapper.toDto(notification);
 
     eventPublisher.publishEvent(new NotificationCreatedEvent(userId, dto));
 
     return dto;
   }
 
-  public PaginatedResponse<NotificationDto> getNotifications(Integer userId, Pageable pageable) {
+  public PaginatedResponse<NotificationResponse> getNotifications(
+      Integer userId, Pageable pageable) {
     return PaginatedResponse.fromPage(
         notificationRepository.findByUserUserIdOrderByCreatedAtDesc(userId, pageable),
         notificationMapper::toDto);
