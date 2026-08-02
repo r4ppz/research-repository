@@ -1,4 +1,4 @@
-package com.acd.researchrepo.dto.external.model;
+package com.acd.researchrepo.dto.external.departments;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.extern.jackson.Jacksonized;
 @Getter
 @Builder
 @Jacksonized
-public class DepartmentDto {
+public class DepartmentResponse {
   private final Integer departmentId;
   private final String departmentName;
 }

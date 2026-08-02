@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class AdminDepartmentDto {
+public class DepartmentDetailResponse {
   private Integer departmentId;
   private String departmentName;
   private Long paperCount;

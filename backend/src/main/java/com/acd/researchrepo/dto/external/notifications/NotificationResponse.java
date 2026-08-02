@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class NotificationDto {
+public class NotificationResponse {
   private Integer notificationId;
   private String message;
   private String type;
