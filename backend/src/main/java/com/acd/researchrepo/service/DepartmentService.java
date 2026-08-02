@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -103,6 +104,10 @@ public class DepartmentService {
       throw new ApiException(ErrorCode.DUPLICATE_REQUEST, "Department name already exists");
     }
     String slug = generateSlug(name);
+    if (slug.isEmpty()) {
+      throw new ApiException(
+          ErrorCode.VALIDATION_ERROR, "Department name must contain letters or numbers");
+    }
     if (departmentRepository.existsBySlug(slug)) {
       throw new ApiException(
           ErrorCode.DUPLICATE_REQUEST, "A department with a similar name already exists");
@@ -110,7 +115,13 @@ public class DepartmentService {
     Department department = new Department();
     department.setDepartmentName(name);
     department.setSlug(slug);
-    Department saved = departmentRepository.save(department);
+    Department saved;
+    try {
+      saved = departmentRepository.save(department);
+    } catch (DataIntegrityViolationException e) {
+      throw new ApiException(
+          ErrorCode.DUPLICATE_REQUEST, "A department with a similar name already exists");
+    }
     return departmentMapper.toAdminDto(
         saved,
         researchPaperRepository.countByDepartmentDepartmentId(saved.getDepartmentId()),
