@@ -70,7 +70,7 @@ export const ResearchModal = ({
 
   const formattedDate = formatDateLong(paper.submissionDate);
   const department = paper.department.departmentName;
-  const fileName = paper.filePath?.split("/").pop() ?? "paper.pdf";
+  const fileName = paper.originalFileName ?? paper.filePath?.split("/").pop() ?? "paper.pdf";
 
   const handleView = () => {
     if (!paper.paperId) return;

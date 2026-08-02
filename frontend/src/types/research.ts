@@ -12,6 +12,7 @@ export interface ResearchPaper {
   department: Department;
   submissionDate: string; // YYYY-MM-DD
   filePath?: string; // relative file path, e.g. '2023/dept_cs/paper_123.pdf'
+  originalFileName?: string; // original uploaded filename, e.g. 'my_thesis.pdf'
   status?: PaperStatus;
   uploadedBy?: User | null;
   archived?: boolean;
