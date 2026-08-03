@@ -38,6 +38,9 @@ function AppToast({ toast }: ToastProps<ToastData>) {
     <Toast
       toast={toast}
       className={`${styles.toast} ${variantClass} ${isExiting ? styles.exiting : ""}`}
+      onClick={() => {
+        setIsExiting(true);
+      }}
       onAnimationEnd={() => {
         if (isExiting) toast.onClose?.();
       }}
