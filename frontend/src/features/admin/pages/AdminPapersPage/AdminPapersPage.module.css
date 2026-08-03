@@ -53,6 +53,12 @@
   font-weight: var(--font-weight-bold);
 }
 
+.subtitle {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
 .createButton {
   width: 100%;
 }

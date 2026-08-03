@@ -23,6 +23,15 @@ export const AdminRequestsPage = () => {
       <Header />
       <main className={style.main}>
         <div className={style.mainContainer}>
+          <section className={style.headerSection}>
+            <div>
+              <h1 className={style.titleHeader}>Requests &amp; Submissions</h1>
+              <p className={style.subtitle}>
+                Review document requests and manage incoming paper submissions.
+              </p>
+            </div>
+          </section>
+
           <div className={style.tabsContainer}>
             <Button
               variant={tab === "download-requests" ? "primary" : "secondary"}

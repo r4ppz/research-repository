@@ -35,7 +35,12 @@ export const AdminPapersPage = () => {
       <main className={style.main}>
         <div className={style.mainContainer}>
           <div className={style.headerSection}>
-            <h1 className={style.titleHeader}>Manage Research Papers</h1>
+            <div>
+              <h1 className={style.titleHeader}>Manage Research Papers</h1>
+              <p className={style.subtitle}>
+                Add new papers, manage publications, and archive inactive ones.
+              </p>
+            </div>
             <Button onClick={openModal} className={style.createButton}>
               <FilePlus2 className={style.iconTab} />
               Add Paper
