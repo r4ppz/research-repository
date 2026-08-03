@@ -112,7 +112,8 @@ export const ResearchModal = ({
           <p className={style.abstractText}>{paper.abstractText}</p>
         </div>
 
-        {isUserSuperOrDepartmentAdmin(user) && (
+        {(isUserSuperOrDepartmentAdmin(user) ||
+          (paper.uploadedBy?.userId != null && paper.uploadedBy.userId === user?.userId)) && (
           <div
             className={style.fileCard}
             onClick={handleView}
