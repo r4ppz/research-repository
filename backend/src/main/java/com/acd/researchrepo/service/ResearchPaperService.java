@@ -423,12 +423,18 @@ public class ResearchPaperService {
   }
 
   /**
-   * Enforces download access rules based on role: SUPER_ADMIN has unrestricted access;
-   * DEPARTMENT_ADMIN can download papers in their department; students and faculty must have an
-   * accepted document request for the paper (archived papers are not available to non-admins).
+   * Enforces download access rules based on role: SUPER_ADMIN has unrestricted access; the paper's
+   * uploader can always access their own file; DEPARTMENT_ADMIN can download papers in their
+   * department; students and faculty must have an accepted document request for the paper (archived
+   * papers are not available to non-admins).
    */
   private void validateDownloadAccess(ResearchPaper paper, CustomUserPrincipal principal) {
     if (RoleBasedAccess.isUserSuperAdmin(principal)) {
+      return;
+    }
+
+    if (paper.getUploadedBy() != null
+        && principal.getUserId().equals(paper.getUploadedBy().getUserId())) {
       return;
     }
 
