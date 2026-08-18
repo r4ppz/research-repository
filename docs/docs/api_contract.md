@@ -510,6 +510,99 @@ Returns the current user's request for the specified paper, if it exists. Availa
 
 ---
 
+## Submissions
+
+Student-facing endpoints for submitting, listing, updating, and deleting research papers that await
+administrative review. Submissions are stored in the `research_papers` table with status
+`PENDING_REVIEW`. Only the `STUDENT` role may create submissions; `DEPARTMENT_ADMIN` and
+`SUPER_ADMIN` review them via `PUT /api/admin/papers/{id}/approve` and
+`PUT /api/admin/papers/{id}/reject-submission`.
+
+### POST /api/submissions
+
+Submit a new paper. Creates a `PENDING_REVIEW` submission and notifies the department's admins.
+Uses `multipart/form-data`.
+
+- **Authentication:** JWT Required (`STUDENT` only)
+- **Email restriction:** Only accounts with an `@acdeducation.com` email may submit.
+- **Content-Type:** `multipart/form-data`
+- **Request Parts:**
+  - `metadata`: Stringified JSON. Must conform to the [paper validation rules](#validation-rules).
+  ```json
+  {
+      "title": "Impact of AI in Ethics",
+      "authorName": "Sarah Jenkins",
+      "abstractText": "This research analyzes...",
+      "departmentId": 1,
+      "submissionDate": "2025-11-20"
+  }
+  ```
+  - `file`: The binary PDF or DOCX file (max 20MB). Required.
+- **Response (201 Created):** Returns the created `ResearchPaper`.
+- **Notification:** `NEW_SUBMISSION` sent to all `DEPARTMENT_ADMIN` users of the paper's department
+  (related entity = the paper).
+
+### GET /api/submissions
+
+Retrieve a paginated list of the authenticated user's own submissions. Any authenticated user may
+list their uploads.
+
+- **Authentication:** JWT Required
+- The result is always scoped to the caller's own uploads — no other user's papers are returned.
+
+**Query Parameters:**
+
+| Parameter      | Type   | Required | Description                                                              |
+| -------------- | ------ | -------- | ------------------------------------------------------------------------ |
+| `page`         | number | No       | Zero-indexed page number (default: 0)                                    |
+| `size`         | number | No       | Results per page (default: 20, max: 100)                                 |
+| `search`       | string | No       | Full-text search across title, author name, and abstract                 |
+| `status`       | string | No       | Filter by paper status: `ACTIVE`, `PENDING_REVIEW`, or `REJECTED`        |
+| `sortBy`       | string | No       | Sort field: `submissionDate` (default), `title`, `authorName`            |
+| `sortOrder`    | string | No       | Sort direction: `desc` (default), `asc`                                  |
+
+- **Response (200 OK):** Paginated `ResearchPaper[]`.
+
+### PUT /api/submissions/{id}
+
+Update a pending submission's metadata. The file part is optional — omit it to keep the current file.
+
+- **Authentication:** JWT Required
+- **Authorization:** Only the submitter may update their submission, and only while it is
+  `PENDING_REVIEW`.
+- **Content-Type:** `multipart/form-data`
+- **Request Parts:**
+  - `metadata`: Stringified JSON (same schema as POST).
+  - `file`: Optional binary PDF or DOCX file (max 20MB). When omitted, the existing file is kept.
+- **Department change:** If `departmentId` changes, the stored file is relocated to the new
+  department's folder (or replaced to track a new upload).
+- **Response (200 OK):** Returns the updated `ResearchPaper`.
+
+### DELETE /api/submissions/{id}
+
+Delete a pending submission and its stored file.
+
+- **Authentication:** JWT Required
+- **Authorization:** Only the submitter may delete their submission, and only while it is
+  `PENDING_REVIEW`.
+- **Response:** `204 No Content`
+
+**Submissions Error Codes:**
+
+| Condition                                   | HTTP | Code                  | Message                                          |
+| ------------------------------------------- | ---- | --------------------- | ------------------------------------------------ |
+| Non-student attempting to submit            | 403  | `ACCESS_DENIED`       | "Only students can submit papers"                |
+| Email not from allowed domain               | 403  | `ACCESS_DENIED`       | "Only @acdeducation.com emails can submit papers" |
+| Department not found                        | 400  | `VALIDATION_ERROR`    | "Department not found"                           |
+| Uploader mismatch                           | 403  | `ACCESS_DENIED`       | "You do not have access to this paper"           |
+| Paper not in PENDING_REVIEW (edit/delete)   | 400  | `INVALID_REQUEST`     | "Only PENDING_REVIEW submissions can be edited/deleted" |
+| Metadata JSON is malformed                  | 400  | `INVALID_REQUEST`     | "The metadata part must be valid JSON."         |
+| File uploaded is not PDF/DOCX               | 415  | `UNSUPPORTED_MEDIA_TYPE` | "Only PDF and DOCX files are allowed."         |
+| Required field missing (e.g., title)        | 400  | `VALIDATION_ERROR`    | "Title is required."                            |
+| Paper not found                             | 404  | `RESOURCE_NOT_FOUND` | "Paper not found"                               |
+
+---
+
 ## Student/Faculty Requests
 
 ### GET /api/users/me/requests
@@ -1033,7 +1126,8 @@ Idempotent endpoints to toggle paper visibility.
     - All such transitions MUST be audit-logged (admin/system actor, timestamp, old/new status, and
       `rejection_reason`).
     - The system SHOULD notify affected users that their request has been rejected due to the paper
-      being archived (notification channel is out of scope for the API contract).
+      being archived. Notifications are delivered via SSE — see
+      [Real-time Notifications](#real-time-and-inbox-notifications-sse).
 
 - Effects on endpoints:
     - `GET /api/users/me/requests` SHOULD return the authenticated user's requests for archived
@@ -1044,6 +1138,47 @@ Idempotent endpoints to toggle paper visibility.
       archived papers. Users MUST NOT be allowed to create new requests for archived papers.
     - Admin endpoints (`/api/admin/*`) MAY continue to surface historical requests for archived
       papers (now marked `REJECTED`) so admins can audit and view history.
+
+---
+
+### PUT /api/admin/papers/{id}/approve
+
+Approve a paper submission, transitioning it from `PENDING_REVIEW` to `ACTIVE` and making it
+publicly visible. Sends a `SUBMISSION_APPROVED` notification to the submitting user.
+
+- **Authentication:** JWT Required (`DEPARTMENT_ADMIN` or `SUPER_ADMIN`)
+- **Authorization:** Paper must belong to the admin's own department (for `DEPARTMENT_ADMIN`).
+- **Process:** 1. Paper must be in `PENDING_REVIEW`. 2. Move to `ACTIVE`.
+- **Response (200 OK):** Returns the updated `ResearchPaper` object.
+
+**Error Codes:**
+
+| Condition                         | HTTP | Code               | Message                                          |
+| --------------------------------- | ---- | ------------------ | ------------------------------------------------ |
+| Paper not found                   | 404  | `RESOURCE_NOT_FOUND` | "Paper not found"                              |
+| Paper not pending review          | 400  | `INVALID_REQUEST`  | "Only PENDING_REVIEW submissions can be approved" |
+| Wrong department                  | 403  | `ACCESS_DENIED`    | "You can only manage papers within your department." |
+
+---
+
+### PUT /api/admin/papers/{id}/reject-submission
+
+Reject a paper submission. The paper and its stored file are **permanently deleted** and a
+`SUBMISSION_REJECTED` notification is sent to the submitting user.
+
+- **Authentication:** JWT Required (`DEPARTMENT_ADMIN` or `SUPER_ADMIN`)
+- **Authorization:** Paper must belong to the admin's own department (for `DEPARTMENT_ADMIN`).
+- **Process:** 1. Paper must be in `PENDING_REVIEW`. 2. Delete database record. 3. Delete
+  physical file from storage. 4. Notify uploader.
+- **Response:** `200 OK` (no body)
+
+**Error Codes:**
+
+| Condition                         | HTTP | Code                 | Message                                          |
+| --------------------------------- | ---- | -------------------- | ------------------------------------------------ |
+| Paper not found                   | 404  | `RESOURCE_NOT_FOUND` | "Paper not found"                                |
+| Paper not pending review          | 400  | `INVALID_REQUEST`    | "Only PENDING_REVIEW submissions can be rejected" |
+| Wrong department                  | 403  | `ACCESS_DENIED`      | "You can only manage papers within your department." |
 
 ---
 
@@ -1070,6 +1205,124 @@ Permanently delete a paper and its associated file.
 | Metadata JSON is malformed           | 400  | `INVALID_REQUEST`        | "The metadata part must be valid JSON."              |
 | Required field missing (e.g., title) | 400  | `VALIDATION_ERROR`       | "Title is required."                                 |
 | Physical file cannot be saved        | 500  | `FILE_STORAGE_ERROR`     | "Internal storage failure while saving file."        |
+
+---
+
+## Admin Departments
+
+SuperAdmin CRUD for departments. Department names generate a filesystem-safe folder `slug`
+(e.g. `Information Technology` → `information_technology`) used for paper file folders.
+`DEPARTMENT_ADMIN` and other non-super-admin roles are denied.
+
+### GET /api/admin/departments
+
+Retrieve a paginated list of departments with usage counts.
+
+- **Authentication:** JWT Required (`SUPER_ADMIN`)
+- **Query Parameters:** `page` (default 0), `size` (default 20, max 100)
+- **Response (200 OK):** Paginated `DepartmentDetail[]`.
+
+| Field              | Type   | Description                                    |
+| ------------------ | ------ | ---------------------------------------------- |
+| `departmentId`     | number | Unique identifier                              |
+| `departmentName`   | string | Display name                                   |
+| `slug`             | string | Filesystem-safe folder slug                    |
+| `paperCount`       | number | Number of research papers in the department    |
+| `userCount`        | number | Number of users assigned to the department     |
+| `createdAt`        | string | ISO 8601 timestamp of creation                 |
+| `updatedAt`        | string | ISO 8601 timestamp of last update              |
+
+### POST /api/admin/departments
+
+Create a new department.
+
+- **Authentication:** JWT Required (`SUPER_ADMIN`)
+- **Request Body:** `{ "departmentName": string (required, ≤64) }`
+- **Response (201 Created):** The created `DepartmentDetail`.
+
+### PUT /api/admin/departments/{id}
+
+Rename a department.
+
+- **Authentication:** JWT Required (`SUPER_ADMIN`)
+- **Request Body:** `{ "departmentName": string (required, ≤64) }`
+- **Response (200 OK):** The updated `DepartmentDetail`.
+
+### DELETE /api/admin/departments/{id}
+
+Delete an empty department.
+
+- **Authentication:** JWT Required (`SUPER_ADMIN`)
+- **Fails** if any research papers or users are still linked to the department.
+- **Response:** `204 No Content`
+
+**Admin Departments Error Codes:**
+
+| Condition                                                     | HTTP | Code                  | Message                                                          |
+| ------------------------------------------------------------- | ---- | --------------------- | ---------------------------------------------------------------- |
+| Non-super-admin role                                         | 403  | `ACCESS_DENIED`       | "Access denied"                                                  |
+| Department not found                                         | 404  | `RESOURCE_NOT_FOUND`  | "Department not found"                                          |
+| Delete with linked papers or users                           | 400  | `INVALID_REQUEST`     | "Cannot delete department with linked papers or users. Remove all linked papers and users first." |
+| Missing department name                                      | 400  | `VALIDATION_ERROR`    | "Department name is required"                                   |
+
+---
+
+## Admin Users
+
+SuperAdmin user management — list, create users, and change roles. Role changes are logged in
+`RoleChangeLog` and revoke the target user's refresh tokens.
+
+Roles: `STUDENT`, `FACULTY`, `DEPARTMENT_ADMIN`, `SUPER_ADMIN`.
+
+### GET /api/admin/users
+
+Retrieve a paginated list of users, optionally filtered by search term (matches email/full name).
+
+- **Authentication:** JWT Required (`SUPER_ADMIN`)
+- **Query Parameters:** `page` (default 0), `size` (default 20, max 100), `search` (optional)
+- **Response (200 OK):** Paginated `User[]`.
+- `User` fields: `userId`, `email`, `fullName`, `role`, `department` (id/name/slug), `profilePictureUrl`, `createdAt`.
+
+### POST /api/admin/users
+
+Create a user.
+
+- **Authentication:** JWT Required (`SUPER_ADMIN`)
+- **Request Body:**
+  ```json
+  {
+      "email": "user@acdeducation.com",
+      "role": "FACULTY",
+      "departmentId": 1
+  }
+  ```
+  - `email`: required, must be a valid email
+  - `role`: required, one of `STUDENT`, `FACULTY`, `DEPARTMENT_ADMIN`, `SUPER_ADMIN`
+  - `departmentId`: required for department-bound roles
+- **Response (201 Created):** The created `User`.
+
+### PUT /api/admin/users/{id}/role
+
+Change a user's role (and optionally their department). Logged in `RoleChangeLog`; revokes the
+target's refresh tokens.
+
+- **Authentication:** JWT Required (`SUPER_ADMIN`)
+- **Request Body:**
+  ```json
+  {
+      "role": "FACULTY",
+      "departmentId": 1
+  }
+  ```
+- **Response (200 OK):** The updated `User`.
+
+**Admin Users Error Codes:**
+
+| Condition                        | HTTP | Code                 | Message                                  |
+| -------------------------------- | ---- | -------------------- | ---------------------------------------- |
+| Non-super-admin role             | 403  | `ACCESS_DENIED`      | "Admin privileges required" or "Access denied" |
+| User not found                   | 404  | `RESOURCE_NOT_FOUND` | "User not found"                         |
+| Invalid email / missing fields   | 400  | `VALIDATION_ERROR`   | Validation field messages                |
 
 ---
 
@@ -1121,6 +1374,93 @@ Download or view a research paper file.
 
 ---
 
+## Real-time and Inbox Notifications (SSE)
+
+Notifications are created as a side effect of system events and delivered to the affected user
+through two channels:
+
+1. **SSE streaming** (`GET /stream`) — real-time push. Events are published after the triggering
+   transaction commits and are delivered only to the owning user.
+2. **REST inbox** — persisted notifications that can be listed, counted, and marked as read.
+
+Users only ever see their own notifications. Multiple simultaneous SSE connections per user are
+supported (e.g., multiple browser tabs) — each tab independently receives events.
+
+**Notification types** (`type` field):
+
+| Type                   | Meaning                                          | `relatedEntityType`  |
+| ---------------------- | ------------------------------------------------ | -------------------- |
+| `NEW_REQUEST`          | A new document request was received              | `DOCUMENT_REQUEST`   |
+| `REQUEST_ACCEPTED`     | A document request was accepted                  | `DOCUMENT_REQUEST`   |
+| `REQUEST_REJECTED`     | A document request was rejected                  | `DOCUMENT_REQUEST`   |
+| `NEW_SUBMISSION`       | A new student submission was received            | `RESEARCH_PAPER`     |
+| `SUBMISSION_APPROVED`  | A submission was approved and is now live        | `RESEARCH_PAPER`     |
+| `SUBMISSION_REJECTED`  | A submission was rejected                        | `RESEARCH_PAPER`     |
+
+### GET /api/notifications/stream
+
+Open a Server-Sent Events stream for the authenticated user.
+
+- **Authentication:** JWT Required
+- **Content-Type:** `text/event-stream`
+- **Events:** Named `notification` events whose data is a serialized
+  `NotificationResponse` (see fields below). Emits a keep-alive/connected event first.
+- **Authorization:** Only the caller's own notifications are pushed.
+- **Notes:** Long-lived connection. Clients should reconnect on disconnect; invalidated access
+  tokens can be refreshed via the normal refresh flow.
+
+### GET /api/notifications
+
+Retrieve a paginated list of the authenticated user's notifications, newest first.
+
+- **Authentication:** JWT Required
+- **Query Parameters:** `page` (default 0), `size` (default 20, max 100)
+- **Response (200 OK):** Paginated `Notification[]`.
+
+`Notification` fields:
+
+| Field                  | Type    | Description                                            |
+| ---------------------- | ------- | ------------------------------------------------------ |
+| `notificationId`       | number  | Unique identifier                                      |
+| `message`              | string  | Human-readable message                                 |
+| `type`                 | string  | One of the notification types above                    |
+| `relatedEntityId`      | number  | ID of the related request or paper (nullable)          |
+| `relatedEntityType`    | string  | `DOCUMENT_REQUEST` or `RESEARCH_PAPER` (nullable)      |
+| `isRead`               | boolean | Whether the notification has been read                 |
+| `createdAt`            | string  | ISO 8601 timestamp of creation                         |
+
+### GET /api/notifications/unread-count
+
+Return the number of unread notifications for the authenticated user.
+
+- **Authentication:** JWT Required
+- **Response (200 OK):** number
+
+### PUT /api/notifications/mark-all-read
+
+Mark all of the authenticated user's notifications as read.
+
+- **Authentication:** JWT Required
+- **Response:** `204 No Content`
+
+### PUT /api/notifications/{id}/read
+
+Mark a single notification as read. Ownership is enforced server-side.
+
+- **Authentication:** JWT Required
+- **Path Parameter:** `id` (number) — Notification ID
+- **Response:** `204 No Content`
+
+**Notifications Error Codes:**
+
+| Condition            | HTTP | Code                 | Message                       |
+| -------------------- | ---- | -------------------- | ----------------------------- |
+| Missing/Invalid JWT  | 401  | `UNAUTHENTICATED`    | "Authentication required"     |
+| Notification not found | 404 | `RESOURCE_NOT_FOUND` | "Notification not found"      |
+| Not the owning user  | 403  | `ACCESS_DENIED`      | "Access denied"               |
+
+---
+
 ## Validation Rules
 
 **Paper Create/Update**
@@ -1146,5 +1486,7 @@ Download or view a research paper file.
 ## State Machines
 
 **Paper. archived**: `false → true` via /archive; `true → false` via /unarchive
+**Paper. status**: `PENDING_REVIEW → ACTIVE` via approve; `PENDING_REVIEW → (deleted)` via
+reject-submission or submitter delete. Admin-created papers start `ACTIVE`.
 **DocumentRequest.status**: `PENDING → ACCEPTED | REJECTED`; `ACCEPTED → REJECTED` (revocation);
 `REJECTED` is terminal

@@ -16,7 +16,7 @@ The system is available for testing locally via Docker.<!-- TODO: add live demo 
 ### Setup
 
 ```bash
-git clone https://github.com/r4ppz/research-repository.git
+git clone https://github.com/acd-research-repo/research-repository.git
 cd research-repository
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
@@ -79,4 +79,4 @@ make up ENV=prod
 
 This builds and starts all four services (PostgreSQL, MinIO, backend, frontend). The frontend is served via nginx on port 80.
 
-> If you encounter any issue please [open an issue](https://github.com/r4ppz/research-repository/issues).
+> If you encounter any issue please [open an issue](https://github.com/acd-research-repo/research-repository/issues).

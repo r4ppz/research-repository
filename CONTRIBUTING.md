@@ -11,7 +11,7 @@
 > Before running, copy `.env.example` to `.env` in each component (`backend/`, `frontend/`) and fill in the required values.
 
 ```bash
-git clone https://github.com/r4ppz/research-repository.git
+git clone https://github.com/acd-research-repo/research-repository.git
 cd research-repository
 ```
 
