@@ -72,10 +72,7 @@ export const AdminPapersPage = () => {
           </div>
 
           <div className={style.tableSection}>
-            <PapersTable
-              archived={isArchived}
-              showDepartment={showDepartment}
-            />
+            <PapersTable archived={isArchived} showDepartment={showDepartment} />
           </div>
         </div>
       </main>

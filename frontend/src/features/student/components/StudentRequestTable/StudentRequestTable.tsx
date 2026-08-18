@@ -1,16 +1,16 @@
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { columns, type TableMeta } from "./columns";
+import styles from "./StudentRequestTable.module.css";
 import { downloadFile } from "@/api/files";
-import { getUserRequests } from "@/api/users";
 import { deleteRequest } from "@/api/request";
+import { getUserRequests } from "@/api/users";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { Input } from "@/components/common/Input/Input";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import { triggerBrowserDownload } from "@/util/download";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
-import styles from "./StudentRequestTable.module.css";
 
 export function StudentRequestTable() {
   const [removalError, setRemovalError] = useState<string | null>(null);
@@ -18,8 +18,19 @@ export function StudentRequestTable() {
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [downloadingIds, setDownloadingIds] = useState<Set<number>>(new Set());
 
-  const { data, pageIndex, pageSize, pageCount, setPageIndex, setPageSize, isLoading, error, searchQuery, handleSearchChange, refresh } =
-    usePaginatedSearch("studentRequests", getUserRequests);
+  const {
+    data,
+    pageIndex,
+    pageSize,
+    pageCount,
+    setPageIndex,
+    setPageSize,
+    isLoading,
+    error,
+    searchQuery,
+    handleSearchChange,
+    refresh,
+  } = usePaginatedSearch("studentRequests", getUserRequests);
 
   const tableMeta: TableMeta = {
     onDownload: (paperId: number) => {

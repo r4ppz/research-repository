@@ -1,8 +1,8 @@
 import { Search } from "lucide-react";
 import { useState } from "react";
-import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import { useAcceptRequest, useRejectRequest } from "../../hooks/useAdminRequestMutations";
 import { columns, columnsWithoutDepartment, type TableMeta } from "./columns";
+import requestTableStyle from "./RequestTable.module.css";
 import { getAdminRequests } from "@/api/admin/requests";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog/ConfirmDialog";
 import { DataTable } from "@/components/common/DataTable/DataTable";
@@ -10,9 +10,9 @@ import { Input } from "@/components/common/Input/Input";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
+import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import type { ResearchPaper } from "@/types";
 import { extractApiError, getUserErrorMessage } from "@/util/errorHandler";
-import requestTableStyle from "./RequestTable.module.css";
 
 interface RequestsTableProps {
   showDepartment?: boolean;
@@ -25,8 +25,18 @@ export function RequestsTable({ showDepartment = true }: RequestsTableProps) {
     requestId: number;
   } | null>(null);
 
-  const { data, pageCount, pageIndex, pageSize, setPageIndex, setPageSize, isLoading, error, searchQuery, handleSearchChange } =
-    usePaginatedSearch("adminRequests", getAdminRequests, { status: "PENDING" });
+  const {
+    data,
+    pageCount,
+    pageIndex,
+    pageSize,
+    setPageIndex,
+    setPageSize,
+    isLoading,
+    error,
+    searchQuery,
+    handleSearchChange,
+  } = usePaginatedSearch("adminRequests", getAdminRequests, { status: "PENDING" });
 
   const acceptMutation = useAcceptRequest();
   const rejectMutation = useRejectRequest();

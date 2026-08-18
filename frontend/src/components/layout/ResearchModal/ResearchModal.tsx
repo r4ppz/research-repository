@@ -136,16 +136,19 @@ export const ResearchModal = ({
           </div>
         )}
 
-        {(isUserStudent(user) || isUserFaculty(user)) && !paper.archived && paper.status === "ACTIVE" && paper.uploadedBy?.userId !== user?.userId && (
-          <Button
-            onPress={requestDocument}
-            isDisabled={requestExists}
-            isPending={isRequestLoading}
-            variant="primary"
-          >
-            {requestExists ? "Request Submitted" : "Request Document"}
-          </Button>
-        )}
+        {(isUserStudent(user) || isUserFaculty(user)) &&
+          !paper.archived &&
+          paper.status === "ACTIVE" &&
+          paper.uploadedBy?.userId !== user?.userId && (
+            <Button
+              onPress={requestDocument}
+              isDisabled={requestExists}
+              isPending={isRequestLoading}
+              variant="primary"
+            >
+              {requestExists ? "Request Submitted" : "Request Document"}
+            </Button>
+          )}
         {isUserSuperOrDepartmentAdmin(user) && (
           <Button onPress={handleDownload} variant="primary">
             Download
