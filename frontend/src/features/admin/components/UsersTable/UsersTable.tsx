@@ -1,16 +1,16 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useState } from "react";
-import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import { columns, type RowDraft, type TableMeta } from "./columns";
+import usersTableStyle from "./UsersTable.module.css";
 import { changeUserRole, getAdminUsers } from "@/api/admin/users";
 import { getDepartments } from "@/api/filter";
 import { DataTable } from "@/components/common/DataTable/DataTable";
 import { Input } from "@/components/common/Input/Input";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { toastQueue } from "@/components/common/Toast/Toast";
+import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import type { User } from "@/types";
-import usersTableStyle from "./UsersTable.module.css";
 
 interface UsersTableProps {
   currentUserId: number | undefined;

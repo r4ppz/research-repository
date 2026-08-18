@@ -1,0 +1,11 @@
+.git
+node_modules
+dist
+build
+.vite
+.env
+.env.*
+!.env.example
+Dockerfile
+.dockerignore
+*.log

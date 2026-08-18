@@ -6,8 +6,8 @@ import style from "./StudentRequestPage.module.css";
 import { Button } from "@/components/common/Button/Button";
 import { Footer } from "@/components/layout/Footer/Footer";
 import { Header } from "@/components/layout/Header/Header";
-import { StudentRequestTable } from "@/features/student/components/StudentRequestTable/StudentRequestTable";
 import { PaperUploadModal } from "@/features/student/components/PaperUploadModal/PaperUploadModal";
+import { StudentRequestTable } from "@/features/student/components/StudentRequestTable/StudentRequestTable";
 import { StudentSubmissionTable } from "@/features/student/components/StudentSubmissionTable/StudentSubmissionTable";
 
 export const StudentRequestPage = () => {

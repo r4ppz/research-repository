@@ -1,5 +1,5 @@
 # Use a specific minor version for reproducibility
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 
 # Install pnpm globally via npm

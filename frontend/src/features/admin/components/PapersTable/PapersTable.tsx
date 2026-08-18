@@ -1,11 +1,10 @@
-import { useState } from "react";
 import { Search } from "lucide-react";
+import { useState } from "react";
 import {
   useArchivePaper,
   useDeletePaper,
   useUnarchivePaper,
 } from "../../hooks/useAdminPaperActions";
-import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import { EditPaperModal } from "../EditPaperModal/EditPaperModal";
 import {
   columnsActive,
@@ -22,6 +21,7 @@ import { Input } from "@/components/common/Input/Input";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner/LoadingSpinner";
 import { toastQueue } from "@/components/common/Toast/Toast";
 import { ResearchModal } from "@/components/layout/ResearchModal/ResearchModal";
+import { usePaginatedSearch } from "@/hooks/usePaginatedSearch";
 import type { ResearchPaper } from "@/types";
 
 interface PapersTableProps {
@@ -37,8 +37,18 @@ export function PapersTable({ archived, showDepartment = true }: PapersTableProp
     paperId: number;
   } | null>(null);
 
-  const { data, pageCount, pageIndex, pageSize, setPageIndex, setPageSize, isLoading, error, searchQuery, handleSearchChange } =
-    usePaginatedSearch("adminPapers", getAdminPapers, { archived });
+  const {
+    data,
+    pageCount,
+    pageIndex,
+    pageSize,
+    setPageIndex,
+    setPageSize,
+    isLoading,
+    error,
+    searchQuery,
+    handleSearchChange,
+  } = usePaginatedSearch("adminPapers", getAdminPapers, { archived });
 
   const archiveMutation = useArchivePaper();
   const unarchiveMutation = useUnarchivePaper();
