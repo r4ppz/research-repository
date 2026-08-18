@@ -1,5 +1,6 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 site_name: 'Research Repository Documentation'
+site_url: https://acd-research-repo.github.io/research-repository/docs/
 
 repo_url: https://github.com/acd-research-repo/research-repository
 
