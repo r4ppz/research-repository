@@ -12,7 +12,7 @@ interface ErrorBoundaryProps {
 
 function SimpleFallback({ error }: FallbackProps) {
   const errorTraceId = extractApiError(error).traceId;
-  const repoUrl = "https://github.com/r4ppz/research-repository-frontend/issues";
+  const repoUrl = "https://github.com/acd-research-repo/research-repository/issues";
 
   return (
     <div className={styles.page} role="alert">

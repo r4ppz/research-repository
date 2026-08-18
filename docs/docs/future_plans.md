@@ -7,7 +7,7 @@
 - [ ] Ensure responsive design on the frontend.
 - [ ] Implement multi-select actions in the frontend (backend mostly supports it).
 - [x] Fully migrate to React Aria for better accessibility.
-- [ ] Add WebSocket or SSE to notify users of backend resource changes.
+- [x] Add WebSocket or SSE to notify users of backend resource changes (SSE shipped).
 - [ ] Complete authentication system; integrate OLSIS if possible.
 - [ ] Implement full CI/CD pipelines, including Docker deployments.
 - [ ] Set up Git hooks (Husky in dependencies, no hooks initialized yet).

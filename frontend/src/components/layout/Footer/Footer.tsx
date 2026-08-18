@@ -52,7 +52,7 @@ export const Footer = ({ className, ...props }: ComponentProps) => {
             <div className={style.linksContainer}>
               <h3 className={style.linkText}>Links</h3>
               <Link href="https://www.facebook.com/assumptiondavao.edu.ph">Facebook</Link>
-              <Link href="https://github.com/r4ppz/research-repository">Github</Link>
+              <Link href="https://github.com/acd-research-repo/research-repository">Github</Link>
               <Link href="https://r4ppz.github.io/research-repo-docs/">Docs</Link>
             </div>
 

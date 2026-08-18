@@ -394,3 +394,108 @@ VALUES
 ## V5\_\_populate_papers.sql (dev only)
 
 > Located under `db/dev/` — only loaded when the `dev` Spring profile is active. Contains the same mock data as V4 but in larger batches for development/testing with a richer dataset.
+
+---
+
+## V6\_\_update_departments.sql
+
+Replaces the original department list with the school's actual departments. Because `research_papers.department_id` is a required FK, papers referencing the old departments are removed first to keep referential integrity.
+
+```sql
+-- Remove papers referencing old departments (maintain FK integrity)
+DELETE FROM research_papers
+WHERE department_id IN (
+  SELECT department_id FROM departments
+  WHERE department_name IN ('Computer Science', 'Mechanical Engineering', 'Physics', 'Chemistry', 'Business Administration')
+);
+
+-- Remove old departments
+DELETE FROM departments
+WHERE department_name IN ('Computer Science', 'Mechanical Engineering', 'Physics', 'Chemistry', 'Business Administration');
+
+-- Insert new departments
+INSERT INTO departments (department_name) VALUES
+  ('Information Technology'),
+  ('Teacher Education'),
+  ('Business Administration'),
+  ('Hospitality Management'),
+  ('Social Work');
+```
+
+---
+
+## V7\_\_add_notifications.sql
+
+Introduces the `notifications` table used for the notification inbox and SSE delivery.
+
+```sql
+CREATE TABLE notifications (
+    notification_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    message TEXT NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    related_request_id INT REFERENCES document_requests(request_id) ON DELETE SET NULL,
+    is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_notifications_user ON notifications(user_id);
+CREATE INDEX idx_notifications_unread ON notifications(user_id, is_read);
+```
+
+---
+
+## V8\_\_add_paper_status_and_uploaded_by.sql
+
+Adds review workflow support to papers: a `status` column (handled as `ACTIVE` / `PENDING_REVIEW` / `REJECTED` in the application layer) and `uploaded_by` to track which user submitted the paper.
+
+```sql
+ALTER TABLE research_papers
+ADD COLUMN status VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
+ADD COLUMN uploaded_by INT NULL REFERENCES users(user_id) ON DELETE SET NULL;
+
+CREATE INDEX idx_papers_status ON research_papers(status);
+CREATE INDEX idx_papers_uploaded_by ON research_papers(uploaded_by);
+```
+
+---
+
+## V9\_\_polymorphic_notifications.sql
+
+Generalizes notifications to reference either a document request or a research paper. Renames `related_request_id` to `related_entity_id`, adds `related_entity_type`, and backfills existing rows as `DOCUMENT_REQUEST`.
+
+```sql
+ALTER TABLE notifications DROP CONSTRAINT IF EXISTS notifications_related_request_id_fkey;
+ALTER TABLE notifications RENAME COLUMN related_request_id TO related_entity_id;
+ALTER TABLE notifications ADD COLUMN related_entity_type VARCHAR(50);
+UPDATE notifications SET related_entity_type = 'DOCUMENT_REQUEST' WHERE related_entity_id IS NOT NULL;
+```
+
+---
+
+## V10\_\_add_original_file_name.sql
+
+Stores the original client filename so downloads can use a friendly name instead of the storage path.
+
+```sql
+ALTER TABLE research_papers ADD COLUMN original_file_name VARCHAR(255);
+
+UPDATE research_papers
+SET original_file_name = split_part(file_path, '/', array_length(string_to_array(file_path, '/'), 1));
+```
+
+---
+
+## V11\_\_add_department_slug.sql
+
+Adds a stable, filesystem-safe folder slug to departments. Existing departments get a slug derived from their display name; new departments get a derived slug (e.g. `computer_science`) generated at creation time in `DepartmentService`. The backfill mirrors `DepartmentService.generateSlug` (trim, lowercase, collapse non-alphanumeric runs to `_`, strip leading/trailing `_`) so migration and runtime logic can never drift.
+
+```sql
+ALTER TABLE departments ADD COLUMN slug VARCHAR(64);
+
+UPDATE departments
+SET slug = btrim(regexp_replace(lower(trim(department_name)), '[^a-z0-9]+', '_', 'g'), '_');
+
+ALTER TABLE departments ALTER COLUMN slug SET NOT NULL;
+CREATE UNIQUE INDEX uq_departments_slug ON departments (slug);
+```
