@@ -20,23 +20,9 @@
     "fix": "pnpm lint:fix && pnpm format && pnpm lint:css:fix",
     "check": "pnpm lint:css && pnpm type-check && pnpm lint",
     "deploy": "pnpm run build",
-    "prepare": "husky",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "preinstall": "npx only-allow pnpm"
-  },
-  "lint-staged": {
-    "src/**/*.{js,ts,jsx,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "src/**/*.css": [
-      "stylelint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
   },
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
@@ -86,8 +72,6 @@
     "eslint-plugin-storybook": "^10.4.6",
     "gh-pages": "^6.3.0",
     "globals": "^17.7.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.4.0",
     "playwright": "^1.61.1",
     "prettier": "^3.9.4",
     "semantic-release": "^25.0.5",

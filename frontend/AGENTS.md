@@ -34,7 +34,6 @@ pnpm build-storybook  # Build Storybook static site
 - UI Components: Radix UI (AlertDialog, Dialog, Select, Tooltip, Icons), react-aria-components, Lucide React, react-icons
 - Styling: CSS Modules, `clsx` for composition
 - Format & Lint: ESLint 9, Stylelint (recess-order + standard), Prettier 3
-- Git Hooks: Husky 9 + lint-staged (in dependencies, hooks not yet initialized)
 - Testing: Vitest 4 + Playwright browser runner, Storybook 10 + addon-vitest
 - CI/CD: semantic-release
 
