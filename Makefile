@@ -21,8 +21,8 @@ reset:
 	$(COMPOSE) down -v
 
 rebuild: down
-	$(COMPOSE) build
-	$(COMPOSE) up -d
+	$(COMPOSE) pull --ignore-pull-failures
+	$(COMPOSE) up -d --build
 
 .PHONY: trace
 trace:

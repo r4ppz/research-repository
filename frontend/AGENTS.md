@@ -18,7 +18,6 @@ pnpm type-check       # tsc --noEmit
 pnpm format           # Prettier (entire project)
 pnpm check            # lint:css + type-check + lint
 pnpm fix              # lint:fix + format + lint:css:fix
-pnpm deploy           # build for production
 pnpm storybook        # Storybook dev server (port 6006)
 pnpm build-storybook  # Build Storybook static site
 ```
@@ -35,7 +34,6 @@ pnpm build-storybook  # Build Storybook static site
 - Styling: CSS Modules, `clsx` for composition
 - Format & Lint: ESLint 9, Stylelint (recess-order + standard), Prettier 3
 - Testing: Vitest 4 + Playwright browser runner, Storybook 10 + addon-vitest
-- CI/CD: semantic-release
 
 ## Architecture
 

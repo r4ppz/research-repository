@@ -37,8 +37,7 @@ services:
       start_period: 10s
 
   backend:
-    build: ./backend
-    image: research-repo-backend:prod
+    image: ${BACKEND_IMAGE:-ghcr.io/acd-research-repo/research-repository/backend:latest}
     restart: no
     depends_on:
       database:
@@ -81,12 +80,7 @@ services:
       - "8080:8080"
 
   frontend:
-    build:
-      context: ./frontend
-      args:
-        VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID}
-        VITE_BACKEND_API_BASE_URL: ${VITE_BACKEND_API_BASE_URL}
-    image: research-repo-frontend:prod
+    image: ${FRONTEND_IMAGE:-ghcr.io/acd-research-repo/research-repository/frontend:latest}
     restart: no
     depends_on:
       - backend

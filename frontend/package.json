@@ -2,11 +2,7 @@
   "name": "research-repository-frontend",
   "description": "Just a school project",
   "private": true,
-  "version": "0.1.0",
   "type": "module",
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -19,7 +15,6 @@
     "type-check": "tsc --noEmit",
     "fix": "pnpm lint:fix && pnpm format && pnpm lint:css:fix",
     "check": "pnpm lint:css && pnpm type-check && pnpm lint",
-    "deploy": "pnpm run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "preinstall": "npx only-allow pnpm"
@@ -44,11 +39,6 @@
     "react-router-dom": "^7.18.1"
   },
   "devDependencies": {
-    "@semantic-release/commit-analyzer": "^13.0.1",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^12.0.9",
-    "@semantic-release/npm": "^13.1.5",
-    "@semantic-release/release-notes-generator": "^14.1.1",
     "@storybook/addon-a11y": "^10.4.6",
     "@storybook/addon-docs": "^10.4.6",
     "@storybook/addon-onboarding": "^10.4.6",
@@ -70,11 +60,9 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.4.26",
     "eslint-plugin-storybook": "^10.4.6",
-    "gh-pages": "^6.3.0",
     "globals": "^17.7.0",
     "playwright": "^1.61.1",
     "prettier": "^3.9.4",
-    "semantic-release": "^25.0.5",
     "storybook": "^10.4.6",
     "stylelint": "^16.26.1",
     "stylelint-config-recess-order": "^5.1.1",
